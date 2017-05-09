@@ -1,14 +1,13 @@
 FROM gliderlabs/alpine:latest
 
-ENV CONSUL_PREFIX __CONSUL_PREFIX__
-ENV CONSUL_SECRET_PREFIX __CONSUL_SECRET_PREFIX__
+ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk8
+
+COPY __UBERJAR___                   /app.jar
 
 RUN apk add -U && \
-    postgresql-client && \
-    postfix mutt && \
-    tzdata && \
+    openjdk8
     bash bash-completion curl vim && \
-    coreutils bc && \
+    tzdata coreutils && \
     cp /usr/share/zoneinfo/America/Los_Angeles /etc/localtime && \
     echo "America/Los_Angeles" > /etc/timezone && \
     rm -rf /var/cache/apk/*
@@ -27,5 +26,3 @@ RUN mkdir -p ~/.vim/bundle && \
     curl https://raw.githubusercontent.com/skilbjo/dotfiles/master/vim/functions.vim > ~/.vim/functions.vim && \
     ~/.vim/bundle/bin/install.sh && \
     ~/.vim/bundle/bin/neoinstall
-
-COPY src                            /src
