@@ -1,4 +1,4 @@
-(defproject portfolio "0.1.0-SNAPSHOT"
+(defproject compojure "0.1.0-SNAPSHOT"
   :uberjar-name "compojure.jar"
   :url "https://github.com/skilbjo/composure"
   :min-lein-version "2.0.0"
@@ -10,6 +10,7 @@
                  [environ "1.1.0"]
                  [org.clojure/java.jdbc "0.5.8"]
                  [org.postgresql/postgresql "42.0.0"]
+                 [ring "1.1.6"]
                  [ring/ring-defaults "0.2.1"]]
   :plugins [[lein-environ "1.1.0"]
             [lein-ring "0.9.7"]]

@@ -3,7 +3,7 @@
   (:require [clojure.string :as string]
             [clojure.java.jdbc :as jdbc]
             [environ.core :refer [env]]
-            [markets-etl.util :as util]
+            [util :as util]
             [clj-time.jdbc])
   (:import [java.sql BatchUpdateException]
            [java.util Properties]

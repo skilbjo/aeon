@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -eux
 
 # Set these environment variables in circle.yml if you want to override the
@@ -34,7 +34,7 @@ echo $(git rev-parse HEAD) > .tag
 docker login -u $QUAY_ROBOT_USERNAME -p $QUAY_ROBOT_PASSWORD -e $EMAIL $DOCKER_REGISTRY
 
 # Build
-lein uberjar
+lein ring uberjar
 docker build --rm -t $DOCKER_REMOTE:$IMAGE_TAG .
 
 # Tag
