@@ -1,4 +1,4 @@
-(ns model
+(ns sql
   (:refer-clojure :exclude [get])
   (:require [clojure.string :as string]
             [clojure.java.jdbc :as jdbc]
@@ -17,9 +17,31 @@
 (defn get-dw-conn []
   (env :db-jdbc-uri))
 
-(defn query [sql params]
-  (with-open [conn (get-dw-conn)]
-    (jdbc/query conn sql params)))
+(defn- prepare-statement
+  [sql params]
+  (loop [sql sql
+         kvs (map identity params)]
+    (if (empty? kvs)
+      sql
+      (let [[[k v] & others] kvs]
+        (recur (string/replace sql (str k) (str (jdbc/sql-value v)))
+               others)))))
+
+(defn query
+  ([sql]
+   (query sql {}))
+  ([sql params]
+   (jdbc/with-db-connection [conn (get-dw-conn)]
+     (let [sql     (prepare-statement sql params)
+           _       (println sql)
+           results (-> conn
+                       (.createStatement)
+                       (.executeQuery sql))]
+       (jdbc/metadata-result results)))))
+
+;(defn query [sql]
+  ;(jdbc/with-db-connection [conn (get-dw-conn)]
+    ;(jdbc/query conn sql)))
 
 (defn insert-multi! [table data]
   (jdbc/with-db-connection [conn (get-dw-conn)]
