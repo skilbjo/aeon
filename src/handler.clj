@@ -16,7 +16,9 @@
        (response (controller/data)))
   (GET "/api/:dataset" [dataset]
        (response
-         (util/printit (controller/query dataset)))))
+         (controller/query dataset))))
+       ;(response
+         ;(util/printit (controller/query dataset)))))
 
 (defroutes combined-routes
   (-> site-routes

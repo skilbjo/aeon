@@ -15,7 +15,8 @@
 (def internalize-map-identifier (comp keyword string/lower-case util/dasherize))
 
 (defn get-dw-conn []
-  (env :db-jdbc-uri))
+  (DriverManager/getConnection
+    (env :db-jdbc-uri)))
 
 (defn- prepare-statement
   [sql params]
@@ -31,9 +32,8 @@
   ([sql]
    (query sql {}))
   ([sql params]
-   (jdbc/with-db-connection [conn (get-dw-conn)]
+   (with-open [conn (get-dw-conn)]
      (let [sql     (prepare-statement sql params)
-           _       (println sql)
            results (-> conn
                        (.createStatement)
                        (.executeQuery sql))]

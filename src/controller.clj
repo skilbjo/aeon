@@ -11,8 +11,16 @@
 (defn data []
   {:name "clojure developer"})
 
+;(defn query [dataset]
+  ;(sql/query "select * from dw.equities limit 10"))
+
 (defn query [dataset]
-  (sql/query "select * from dw.equities limit 10"))
+  {:body
+   (sql/query (util/multi-line-string
+               "select *
+                from dw.:table
+                limit 10")
+             {:table dataset})})
 
 ;(defn query [dataset]
   ;(sql/query (util/multi-line-string
