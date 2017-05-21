@@ -16,7 +16,7 @@ docker ps -a | grep compojure | awk '{print $1}' | xargs docker rm -f
 docker images | grep compojure | awk '{print $3}' | grep -v IMAGE | xargs docker rmi --force
 
 ## start
-~/deploy/app/compojure/deploy/bin/run-docker &
+. ~/.profilelocal ; ~/deploy/app/compojure/deploy/bin/run-docker &
 
 echo "all done"
 
