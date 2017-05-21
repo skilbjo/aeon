@@ -11,13 +11,10 @@ GIT_WORK_TREE="$deploy_dir" git checkout -f
 
 cd "$deploy_dir"
 
-## build steps here ##
-docker ps -a | grep compojure | awk '{print $1}' | xargs docker rm -f
-docker images | grep compojure | awk '{print $3}' | grep -v IMAGE | xargs docker rmi --force
+source ~/.profilelocal
 
 ## start
-source ~/.profilelocal && \
-  ~/deploy/app/compojure/deploy/bin/marathon
+deploy/bin/marathon
 
 echo "all done"
 
