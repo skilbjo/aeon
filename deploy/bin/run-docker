@@ -5,6 +5,7 @@ img="quay.io/skilbjo/compojure:latest"
 job_cmd="usr/local/deploy/bin/run-job"
 
 docker run --rm \
+  -p 8080:8080 \
   -e ro_db_jdbc_uri="$(echo $ro_db_jdbc_uri)" \
   "$img" \
   "$job_cmd" $@
