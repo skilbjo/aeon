@@ -2,7 +2,7 @@ FROM gliderlabs/alpine:latest
 
 ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk8
 
-COPY __UBERJAR__                   /app.jar
+COPY __UBERJAR__                    /app.jar
 
 RUN apk add -U openjdk8 \
     bash bash-completion curl vim git \
@@ -12,7 +12,7 @@ RUN apk add -U openjdk8 \
     rm -rf /var/cache/apk/*
 
 COPY deploy                         /usr/local/deploy
-COPY src                            /src
+COPY src                            /usr/local/src
 
 RUN mkdir -p ~/.vim/bundle && \
     git clone https://github.com/Shougo/neobundle.vim ~/.vim/bundle && \

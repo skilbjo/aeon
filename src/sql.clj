@@ -16,7 +16,7 @@
 
 (defn get-dw-conn []
   (DriverManager/getConnection
-    (env :db-jdbc-uri)))
+    (env :ro-db-jdbc-uri)))
 
 (defn- prepare-statement
   [sql params]
@@ -39,10 +39,6 @@
                        (.executeQuery sql))]
        (jdbc/metadata-result results)))))
 
-;(defn query [sql]
-  ;(jdbc/with-db-connection [conn (get-dw-conn)]
-    ;(jdbc/query conn sql)))
-
 (defn insert-multi! [table data]
   (jdbc/with-db-connection [conn (get-dw-conn)]
     (jdbc/insert-multi! conn table data)))
@@ -59,6 +55,3 @@
           (insert! table data)
           result)))))
 
-(defn all [params]
-  (query "select * from :table"
-         params))

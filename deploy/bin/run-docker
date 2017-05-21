@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-img="quay.io/skilbjo/markets-etl:latest"
+img="quay.io/skilbjo/compojure:latest"
 job_cmd="usr/local/deploy/bin/run-job"
 
 docker run --rm \
-  -e db_uri="$(echo $db_uri)" \
-  -e db_jdbc_uri="$(echo $db_jdbc_uri)" \
+  -e ro_db_jdbc_uri="$(echo $ro_db_jdbc_uri)" \
   "$img" \
   "$job_cmd" $@

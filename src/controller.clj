@@ -7,36 +7,24 @@
   (util/render-template "index"
                         {:name "clojure developer"}))
 
+;(defn query [dataset]
+  ;(sql/query (util/multi-line-string
+               ;"select *
+                ;from dw.:table
+                ;order by date desc
+                ;limit 10")
+             ;{:table dataset}))
+
 ; API
 (defn data []
   {:name "clojure developer"})
 
-;(defn query [dataset]
-  ;(sql/query "select * from dw.equities limit 10"))
-
-(defn query [dataset]
-  {:body
-   (sql/query (util/multi-line-string
-               "select *
-                from dw.:table
-                limit 10")
-             {:table dataset})})
-
-;(defn query [dataset]
-  ;(sql/query (util/multi-line-string
-               ;"select *
-                ;from dw.equities
-                ;limit 10")))
-
-;(defn query [dataset]
-  ;(sql/query "select *
-              ;from dw.:table
-              ;limit 10"
-             ;{:table dataset}))
-
-;(defn query [dataset]
-  ;(sql/query ["select *
-               ;from dw.?
-               ;limit 10"
-              ;dataset]))
-
+(defn data-latest [dataset]
+  (let [sql         (util/multi-line-string "select *
+                                             from dw.:table
+                                             order by date desc
+                                             limit 10")
+        rs          (sql/query sql {:table dataset})
+        transformed (->> rs
+                         (util/map-seq-fkv-v util/date-me))]
+    {:body transformed}))

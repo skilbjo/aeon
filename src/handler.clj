@@ -14,11 +14,9 @@
 (defroutes api-routes
   (GET "/api/data" []
        (response (controller/data)))
-  (GET "/api/:dataset" [dataset]
+  (GET "/api/:dataset/latest" [dataset]
        (response
-         (controller/query dataset))))
-       ;(response
-         ;(util/printit (controller/query dataset)))))
+         (controller/data-latest dataset))))
 
 (defroutes combined-routes
   (-> site-routes

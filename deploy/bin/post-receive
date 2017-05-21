@@ -12,10 +12,11 @@ GIT_WORK_TREE="$deploy_dir" git checkout -f
 cd "$deploy_dir"
 
 ## build steps here ##
-case "$user" in
-  (skilbjo) sudo cp deploy/tasks/crontab "$cron_dir/$app" ;;
-  (pi) sudo cp deploy/tasks/crontab-rspi "$cron_dir/$app" ;;
-esac
+docker ps -a | grep compojure | awk '{print $1}' | xargs docker rm
+docker images | grep compojure | awk '{print $3}' | grep -v IMAGE | xargs docker rmi --force
+
+## start
+~/deploy/app/compojure/bin/run-docker &
 
 echo "all done"
 
