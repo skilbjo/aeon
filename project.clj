@@ -20,8 +20,8 @@
                                   [ring/ring-mock "0.3.0"]]}
              :uberjar {:aot :all}}
   :target-path "target/%s"
-  :main ^:skip-aot handler
-  :ring {:handler handler/app
+  :main ^:skip-aot routes
+  :ring {:handler routes/app
          :port 8080}
   :jvm-opts ["-Xms256m" "-Xmx256m" "-XX:MaxMetaspaceSize=128m"
              "-client" "-Duser.timezone=PST8PDT"

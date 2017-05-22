@@ -1,4 +1,4 @@
-(ns handler
+(ns routes
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
             [ring.middleware.defaults :as ring-defaults]
@@ -15,8 +15,7 @@
   (GET "/api/data" []
        (response (controller/data)))
   (GET "/api/:dataset/latest" [dataset]
-       (response
-         (controller/data-latest dataset))))
+       (response (controller/data-latest dataset))))
 
 (defroutes combined-routes
   (-> site-routes

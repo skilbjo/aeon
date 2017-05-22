@@ -7,14 +7,6 @@
   (util/render-template "index"
                         {:name "clojure developer"}))
 
-;(defn query [dataset]
-  ;(sql/query (util/multi-line-string
-               ;"select *
-                ;from dw.:table
-                ;order by date desc
-                ;limit 10")
-             ;{:table dataset}))
-
 ; API
 (defn data []
   {:name "clojure developer"})
