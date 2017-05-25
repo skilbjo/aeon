@@ -16,7 +16,7 @@
 
 (defn get-dw-conn []
   (DriverManager/getConnection
-    (env :ro-db-jdbc-uri)))
+   (env :ro-db-jdbc-uri)))
 
 (defn- prepare-statement
   [sql params]
