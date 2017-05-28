@@ -1,21 +1,22 @@
-(ns routes
+(ns server.routes
   (:require [compojure.core :refer :all]
             [compojure.route :as route]
+            [jobs.static :as jobs.static]
+            [jobs.api :as jobs.api]
+            [ring.adapter.jetty :as jetty]
             [ring.middleware.defaults :as ring-defaults]
             [ring.middleware.json :as ring-json]
-            [ring.util.response :refer [response]]
-            [ring.adapter.jetty :as jetty]
-            [controller :as controller])
+            [ring.util.response :refer [response]])
   (:gen-class))
 
 (defroutes site-routes
-  (GET "/" [] (controller/index)))
+  (GET "/" [] (jobs.static/index)))
 
 (defroutes api-routes
   (GET "/api/data" []
-    (response (controller/data)))
+    (response (jobs.api/data)))
   (GET "/api/:dataset/latest" [dataset]
-    (response (controller/data-latest dataset))))
+    (response (jobs.api/data-latest dataset))))
 
 (defroutes combined-routes
   (-> site-routes

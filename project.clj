@@ -18,10 +18,10 @@
                              [lein-cljfmt "0.5.6"]
                              [lein-ring "0.12.0"]]}
              :uberjar {:aot :all}}
-  :ring {:handler routes/app
+  :ring {:handler server.routes/app
          :port 8080}
   :target-path "target/%s"
-  :main ^:skip-aot routes
+  :main ^:skip-aot server.routes
   :jvm-opts ["-Xms256m" "-Xmx256m" "-XX:MaxMetaspaceSize=128m"
              "-client" "-Duser.timezone=PST8PDT"
              "-Dclojure.compiler.direct-linking=true"

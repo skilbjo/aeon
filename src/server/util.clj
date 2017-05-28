@@ -1,4 +1,4 @@
-(ns util
+(ns server.util
   (:require [clj-time.coerce :as coerce]
             [clj-time.core :as time]
             [clojure.pprint :as pprint]

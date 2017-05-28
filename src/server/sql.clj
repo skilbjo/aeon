@@ -1,18 +1,15 @@
-(ns sql
+(ns server.sql
   (:refer-clojure :exclude [get])
   (:require [clojure.string :as string]
             [clojure.java.jdbc :as jdbc]
             [environ.core :refer [env]]
-            [util :as util]
+            [server.util :as util]
             [clj-time.jdbc])
   (:import [java.sql BatchUpdateException]
            [java.util Properties]
            [java.sql DriverManager Connection]))
 
 (clojure.lang.RT/loadClassForName "org.postgresql.Driver")
-
-(def internalize-identifier (comp string/lower-case util/dasherize))
-(def internalize-map-identifier (comp keyword string/lower-case util/dasherize))
 
 (defn get-dw-conn []
   (DriverManager/getConnection

@@ -1,13 +1,7 @@
-(ns controller
-  (:require [sql :as sql]
-            [util :as util]))
+(ns jobs.api
+  (:require [server.sql :as sql]
+            [server.util :as util]))
 
-; Main
-(defn index []
-  (util/render-template "index"
-                        {:name "clojure developer"}))
-
-; API
 (defn data []
   {:name "clojure developer"})
 
