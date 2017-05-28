@@ -6,3 +6,6 @@
   (util/render-template "index"
                         {:name "clojure developer"}))
 
+(defn index-md []
+  (util/render-markdown "index"
+                        {:name "clojure developer"}))

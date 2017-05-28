@@ -10,7 +10,10 @@
   (:gen-class))
 
 (defroutes site-routes
-  (GET "/" [] (jobs.static/index)))
+  (GET "/old" []
+       (jobs.static/index))
+  (GET "/" []
+       (jobs.static/index-md)))
 
 (defroutes api-routes
   (GET "/api/data" []

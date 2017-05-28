@@ -6,6 +6,8 @@
                  [compojure "1.5.1"]
                  [de.ubercode.clostache/clostache "1.3.1"]
                  [environ "1.1.0"]
+                 [markdown-clj "0.9.99"]
+                 [selmer "1.10.7"]
                  [org.clojure/data.json "0.2.6"]
                  [org.clojure/java.jdbc "0.5.8"]
                  [org.postgresql/postgresql "42.0.0"]

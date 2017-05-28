@@ -3,7 +3,9 @@
             [clj-time.core :as time]
             [clojure.pprint :as pprint]
             [clojure.string :as string]
-            [clostache.parser :as clostache]))
+            [clostache.parser :as clostache]
+            [markdown.core :as markdown]
+            [selmer.parser :as selmer]))
 
 ; -- web -----------------------------------------------
 (defn read-template [template-name]
@@ -13,6 +15,16 @@
 
 (defn render-template [template-file params]
   (clostache/render (read-template template-file)
+                    params))
+
+(defn read-markdown [template-name]
+  (-> (str "views/" template-name ".md")
+      (clojure.java.io/resource)
+      slurp
+      markdown/md-to-html-string))
+
+(defn render-markdown [template-file params]
+  (clostache/render (read-markdown template-file)
                     params))
 
 ; -- dev -----------------------------------------------
