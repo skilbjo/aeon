@@ -11,9 +11,9 @@
 
 (defroutes site-routes
   (GET "/old" []
-       (jobs.static/index))
+    (jobs.static/index))
   (GET "/" []
-       (jobs.static/index-md)))
+    (jobs.static/index-md)))
 
 (defroutes api-routes
   (GET "/api/data" []
