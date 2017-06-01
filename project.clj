@@ -12,6 +12,7 @@
                  [org.clojure/java.jdbc "0.5.8"]
                  [org.postgresql/postgresql "42.0.0"]
                  [ring "1.1.6"]
+                 [ring/ring-anti-forgery "1.1.0"]
                  [ring/ring-defaults "0.2.1"]
                  [ring/ring-json "0.4.0"]]
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
