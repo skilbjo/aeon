@@ -27,6 +27,11 @@
   (clostache/render (read-markdown template-file)
                     params))
 
+(defn allowed-endpoint? [endpoints endpoint]
+  (->> endpoint
+       (keyword)
+       (contains? endpoints)))
+
 ; -- dev -----------------------------------------------
 (defn print-and-die [x]
   (pprint/pprint x)

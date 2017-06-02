@@ -3,38 +3,26 @@
             [server.sql :as sql]
             [server.util :as util]))
 
-;(defn query-quandl
-  ;[dataset ticker & paramz]
-  ;{:pre [(every? true? (util/allowed? paramz))]}
-  ;(let [params   (first paramz)
-
-;(def ^:private allowed
-  ;{:collapse     #{"none" "daily" "weekly" "monthly" "quarterly" "annual"}
-   ;:transform    #{"none" "rdiff" "diff" "cumul" "normalize"}
-   ;:order        #{"asc" "desc"}
-   ;:rows         integer?
-   ;:limit        integer?
-   ;:column_index integer?
-   ;:start_date   date-time?
-   ;:end_date     date-time?})
-
-;(defn allowed? [m]
-  ;(->> m
-       ;first
-       ;(map (fn [[k v]]
-              ;((allowed k) v)))))
+(def ^:private api-endpoints
+  #{:currency
+    :economics
+    :interest_rates
+    :real_estate
+    :equities})
 
 (defn data []
   {:name "clojure developer"})
 
 (defn data-latest [dataset]
-  (let [sql           (util/multi-line-string "select *
-                                               from dw.:table
-                                               order by date desc
-                                               limit 10")
-        rs            (memoize (fn []
-                                 (sql/query sql
-                                            {:table dataset})))
-        transformed (->> (rs)
-                         (util/map-seq-fkv-v util/date-me))]
-    {:body transformed}))
+  (if (false? (util/allowed-endpoint? api-endpoints dataset))
+    {:error {:msg (format "Error: '/api/%s' is not a valid endpoint. Try /api/equities or /api/currency." dataset)}}
+    (let [sql           (util/multi-line-string "select *
+                                                 from dw.:table
+                                                 order by date desc
+                                                 limit 10")
+          rs            (memoize (fn []
+                                   (sql/query sql
+                                              {:table dataset})))
+          transformed (->> (rs)
+                           (util/map-seq-fkv-v util/date-me))]
+      {:body transformed})))
