@@ -23,14 +23,17 @@
       slurp
       markdown/md-to-html-string))
 
-(defn render-markdown [template-file params]
-  (clostache/render (read-markdown template-file)
-                    params))
+(defn render-markdown
+  ([template-file]
+   (render-markdown template-file {}))
+  ([template-file params]
+   (clostache/render (read-markdown template-file)
+                     params)))
 
-(defn allowed-endpoint? [endpoints endpoint]
-  (->> endpoint
+(defn allowed-endpoint? [coll needle]
+  (->> needle
        (keyword)
-       (contains? endpoints)))
+       (contains? coll)))
 
 ; -- dev -----------------------------------------------
 (defn print-and-die [x]

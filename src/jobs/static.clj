@@ -3,9 +3,12 @@
             [server.util :as util]))
 
 (defn index []
-  (util/render-template "index"
+  (util/render-markdown "index"
                         {:name "clojure developer"}))
 
-(defn index-md []
-  (util/render-markdown "index"
+(defn routes []
+  (util/render-markdown "routes"))
+
+(defn index-mustache []
+  (util/render-template "index"
                         {:name "clojure developer"}))

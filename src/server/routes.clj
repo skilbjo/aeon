@@ -13,17 +13,19 @@
   (:gen-class))
 
 (defroutes site-routes
-  (GET "/old" []
-    (jobs.static/index))
   (GET "/" []
-    (jobs.static/index-md)))
+    (jobs.static/index))
+  (GET "/routes" []
+    (jobs.static/routes))
+  (GET "/old" []
+    (jobs.static/index-mustache)))
 
 (defroutes api-routes
-  (GET "/api/data" []
-    (response (jobs.api/data)))
+  (GET "/dashboard" []
+    (response (jobs.api/dashboard)))
   (GET "/api/:dataset/latest" [dataset]
     (let [dataset-trusted  (string/escape dataset {\; "" \- ""})]
-      (response (jobs.api/data-latest dataset-trusted)))))
+      (response (jobs.api/latest dataset-trusted)))))
 
 (defroutes combined-routes
   (-> site-routes
