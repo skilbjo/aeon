@@ -17,12 +17,10 @@
     (jobs.static/index))
   (GET "/routes" []
     (jobs.static/routes))
-  (GET "/old" []
-    (jobs.static/index-mustache)))
+  (GET "/dashboard" []
+    (jobs.static/dashboard)))
 
 (defroutes api-routes
-  (GET "/dashboard" []
-    (response (jobs.api/dashboard)))
   (GET "/api/:dataset/latest" [dataset]
     (let [dataset-trusted  (string/escape dataset {\; "" \- ""})]
       (response (jobs.api/latest dataset-trusted)))))

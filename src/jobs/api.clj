@@ -25,19 +25,3 @@
                            (util/map-seq-fkv-v util/date-me))]
       {:body transformed})))
 
-(defn dashboard-helper []
-  (let [sql           (-> "sql/dashboard.sql"
-                          (io/resource)
-                          (slurp))
-        rs            (memoize (fn []
-                                 (sql/query sql)))
-        transformed (->> (rs)
-                         (util/map-seq-fkv-v util/date-me)
-                           ;first
-)]
-    {:body transformed}))
-
-(defn dashboard []
-  (let [data    (dashboard-helper)
-        _ (println data)]
-    (util/render-markdown "dashboard" data)))

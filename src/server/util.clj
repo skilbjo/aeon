@@ -18,10 +18,17 @@
                     params))
 
 (defn read-markdown [template-name]
-  (-> (str "views/" template-name ".md")
-      (clojure.java.io/resource)
-      slurp
-      markdown/md-to-html-string))
+  (let [header        (-> (str "views/template/header.md")
+                          (clojure.java.io/resource)
+                          slurp)
+        body          (-> (str "views/" template-name ".md")
+                          (clojure.java.io/resource)
+                          slurp)
+        footer        (-> (str "views/template/footer.md")
+                          (clojure.java.io/resource)
+                          slurp)]
+    (-> (str header body footer)
+        (markdown/md-to-html-string))))
 
 (defn render-markdown
   ([template-file]
