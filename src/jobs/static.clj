@@ -17,8 +17,7 @@
         rs            (memoize (fn []
                                  (sql/query sql)))
         transformed (->> (rs)
-                         (util/map-seq-fkv-v util/date-me)
-                         )]
+                         (util/map-seq-fkv-v util/date-me))]
     {:body transformed}))
 
 (defn dashboard []
