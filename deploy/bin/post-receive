@@ -11,9 +11,14 @@ GIT_WORK_TREE="$deploy_dir" git checkout -f
 
 cd "$deploy_dir"
 
-source ~/.profilelocal
+## build steps here ###
+case "$user" in
+  (skilbjo) sudo cp deploy/tasks/crontab "$cron_dir/$app" ;;
+  (pi) sudo cp deploy/tasks/crontab-rspi "$cron_dir/$app" ;;
+esac
 
 ## start
+source ~/.profilelocal
 deploy/bin/marathon
 
 echo "all done"
