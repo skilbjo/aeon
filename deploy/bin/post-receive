@@ -2,6 +2,7 @@
 set -eoux pipefail
 
 user=$(whoami)
+kernel=$(uname)
 dir="/home/${user}/deploy/app"
 app=$(basename $(pwd) | sed -e 's/.git//')
 deploy_dir="$dir/$app"
@@ -12,9 +13,14 @@ GIT_WORK_TREE="$deploy_dir" git checkout -f
 cd "$deploy_dir"
 
 ## build steps here ###
-case "$user" in
-  (skilbjo) sudo cp deploy/tasks/crontab "$cron_dir/$app" ;;
-  (pi) sudo cp deploy/tasks/crontab-rspi "$cron_dir/$app" ;;
+case "$kernel" in
+  (Linux)
+    case "$user" in
+      (skilbjo) sudo cp deploy/tasks/crontab "$cron_dir/$app" ;;
+      (pi) sudo cp deploy/tasks/crontab-rspi "$cron_dir/$app" ;;
+    esac ;;
+  (FreeBSD)
+    sudo cp deploy/tasks/freebsd "/var/cron/tabs/$app" ;;
 esac
 
 ## start

@@ -1,0 +1,11 @@
+## -- variables -----------------------------------
+  SHELL=/bin/bash
+  PATH=:/bin:/usr/bin:/usr/local/bin:/usr/sbin:/usr/local/sbin
+  MAILTO=john.skilbeck@gmail.com
+  cmd="deploy/bin/marathon"
+  app_dir="/home/skilbjo/deploy/app/compojure"
+
+## -- jobs ----------------------------------------
+0 3 */4 * * skilbjo . /home/skilbjo/.profilelocal; cd "$app_dir" ; $cmd >/dev/null
+
+
