@@ -13,5 +13,5 @@ deployment:
   quay:
     branch: /.*/
     commands:
-      - deploy/bin/x86
       - deploy/bin/publish-image
+      - deploy/bin/x86
