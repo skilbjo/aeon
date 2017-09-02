@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -eoux pipefail
+
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+app_name=$(basename $(dirname $(dirname $dir)))
+uberjar="target/uberjar/${app_name}.jar"
+image_tag='udoo'
+
+cd "${dir}/../.."
+
+lein uberjar
+cat "$uberjar" | ssh udoo "cat >deploy/app/$app_name/app.jar"
+cat deploy/tasks/freebsd | ssh udoo "cat >/var/cron/tabs/$app_name"
