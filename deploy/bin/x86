@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 
+rm Dockerfile
+
 cat deploy/bin/publish-image | \
   sed "s/cat '.\/deploy\/default\/Dockerfile'/cat '.\/deploy\/default\/Dockerfile.x86'/g" | \
   sed "s/image_tag='latest'/image_tag='latest-x86'/g" | \
