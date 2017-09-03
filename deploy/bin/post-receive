@@ -25,7 +25,12 @@ esac
 
 ## start
 source ~/.profilelocal
-deploy/bin/marathon
+case "$kernel" in
+  (Linux)
+    deploy/bin/marathon ;;
+  (FreeBSD)
+    deploy/bin/marathon-udoo ;;
+esac
 
 echo "all done"
 
