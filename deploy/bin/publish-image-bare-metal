@@ -10,4 +10,4 @@ cd "${dir}/../.."
 
 lein uberjar
 cat "$uberjar" | ssh udoo "cat >deploy/app/$app_name/$app_name.jar"
-cat deploy/tasks/freebsd | ssh udoo "cat >/var/cron/tabs/$app_name"
+cat deploy/tasks/freebsd | ssh udoo "sudo cat >/var/cron/tabs/$app_name"
