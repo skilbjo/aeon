@@ -29,7 +29,7 @@ case "$kernel" in
   (Linux)
     deploy/bin/marathon ;;
   (FreeBSD)
-    deploy/bin/marathon-udoo ;;
+    deploy/bin/marathon-bare-metal ;;
 esac
 
 echo "all done"
