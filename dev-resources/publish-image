@@ -8,9 +8,9 @@ image_tag='dev'
 
 cd "${dir}/.."
 
-cp "${dir}/../deploy/default/Dockerfile.x86" Dockerfile
+cp "${dir}/../deploy/default/Dockerfile" Dockerfile
 
-cat "${dir}/../deploy/default/Dockerfile.x86" | \
+cat "${dir}/../deploy/default/Dockerfile" | \
   sed "s;__UBERJAR__;${uberjar};" \
   >Dockerfile
 
