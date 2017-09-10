@@ -21,6 +21,16 @@ Note: formerly valid sql injection: `http://localhost:8080/api/equities'select%2
       "ticker":"FB","adj_low":147.96,"ex_dividend":0.00,"close":148.06,"volume":16101229.00,"high":149.39, \
       "adj_high":149.39,"split_ratio":1.00,"low":147.96,"adj_open":148.45,"dataset":"WIKI"}]}
 
+## Set up on AWS
+
+    sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080
+
+    curl $(curl v4.ifconfig.co 2>/dev/null)
+
+Revert
+
+    sudo iptables -t nat -D PREROUTING 1
+
 ## Git remotes
 
     $ git remote add pi-vpn ssh://skilbjo@router.:43/~/deploy/git/compojure.git
