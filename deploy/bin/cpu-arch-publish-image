@@ -3,6 +3,7 @@ set -euxo pipefail
 
 build_x86() {
   rm Dockerfile
+  rm -rf target/
 
   cat deploy/bin/publish-image | \
     sed "s/cat '.\/deploy\/default\/Dockerfile'/cat '.\/deploy\/default\/Dockerfile'/g" | \
@@ -17,6 +18,7 @@ build_x86() {
 
 build_arm() {
   rm Dockerfile
+  rm -rf target/
 
   cat deploy/bin/publish-image | \
     sed "s/cat '.\/deploy\/default\/Dockerfile'/cat '.\/deploy\/default\/Dockerfile.arm'/g" | \

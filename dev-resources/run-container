@@ -4,4 +4,7 @@ set -eou pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 app_name=$(basename $(dirname $dir))
 
-docker run -it "$app_name":dev bash
+docker run -it --rm \
+  -p 8080:8080 \
+  -e ro_db_jdbc_uri="$(echo $ro_db_jdbc_uri)" \
+  "$app_name":dev bash
