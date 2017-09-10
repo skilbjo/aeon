@@ -15,22 +15,14 @@ cd "$deploy_dir"
 ## build steps here ###
 case "$kernel" in
   (Linux)
-    case "$user" in
-      (skilbjo) sudo cp deploy/tasks/crontab "$cron_dir/$app" ;;
-      (pi) sudo cp deploy/tasks/crontab-rspi "$cron_dir/$app" ;;
-    esac ;;
+    sudo cp deploy/tasks/crontab "$cron_dir/$app" ;;
   (FreeBSD)
-    sudo cp deploy/tasks/freebsd "/var/cron/tabs/$app" ;;
+    sudo cp deploy/tasks/crontab "/var/cron/tabs/$app" ;;
 esac
 
 ## start
 source ~/.profilelocal
-case "$kernel" in
-  (Linux)
-    deploy/bin/marathon ;;
-  (FreeBSD)
-    deploy/bin/marathon-bare-metal ;;
-esac
+deploy/bin/marathon
 
 echo "all done"
 
