@@ -12,6 +12,8 @@ email='skilbjo@github.com'
 # Use default Dockerfile if one doesn't exist
 if [[ ! -f './Dockerfile' ]]; then
   cat './deploy/default/Dockerfile' | \
+    sed "s;__CONSUL_PREFIX__;${consul_prefix};" | \
+    sed "s;__CONSUL_SECRET_PREFIX__;${consul_secret_prefix};" | \
     sed "s;__UBERJAR__;${uberjar};" \
     >Dockerfile
 fi
