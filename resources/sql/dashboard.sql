@@ -12,10 +12,9 @@ with date as (
              and ( select now from date )
   group by
     currency, date, rate
-  limit 10
 )
 select currency, date, rate
 from data
 where rn in (1,2)
 group by currency, date, rate
-order by currency, date
+order by currency, date desc
