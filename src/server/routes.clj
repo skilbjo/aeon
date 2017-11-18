@@ -2,8 +2,9 @@
   (:require [clojure.string :as string]
             [compojure.core :refer :all]
             [compojure.route :as route]
-            [jobs.static :as jobs.static]
             [jobs.api :as jobs.api]
+            [jobs.static :as jobs.static]
+            [malcontent.middleware :as csp]
             [ring.adapter.jetty :as jetty]
             [ring.middleware.anti-forgery :as anti-forgery]
             [ring.middleware.defaults :as ring-defaults]
@@ -30,7 +31,7 @@
       (ring-defaults/wrap-defaults (assoc ring-defaults/site-defaults
                                           :security {:content-type-options :nosniff
                                                      :anti-forgery   true
-                                                     :hsts           true
+                                                     ;:hsts           true ; add this when you add HTTPS
                                                      :frame-options  :sameorigin
                                                      :xss-protection {:enable? true :mode :block}})))
   (-> api-routes
@@ -40,7 +41,9 @@
 (def app
   (-> combined-routes
       anti-forgery/wrap-anti-forgery
-      session/wrap-session))
+      session/wrap-session
+      (csp/add-content-security-policy :config-path
+                                   "resources/security/policy.clj")))
 
 (defn -main []
   (jetty/run-jetty app
