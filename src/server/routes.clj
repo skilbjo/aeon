@@ -41,7 +41,7 @@
 (def app
   (-> combined-routes
       (csp/add-content-security-policy :config-path
-                                       "resources/security/policy.clj")
+                                       "security/policy.clj")
       anti-forgery/wrap-anti-forgery
       session/wrap-session))
 

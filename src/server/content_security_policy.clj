@@ -1,5 +1,6 @@
 (ns server.content-security-policy
-  (:require [clojure.edn :as edn])
+  (:require [clojure.edn :as edn]
+            [clojure.java.io :as io])
   (:import [net.sf.uadetector UserAgent UserAgentStringParser]
            [net.sf.uadetector.service UADetectorServiceFactory]))
 
@@ -70,7 +71,9 @@
   ([]
    (edn/read-string (slurp "config/security_policy.clj")))
   ([filepath]
-   (edn/read-string (slurp filepath))))
+   (edn/read-string (-> filepath
+                        io/resource
+                        slurp))))
 
 ; -- browser ---------------
 (defn parse-user-agent-string [user-agent-string]
