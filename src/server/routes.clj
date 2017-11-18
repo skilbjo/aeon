@@ -43,4 +43,6 @@
       session/wrap-session))
 
 (defn -main []
-  (jetty/run-jetty app {:port 8080}))
+  (jetty/run-jetty app
+                   {:send-server-version? false
+                    :port 8080}))
