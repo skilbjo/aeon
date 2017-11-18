@@ -4,7 +4,7 @@
             [compojure.route :as route]
             [jobs.api :as jobs.api]
             [jobs.static :as jobs.static]
-            [malcontent.middleware :as csp]
+            [server.content-security-policy :as csp]
             [ring.adapter.jetty :as jetty]
             [ring.middleware.anti-forgery :as anti-forgery]
             [ring.middleware.defaults :as ring-defaults]
@@ -40,10 +40,10 @@
 
 (def app
   (-> combined-routes
-      anti-forgery/wrap-anti-forgery
-      session/wrap-session
       (csp/add-content-security-policy :config-path
-                                   "resources/security/policy.clj")))
+                                       "resources/security/policy.clj")
+      anti-forgery/wrap-anti-forgery
+      session/wrap-session))
 
 (defn -main []
   (jetty/run-jetty app
