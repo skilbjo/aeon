@@ -9,10 +9,10 @@
 (deftest test-app
   (testing "main route"
     (let [response (app (-> (mock/request :get "/")
-                            #_(mock/header "user-agent" user-agent)))]
+                            (mock/header "user-agent" user-agent)))]
       (is (= (:status response) 200))))
 
-  (testing "No user-agent header is set"
+  (testing "When user-agent header is set, things are still OK"
     (let [response (app (mock/request :get "/"))]
       (is (= (:status response) 200))))
 

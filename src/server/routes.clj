@@ -14,13 +14,13 @@
   (:gen-class))
 
 (defroutes site-routes
-  (HEAD "/" []))
+  (HEAD "/" [])
   (GET "/" []
     (jobs.static/index))
   (GET "/routes" []
     (jobs.static/routes))
   (GET "/dashboard" []
-    (jobs.static/dashboard))
+    (jobs.static/dashboard)))
 
 (defroutes api-routes
   (GET "/api/:dataset/latest" [dataset]
