@@ -12,5 +12,4 @@
                       "http://skilbjo.duckdns.org"
                       "http://localhost:8080"]
            :child    :self
-           :base-uri :none
            }}
