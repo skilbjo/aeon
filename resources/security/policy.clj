@@ -1,15 +1,18 @@
 {:sources {:default :none
-           :script   ["http://skilbjo-robot.duckdns.org"
-                      "http://skilbjo.duckdns.org"
+           :script   ["http://skilbjo.duckdns.org"
+                      "http://skilbjo-aws.duckdns.org"
+                      "http://skilbjo-robot.duckdns.org"
                       "http://localhost:8080"
                       :self]
-           :style    ["http://skilbjo-robot.duckdns.org"
-                      "http://skilbjo.duckdns.org"
+           :style    ["http://skilbjo.duckdns.org"
+                      "http://skilbjo-aws.duckdns.org"
+                      "http://skilbjo-robot.duckdns.org"
                       "http://localhost:8080"]
            :img      "*"
            :object   :none
-           :connect  ["http://skilbjo-robot.duckdns.org"
-                      "http://skilbjo.duckdns.org"
+           :connect  ["http://skilbjo.duckdns.org"
+                      "http://skilbjo-aws.duckdns.org"
+                      "http://skilbjo-robot.duckdns.org"
                       "http://localhost:8080"]
            :child    :self
            }}
