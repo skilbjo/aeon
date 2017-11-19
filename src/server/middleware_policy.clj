@@ -77,8 +77,10 @@
 
 ; -- browser ---------------
 (defn parse-user-agent-string [user-agent-string]
-  (let [parser (UADetectorServiceFactory/getResourceModuleParser)
-        user-agent (.parse parser user-agent-string)]
+  (let [safe-user-agent-string (or user-agent-string
+                                   "Unknown")
+        parser                 (UADetectorServiceFactory/getResourceModuleParser)
+        user-agent             (.parse parser safe-user-agent-string)]
     (-> {}
         (assoc :family (str (.getFamily user-agent)))
         (assoc :name (.getName user-agent))
