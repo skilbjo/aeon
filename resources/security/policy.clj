@@ -2,7 +2,7 @@
            :script   ["http://skilbjo-robot.duckdns.org"
                       "http://skilbjo.duckdns.org"
                       "http://localhost:8080"
-                      :strict-dynamic ]
+                      :self]
            :style    ["http://skilbjo-robot.duckdns.org"
                       "http://skilbjo.duckdns.org"
                       "http://localhost:8080"]
