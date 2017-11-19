@@ -1,4 +1,4 @@
-(ns server.content-security-policy
+(ns server.middleware-policy
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io])
   (:import [net.sf.uadetector UserAgent UserAgentStringParser]
@@ -144,3 +144,11 @@
                      (make-policy (if config-path
                                     (load-policy config-path)
                                     (load-policy)))))))))
+
+(defn wrap-referrer-policy [handler policy]
+  (fn [request]
+    (let [response (handler request)
+          headers  (:headers response)]
+      (assoc-in response
+                [:headers "Referrer-Policy"]
+                policy))))
