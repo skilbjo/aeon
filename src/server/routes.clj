@@ -14,8 +14,7 @@
   (:gen-class))
 
 (defroutes site-routes
-  (HEAD "/" []
-    ))
+  (HEAD "/" []))
   (GET "/" []
     (jobs.static/index))
   (GET "/routes" []

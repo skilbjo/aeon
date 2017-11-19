@@ -132,7 +132,7 @@
     (cond (standard-header? browser)   "Content-Security-Policy"
           (gecko-header?    browser)   "X-Content-Security-Policy"
           (webkit-header?   browser)   "X-Webkit-CSP"
-          :else "blah")))
+          :else "Unknown-browser-CSP")))
 
 ; -- public ----------------
 (defn add-content-security-policy
