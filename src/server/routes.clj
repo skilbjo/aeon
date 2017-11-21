@@ -46,8 +46,8 @@
                                           "security/policy.clj")
       (policy/wrap-referrer-policy "strict-origin")
       anti-forgery/wrap-anti-forgery
-      session/wrap-session {:cookie-attrs {:max-age 3600
-                                           :secure  true}}))
+      (session/wrap-session {:cookie-attrs {:max-age 3600
+                                            :secure  true}})))
 
 (defn -main []
   (jetty/run-jetty app

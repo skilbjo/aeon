@@ -1,13 +1,12 @@
 {:sources {:default :none
-           :script   [ "https://skilbjo.duckdns.org"
+           :script   ["https://skilbjo.duckdns.org"
                       "https://skilbjo-sfo.duckdns.org"
                       "https://skilbjo-aws.duckdns.org"
                       "https://skilbjo-robot.duckdns.org"
-                      https:
+                      :https
                       :unsafe-inline
                       ]
-           :style    [
-                      "https://skilbjo.duckdns.org"
+           :style    ["https://skilbjo.duckdns.org"
                       "https://skilbjo-sfo.duckdns.org"
                       "https://skilbjo-aws.duckdns.org"
                       "https://skilbjo-robot.duckdns.org"
