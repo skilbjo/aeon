@@ -31,10 +31,11 @@
   (-> site-routes
       (ring-defaults/wrap-defaults (assoc ring-defaults/site-defaults
                                           :security {:content-type-options :nosniff
-                                                     :anti-forgery   true
-                                                     ;:hsts           true ; add this when you add HTTPS
-                                                     :frame-options  :sameorigin
-                                                     :xss-protection {:enable? true :mode :block}})))
+                                                     :anti-forgery         true
+                                                     :hsts                 true
+                                                     :frame-options        :sameorigin
+                                                     :xss-protection       {:enable? true
+                                                                            :mode    :block}})))
   (-> api-routes
       (ring-json/wrap-json-response))
   (route/not-found "<h1>Not Found</h1>"))
@@ -45,9 +46,13 @@
                                           "security/policy.clj")
       (policy/wrap-referrer-policy "strict-origin")
       anti-forgery/wrap-anti-forgery
-      session/wrap-session))
+      session/wrap-session {:cookie-attrs {:max-age 3600
+                                           :secure  true}}))
 
 (defn -main []
   (jetty/run-jetty app
                    {:send-server-version? false
-                    :port 8080}))
+                    :port                 8080
+                    :ssl?                 true
+                    :keystore             "/.java_key_store"
+                    :ssl-port             8443}))

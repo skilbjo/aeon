@@ -8,4 +8,7 @@ cmd="java $java_opts -jar app.jar"
 # Prereqs
 apk fix
 
+# Keystore
+echo "$java_key_store" >/.java_key_store
+
 exec $cmd $@

@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+set -eoux pipefail
+
+keyfile=$1
+certfile=$2
+password=${quandl_api_key}    # something random
+
+# first we need to merge the keys into a pkcs12 keystore
+openssl pkcs12 -export \
+  -inkey $keyfile \
+  -in $certfile -out key_crt.p12 \
+  -name key_crt \
+  -password "pass:${password}"
+
+keytool -importkeystore \
+  -srckeystore key_crt.p12  \
+  -srcstoretype pkcs12 \
+  -srcstorepass "${password}" \
+  -srcalias key_crt  \
+  -destkeystore key_crt.jks \
+  -deststoretype jks  \
+  -deststorepass "${password}"
