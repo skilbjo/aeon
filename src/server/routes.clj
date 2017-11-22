@@ -2,6 +2,7 @@
   (:require [clojure.string :as string]
             [compojure.core :refer :all]
             [compojure.route :as route]
+            [environ.core :refer [env]]
             [jobs.api :as jobs.api]
             [jobs.static :as jobs.static]
             [server.middleware-policy :as policy]
@@ -54,5 +55,6 @@
                    {:send-server-version? false
                     :port                 8080
                     :ssl-port             8443
-                    :keystore             "/.java_key_store"
+                    :keystore             "/java_key_store"
+                    :key-password         (env :quandl-api-key)
                     :ssl?                 true}))
