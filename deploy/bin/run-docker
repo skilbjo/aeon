@@ -17,11 +17,13 @@ esac
 img="quay.io/skilbjo/$app_name:$arch"
 job_cmd="usr/local/deploy/bin/run-job"
 
+java_key_store=''; while IFS= read -r -d '' substring || [[ $substring ]]; do java_key_store+="$substring"; done <~java_key_store
+
 docker run --rm \
   -p 8080:8080 \
   -p 8443:8443 \
   -e ro_db_jdbc_uri="$(echo $ro_db_jdbc_uri)" \
   -e quandl_api_key="$(echo $quandl_api_key)" \
-  -e java_key_store="$(echo $java_key_store)" \
+  -e java_key_store=$java_key_store           \
   "$img" \
   "$job_cmd" $@
