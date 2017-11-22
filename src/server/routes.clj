@@ -49,10 +49,10 @@
       (session/wrap-session {:cookie-attrs {:max-age 3600
                                             :secure  true}})))
 
-(defn -main []
+(defn -main []  ; java -jar app.jar uses this as the entrypoint
   (jetty/run-jetty app
                    {:send-server-version? false
                     :port                 8080
-                    :ssl?                 true
+                    :ssl-port             8443
                     :keystore             "/.java_key_store"
-                    :ssl-port             8443}))
+                    :ssl?                 true}))

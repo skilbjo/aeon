@@ -25,8 +25,13 @@
                              [lein-cljfmt "0.5.6"]
                              [lein-ring "0.12.0"]]}
              :uberjar {:aot :all}}
-  :ring {:handler server.routes/app
-         :port 8080}
+  :ring {:handler       server.routes/app  ; lein ring server uses this as
+         :port          8080               ; the entrypoint
+         :ssl-port      8443
+         :send-server-version? false
+         :keystore      "ssl-certs/java_key_store"
+         :key-password  ~(System/getenv "quandl_api_key")
+         :ssl?          true}
   :target-path "target/%s"
   :main ^:skip-aot server.routes
   :jvm-opts ["-Xms256m" "-Xmx256m" "-XX:MaxMetaspaceSize=128m"
