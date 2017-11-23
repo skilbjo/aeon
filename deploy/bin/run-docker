@@ -20,16 +20,17 @@ job_cmd="usr/local/deploy/bin/run-job"
 # Create it
 docker run \
   --name="$app_name" \
+  --detach \
   -p 8080:8080 \
   -p 8443:8443 \
   -e ro_db_jdbc_uri="$(echo $ro_db_jdbc_uri)" \
   -e quandl_api_key="$(echo $quandl_api_key)" \
   "$img" \
-  bash
+  sleep 2
 
 # Drop in the file. Env var won't work :/
 docker cp ~/java_key_store "${app_name}:/java_key_store"
 
 # Start it with the intended entrypoint
-docker exec --name="$app_name" \
+docker exec "$app_name" \
   "$job_cmd" $@
