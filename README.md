@@ -31,6 +31,17 @@ Revert
 
     sudo iptables -t nat -D PREROUTING 1
 
+## Set up on FreeBSD (docker-machine / VirtualBox)
+
+Need to portforward host to guest ports.
+
+    ssh docker@$(docker-machine ip default) -L 8443:localhost:8443
+
+or
+
+    VBoxManage controlvm "default" natpf1 "tcp-port8080,tcp,,8080,,8080";
+    VBoxManage controlvm "default" natpf1 "tcp-port8443,tcp,,8443,,8443";
+
 ## Git remotes
 
     $ git remote add pi-vpn ssh://skilbjo@router.:43/~/deploy/git/compojure.git
