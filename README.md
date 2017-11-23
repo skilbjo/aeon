@@ -21,11 +21,37 @@ Note: formerly valid sql injection: `http://localhost:8080/api/equities'select%2
       "ticker":"FB","adj_low":147.96,"ex_dividend":0.00,"close":148.06,"volume":16101229.00,"high":149.39, \
       "adj_high":149.39,"split_ratio":1.00,"low":147.96,"adj_open":148.45,"dataset":"WIKI"}]}
 
+## Deploy
+
+Make sure the jks is in the prod servers:
+    scp -P [port] java_key_store [user]@[host].:~
+
+ssh to the prod servers, start tmux, and fire:
+    ssh [alias].
+    tm
+    deploy/bin/run-docker
+
+## Debugging
+
+- Did the jks made it onto the host ok? (`cat ~/[jks]; ls -la ~/[jks]`)
+- Did the jks made it into the container ok? (`cat /[jks]; ls -la /[jks]`)
+- Web server Listening on the port? (via another shell in the container)?
+- If in a VM, port forwarding in the VM? (`netstat -tulpen` or `sockstat -l 4`)
+- Port forwarding on the host? (`VBoxManage controlvm "default" natpf1 "tcp-port8443,tcp,,8443,,8443";`
+- Latest docker image! (key!)
+
+Did it work? (locally)
+    curl localhost:8080
+    curl --insecure localhost:8443
+
+Did it work? (externally)
+    curl $(curl v4.ifconfig.co 2>/dev/null)
+    curl "https://$(curl v4.ifconfig.co 2>/dev/null)"
+
 ## Set up on AWS
 
     sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080
-
-    curl $(curl v4.ifconfig.co 2>/dev/null)
+    sudo iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-ports 8443
 
 Revert
 
