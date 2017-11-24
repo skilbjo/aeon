@@ -16,7 +16,7 @@ Note: formerly valid sql injection: `http://localhost:8080/api/equities'select%2
 ## API
 
 ```bash
-$ curl skilbjo.duckdns.org/api/equities/latest
+$ curl [host].duckdns.org/api/equities/latest
 
 {"body":[{"open":148.45,"date":"2017-05-18T07:00:00Z","adj_volume":16101229.00,"adj_close":148.06, \
   "ticker":"FB","adj_low":147.96,"ex_dividend":0.00,"close":148.06,"volume":16101229.00,"high":149.39, \
@@ -26,7 +26,7 @@ $ curl skilbjo.duckdns.org/api/equities/latest
 ## Deploy
 
 Make sure the jks is in the prod servers:
-    scp -P [port] java_key_store [user]@[host].:~
+    scp -P [port] java_key_store [user]@[bastion].:~
 
 ssh to the prod servers, start tmux, and fire:
 ```bash
@@ -53,7 +53,9 @@ curl --insecure localhost:8443
 Did it work? (externally)
 ```bash
 curl $(curl v4.ifconfig.co 2>/dev/null)
-curl "https://$(curl v4.ifconfig.co 2>/dev/null)"
+curl --insecure "https://$(curl v4.ifconfig.co 2>/dev/null)"
+curl --insecure https://$(nslookup [host]-aws.duckdns.org | grep Address | tail -n1 | awk '{print $2}')
+curl https://[host].duckdns.org
 ```
 
 ## Networking set up on AWS
@@ -95,10 +97,22 @@ VBoxManage controlvm "default" natpf1 "tcp-port8080,tcp,,8080,,8080";
 VBoxManage controlvm "default" natpf1 "tcp-port8443,tcp,,8443,,8443";
 ```
 
+## Security
+
+### Port scanning
+
+```bash
+sudo nmap -v -sS -A -T4 $(nslookup [host]-aws.duckdns.org | grep Address | tail -n1 | awk '{print $2}')
+sudo nmap -sS -O $(nslookup [host]-aws.duckdns.org | grep Address | tail -n1 | awk '{print $2}')
+```
+
+### Third party observations
+- [https://observatory.mozilla.org/analyze.html?host=host.duckdns.org](https://observatory.mozilla.org/analyze.html?host=host.duckdns.org)
+
 ## Git remotes
 
-    $ git remote add pi-vpn ssh://skilbjo@router.:43/~/deploy/git/compojure.git
-    $ git remote add pi-home ssh://skilbjo@pi1/~/deploy/git/compojure.git
+    $ git remote add pi-vpn ssh://[user]@[bastion].:43/~/deploy/git/compojure.git
+    $ git remote add pi-home ssh://[user]@[host]/~/deploy/git/compojure.git
 
 ## Resources
 - [ ] [http://markgandolfo.com/blog/2014/01/10/a-simple-blog-in-clojure/](http://markgandolfo.com/blog/2014/01/10/a-simple-blog-in-clojure/)
