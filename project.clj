@@ -1,16 +1,16 @@
 (defproject compojure "0.1.0-SNAPSHOT"
   :uberjar-name "compojure.jar"
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [clj-http "2.3.0"]
-                 [clj-time "0.12.2"]
+                 [clj-http "3.7.0"]
+                 [clj-time "0.14.2"]
                  [compojure "1.5.1" :exclusions [ring/ring-core]]
                  [de.ubercode.clostache/clostache "1.3.1"]
                  [environ "1.1.0"]
                  [markdown-clj "0.9.99"]
                  [net.sf.uadetector/uadetector-resources "2013.02"]
                  [org.clojure/data.json "0.2.6"]
-                 [org.clojure/java.jdbc "0.5.8"]
-                 [org.postgresql/postgresql "42.0.0"]
+                 [org.clojure/java.jdbc "0.7.3"]
+                 [org.postgresql/postgresql "42.1.4"]
                  [ring "1.6.3"]
                  [ring/ring-anti-forgery "1.1.0"]
                  [ring/ring-defaults "0.3.1" ]
@@ -22,7 +22,7 @@
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
                                   [ring/ring-mock "0.3.0"]]
                    :plugins [[lein-environ "1.1.0"]
-                             [lein-cljfmt "0.5.6"]
+                             [lein-cljfmt "0.5.7"]
                              [lein-ring "0.12.0"]]}
              :uberjar {:aot :all}}
   :ring {:handler       server.routes/app  ; lein ring server uses this as
@@ -34,7 +34,12 @@
          :ssl?          true}
   :target-path "target/%s"
   :main ^:skip-aot server.routes
-  :jvm-opts ["-Xms256m" "-Xmx256m" "-XX:MaxMetaspaceSize=128m"
-             "-client" "-Duser.timezone=PST8PDT"
+  :jvm-opts ["-Duser.timezone=PST"
+             ; Same JVM options as deploy/bin/run-job uses in production
+             "-Xms256m"
+             "-Xmx2g"
+             "-XX:MaxMetaspaceSize=128m"
+             ; https://clojure.org/reference/compilation
              "-Dclojure.compiler.direct-linking=true"
+             ; https://stackoverflow.com/questions/4659151/recurring-exception-without-a-stack-trace-how-to-reset
              "-XX:-OmitStackTraceInFastThrow"])
