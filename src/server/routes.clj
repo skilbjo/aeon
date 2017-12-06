@@ -9,6 +9,9 @@
             [ring.adapter.jetty :as jetty]
             [ring.middleware.anti-forgery :as anti-forgery]
             [ring.middleware.defaults :as ring-defaults]
+            [ring.middleware.resource :as resource]
+            [ring.middleware.content-type :as content-type]
+            [ring.middleware.not-modified :as not-modified]
             [ring.middleware.json :as ring-json]
             [ring.middleware.session :as session]
             [ring.util.response :refer [response]])
@@ -48,7 +51,10 @@
       (policy/wrap-referrer-policy "strict-origin")
       anti-forgery/wrap-anti-forgery
       (session/wrap-session {:cookie-attrs {:max-age 3600
-                                            :secure  true}})))
+                                            :secure  true}})
+      (resource/wrap-resource "public")
+      (content-type/wrap-content-type)
+      (not-modified/wrap-not-modified)))
 
 (defn -main []  ; java -jar app.jar uses this as the entrypoint
   (jetty/run-jetty app
