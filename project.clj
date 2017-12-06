@@ -17,6 +17,7 @@
                  [ring/ring-json "0.4.0"]
                  [selmer "1.10.7" :exclusions [joda-time
                                                com.fasterxml.jackson.dataformat/jackson-dataformat-cbor
+                                               com.fasterxml.jackson.dataformat/jackson-dataformat-smile
                                                com.fasterxml.jackson.core/jackson-core]]
                  [venantius/ultra "0.5.1" :exclusions [instaparse]]]
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
@@ -41,5 +42,7 @@
              "-XX:MaxMetaspaceSize=128m"
              ; https://clojure.org/reference/compilation
              "-Dclojure.compiler.direct-linking=true"
+             ; https://stackoverflow.com/questions/28572783/no-log4j2-configuration-file-found-using-default-configuration-logging-only-er
+             "-Dlog4j.configurationFile=resources/log4j.properties"
              ; https://stackoverflow.com/questions/4659151/recurring-exception-without-a-stack-trace-how-to-reset
              "-XX:-OmitStackTraceInFastThrow"])

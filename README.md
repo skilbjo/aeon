@@ -110,8 +110,16 @@ sudo nmap -sS -O $(nslookup [host]-aws.duckdns.org | grep Address | tail -n1 | a
 
 ## Git remotes
 
-    $ git remote add pi-vpn ssh://[user]@[bastion].:43/~/deploy/git/compojure.git
-    $ git remote add pi-home ssh://[user]@[host]/~/deploy/git/compojure.git
+```bash
+git remote add pi-vpn ssh://[user]@[bastion].:43/~/deploy/git/compojure.git
+git remote add pi-home ssh://[user]@[host]/~/deploy/git/compojure.git
+```
+
+## lein depedencies
+
+```bash
+lein deps :tree 2>deps 1>/dev/null && vim deps
+```
 
 ## Resources
 - [ ] [http://markgandolfo.com/blog/2014/01/10/a-simple-blog-in-clojure/](http://markgandolfo.com/blog/2014/01/10/a-simple-blog-in-clojure/)
