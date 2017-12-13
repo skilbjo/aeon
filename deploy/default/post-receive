@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -eoux pipefail
+
+user=$(whoami)
+dir="/home/${user}/deploy/app"
+app=$(basename $(pwd) | sed -e 's/.git//')
+deploy_dir="$dir/$app"
+
+GIT_WORK_TREE="$deploy_dir" git checkout -f
+
+mkdir -p "$deploy_dir" && cd "$deploy_dir"
+
+## build steps here ###
+case $(uname) in
+  (Linux)
+    sudo cp deploy/tasks/crontab "/etc/cron.d/$app" ;;
+  (FreeBSD)
+    sudo cp deploy/tasks/crontab "/var/cron/tabs/$app" ;;
+esac
+
+echo 'Remember to deploy via tmux, not git'
