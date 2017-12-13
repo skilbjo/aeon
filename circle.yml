@@ -1,8 +1,6 @@
 machine:
   services:
     - docker
-  environment:
-    DOCKER_REMOTE: quay.io/skilbjo/compojure
 
 test:
   override:
@@ -13,4 +11,4 @@ deployment:
   quay:
     branch: /.*/
     commands:
-      - deploy/bin/cpu-arch-publish-image
+      - deploy/bin/publish-image
