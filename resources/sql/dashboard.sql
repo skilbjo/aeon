@@ -8,13 +8,23 @@ with date as (
     dw.currency
   where
     currency in ('GBP', 'EUR')
-    and date between ( select now - interval '20 day' from date )
-             and ( select now from date )
+    and date between ( select now - interval '30 day' from date )
+             and     ( select now from date )
   group by
     currency, date, rate
 )
-select currency, date, rate
-from data
-where rn in (1,2)
-group by currency, date, rate
-order by currency, date desc
+select
+  currency,
+  date,
+  rate
+from
+  data
+where
+  rn in (1,2)
+group by
+  currency,
+  date,
+  rate
+order by
+  currency, date desc
+;

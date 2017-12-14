@@ -1,6 +1,8 @@
 (ns jobs.static
-  (:require [clojure.java.io :as io]
-            [server.sql :as sql]
+  (:require [clj-time.coerce :as coerce]
+            [clojure.java.io :as io]
+            [clojure.java.jdbc :as jdbc]
+            [environ.core :refer [env]]
             [server.util :as util]))
 
 (defn index []
@@ -10,18 +12,14 @@
 (defn routes []
   (util/render-markdown "routes"))
 
-(defn dashboard-helper []
-  (let [sql           (-> "sql/dashboard.sql"
-                          (io/resource)
-                          (slurp))
-        rs            (memoize (fn []
-                                 (sql/query sql)))
-        transformed (->> (rs)
-                         (util/map-seq-fkv-v util/date-me))]
-    {:body transformed}))
-
 (defn dashboard []
-  (let [data    (dashboard-helper)
-        _ (println data)]
-    (util/render-markdown "static/dashboard" data)))
-
+  (let [data (fn []
+               (jdbc/with-db-connection [cxn (env :ro-jdbc-db-uri)]
+                 (->> "sql/dashboard.sql"
+                      io/resource
+                      slurp
+                      (jdbc/query cxn)
+                      (map #(update % :date coerce/to-sql-date)))))
+        data' (memoize data)]
+    (util/render-markdown "static/dashboard"
+                          {:body (data')})))

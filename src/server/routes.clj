@@ -25,15 +25,22 @@
 
 (defroutes api-routes
   (GET "/api/:dataset/latest" [dataset]
-    (let [dataset-trusted  (string/escape dataset {\; "" \- ""})]
-      (response (jobs.api/latest dataset-trusted)))))
+       (let [dataset-trusted (-> dataset
+                                 (string/replace #"\;" "")
+                                 (string/replace #"\-" "")
+                                 (string/replace #"\/" "")
+                                 (string/replace #"\/\*" "")
+                                 (string/replace #"\*\\" ""))
+             response'  (jobs.api/latest dataset-trusted)]
+         (-> response'
+             response))))
 
 (defroutes combined-routes
   (-> site-routes
       (ring-defaults/wrap-defaults (assoc ring-defaults/site-defaults
-                                          :security {:content-type-options :nosniff
-                                                     :anti-forgery         true
+                                          :security {:anti-forgery         true
                                                      :hsts                 true
+                                                     :content-type-options :nosniff
                                                      :frame-options        :sameorigin
                                                      :xss-protection       {:enable? true
                                                                             :mode    :block}})))
@@ -44,7 +51,7 @@
 (def app
   (-> combined-routes
       (policy/add-content-security-policy :config-path
-                                          "security/policy.clj")
+                                          "policy/content_security_policy.clj")
       (policy/wrap-referrer-policy "strict-origin")
       anti-forgery/wrap-anti-forgery
       (session/wrap-session {:cookie-attrs {:max-age 3600
