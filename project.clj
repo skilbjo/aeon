@@ -15,10 +15,6 @@
                  [ring/ring-anti-forgery "1.1.0"]
                  [ring/ring-defaults "0.3.1" ]
                  [ring/ring-json "0.4.0"]
-                 [selmer "1.10.7" :exclusions [joda-time
-                                               com.fasterxml.jackson.dataformat/jackson-dataformat-cbor
-                                               com.fasterxml.jackson.dataformat/jackson-dataformat-smile
-                                               com.fasterxml.jackson.core/jackson-core]]
                  [venantius/ultra "0.5.1" :exclusions [instaparse]]]
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
                                   [ring/ring-mock "0.3.0"]]

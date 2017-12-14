@@ -121,5 +121,36 @@ git remote add pi-home ssh://[user]@[host]/~/deploy/git/compojure.git
 lein deps :tree 2>deps 1>/dev/null && vim deps
 ```
 
+## Custom jdbc/query
+
+```clojure
+(defn- prepare-statement
+  [sql params]
+  (loop [sql sql
+         kvs (map identity params)]
+    (if (empty? kvs)
+      sql
+      (let [[[k v] & others] kvs]
+        (recur (string/replace sql (str k) (str (jdbc/sql-value v)))
+               others)))))
+
+(defn query
+  ([sql]
+   (query sql {}))
+  ([sql params]
+   (with-open [conn (-> :ro-db-jdbc-uri env java.sql.DriverManager/getConnection)]
+     (let [sql     (-> sql
+                       (string/replace #";" "")
+                       (string/replace #"--" "")
+                       (string/replace #"\/" "")
+                       (string/replace #"\/\*" "")
+                       (string/replace #"\*\\" "")
+                       (prepare-statement params))
+           results (-> conn
+                       (.createStatement)
+                       (.executeQuery sql))]
+       (jdbc/metadata-result results)))))
+```
+
 ## Resources
 - [ ] [http://markgandolfo.com/blog/2014/01/10/a-simple-blog-in-clojure/](http://markgandolfo.com/blog/2014/01/10/a-simple-blog-in-clojure/)
