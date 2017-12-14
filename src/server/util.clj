@@ -3,10 +3,7 @@
             [clojure.pprint :as pprint]
             [clojure.string :as string]
             [clostache.parser :as clostache]
-            [markdown.core :as markdown]
-            ;[selmer.parser :as selmer]
-            ))
-
+            [markdown.core :as markdown]))
 
 ; -- dev -----------------------------------------------
 (defn print-it [coll]
