@@ -25,15 +25,15 @@
 
 (defroutes api-routes
   (GET "/api/:dataset/latest" [dataset]
-       (let [dataset-trusted (-> dataset
-                                 (string/replace #"\;" "")
-                                 (string/replace #"\-" "")
-                                 (string/replace #"\/" "")
-                                 (string/replace #"\/\*" "")
-                                 (string/replace #"\*\\" ""))
-             response'  (jobs.api/latest dataset-trusted)]
-         (-> response'
-             response))))
+    (let [dataset-trusted (-> dataset
+                              (string/replace #"\;" "")
+                              (string/replace #"\-" "")
+                              (string/replace #"\/" "")
+                              (string/replace #"\/\*" "")
+                              (string/replace #"\*\\" ""))
+          response'  (jobs.api/latest dataset-trusted)]
+      (-> response'
+          response))))
 
 (defroutes combined-routes
   (-> site-routes
