@@ -34,8 +34,7 @@
         footer        (-> (str "views/template/footer.md")
                           (clojure.java.io/resource)
                           slurp)]
-    (-> (str header body footer)
-        (markdown/md-to-html-string))))
+    (markdown/md-to-html-string (str header body footer))))
 
 (defn render-markdown
   ([template-file]
