@@ -108,17 +108,38 @@ sudo nmap -sS -O $(nslookup [host]-aws.duckdns.org | grep Address | tail -n1 | a
 ### Third party observations
 - [https://observatory.mozilla.org/analyze.html?host=host.duckdns.org](https://observatory.mozilla.org/analyze.html?host=host.duckdns.org)
 
-## Git remotes
+## Git
 
+### Git remotes
 ```bash
 git remote add pi-vpn ssh://[user]@[bastion].:43/~/deploy/git/compojure.git
 git remote add pi-home ssh://[user]@[host]/~/deploy/git/compojure.git
 ```
 
-## lein depedencies
+### Pre-commit hook to update pom.xml
+```bash
+vim .git/hooks/pre-commit
 
+#!/usr/bin/env bash
+
+lein pom 2>&1 dev-resources/pom.xml
+```
+
+## lein
+
+### Dependencies
 ```bash
 lein deps :tree 2>deps 1>/dev/null && vim deps
+```
+
+### cljfmt
+```bash
+lein cljfmt check ; lein cljfmt fix
+```
+
+### kibits
+```bash
+lein kibit >tmp ; vim tmp && rm tmp
 ```
 
 ## Custom jdbc/query

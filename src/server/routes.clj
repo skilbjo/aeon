@@ -36,16 +36,18 @@
           response))))
 
 (defroutes combined-routes
-  (-> site-routes
-      (ring-defaults/wrap-defaults (assoc ring-defaults/site-defaults
-                                          :security {:anti-forgery         true
-                                                     :hsts                 true
-                                                     :content-type-options :nosniff
-                                                     :frame-options        :sameorigin
-                                                     :xss-protection       {:enable? true
-                                                                            :mode    :block}})))
-  (-> api-routes
-      (ring-json/wrap-json-response))
+  (ring-defaults/wrap-defaults site-routes
+                               (assoc
+                                ring-defaults/site-defaults
+                                :security
+                                {:anti-forgery true
+                                 :hsts true
+                                 :content-type-options :nosniff
+                                 :frame-options :sameorigin
+                                 :xss-protection {:enable? true :mode :block}}))
+
+  (ring-json/wrap-json-response api-routes)
+
   (route/not-found "<h1>Not Found</h1>"))
 
 (def app

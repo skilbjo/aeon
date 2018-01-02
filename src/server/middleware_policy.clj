@@ -19,7 +19,7 @@
     this))
 
 (defn map-join [func separator collection]
-  (apply str (interpose separator (map func collection))))
+  (clojure.string/join separator (map func collection)))
 
 (defn to-values [collection]
   (map-join to-source " " collection))
@@ -64,8 +64,7 @@
     (if (nil? sources)
       (get-directives directives)
       (str (get-sources sources)
-           (when-not (empty? directives)
-             (str "; " (get-directives directives)))))))
+           (when (seq directives) (str "; " (get-directives directives)))))))
 
 (defn load-policy
   ([]
