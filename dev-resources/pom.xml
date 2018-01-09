@@ -10,6 +10,7 @@
     <url>https://github.com/skilbjo/compojure</url>
     <connection>scm:git:git://github.com/skilbjo/compojure.git</connection>
     <developerConnection>scm:git:ssh://git@github.com/skilbjo/compojure.git</developerConnection>
+    <tag>25ff613468c4e9866191caaa0dc98742ec860e17</tag>
   </scm>
   <build>
     <sourceDirectory>src</sourceDirectory>
