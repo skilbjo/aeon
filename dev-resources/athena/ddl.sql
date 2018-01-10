@@ -49,10 +49,21 @@ tblproperties (
 
 drop table if exists dw.equities;
 create external table dw.equities (
+  open            string,
   date            string,
-  ..
-  dataset         string,
+  adj_volume      string,
+  adj_close       string,
   ticker          string,
+  adj_low         string,
+  ex_dividend     string,
+  close           string,
+  volume          string,
+  high            string,
+  adj_high        string,
+  split_ratio     string,
+  low             string,
+  adj_open        string,
+  dataset         string
 )
 partitioned by (
   s3uploaddate date
@@ -71,10 +82,11 @@ tblproperties (
 
 drop table if exists dw.interest_rates;
 create external table dw.interest_rates (
-  date            string,
-  ..
+  key             string,
+  value           string,
   dataset         string,
   ticker          string,
+  date            string
 )
 partitioned by (
   s3uploaddate date
@@ -150,8 +162,18 @@ with _equities as (
   select
     dataset,
     ticker,
-    cast(date as date)               as date,
-    ...
+    cast(date as date)                 as date,
+    cast(open as decimal(10,2))        as open,
+    cast(close as decimal(10,2))       as close,
+    cast(low as decimal(10,2))         as low,
+    cast(high as decimal(10,2))        as high,
+    cast(volume as decimal(10,2))      as volume,
+    cast(split_ratio as decimal(10,2)) as split_ratio,
+    cast(adj_open as decimal(10,2))    as adj_open,
+    cast(adj_close as decimal(10,2))   as adj_close,
+    cast(adj_low as decimal(10,2))     as adj_low,
+    cast(adj_volume as decimal(10,2))  as adj_volume,
+    cast(ex_dividend as decimal(10,2)) as ex_dividend
   from
     dw.equities
 )
@@ -162,8 +184,9 @@ with _interest_rates as (
   select
     dataset,
     ticker,
-    cast(date as date)               as date,
-    ...
+    cast(date as date)           as date,
+    key,
+    cast(value as decimal(10,2)) as value
   from
     dw.interest_rates
 )
