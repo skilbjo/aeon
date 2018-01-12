@@ -28,9 +28,9 @@ tblproperties (
 drop table if exists dw.economics;
 create external table dw.economics (
   date            string,
-  ..
+  value           string,
   dataset         string,
-  ticker          string,
+  ticker          string
 )
 partitioned by (
   s3uploaddate date
@@ -151,7 +151,7 @@ with _economics as (
     dataset,
     ticker,
     cast(date as date)               as date,
-    ...
+    cast(value as decimal(10,2))     as value
   from
     dw.economics
 )

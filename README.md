@@ -36,6 +36,18 @@ tm
 deploy/bin/run-docker
 ```
 
+### environment variables
+
+```bash
+export ro_jdbc_db_uri='jdbc:postgresql://[host]:[port]/[db_name]?sslmode=require&user=[user]&password=[pass]'
+export quandl_api_key=''
+# to run athena queries
+export jdbc_athena_uri='jdbc:awsathena://athena.[region].amazonaws.com:[port]'
+export s3_staging_dir='s3://aws-athena-query-results-[id]-[region]'
+export aws_access_key_id=''
+export aws_secret_access_key=''
+```
+
 ## Debugging
 
 - Did the jks made it onto the host ok? (`cat ~/[jks]; ls -la ~/[jks]`)

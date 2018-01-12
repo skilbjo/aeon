@@ -22,10 +22,16 @@
     {:error {:msg (format "Error: '/api/%s' is not a valid endpoint.
                            Try /api/equities or /api/currency." dataset)}}
     (let [data  (fn []
-                  (->> (-> "sql/latest.sql"
-                           io/resource
-                           slurp
-                           (sql/query' {:table dataset}))
-                       (map #(update % :date coerce/to-sql-date))))
+                  (let [dir (if (env :jdbc-athena-uri)
+                              "athena"
+                              "dw")
+                        f   (if (env :jdbc-athena-uri)
+                              'sql/query-athena
+                              'sql/query')]
+                    (->> (-> (str dir "/latest.sql")
+                             io/resource
+                             slurp
+                             (f {:table dataset}))
+                         (map #(update % :date coerce/to-sql-date)))))
           data' (memoize data)]
       {:body (data')})))
