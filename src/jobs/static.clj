@@ -21,10 +21,10 @@
                                   (jdbc/query cxn)
                                   (map #(update % :date coerce/to-sql-date))))
                      athena-f '(->> "athena/dashboard.sql"
-                                  io/resource
-                                  slurp
-                                  sql/query-athena
-                                  (map #(update % :date coerce/to-sql-date)))]
+                                    io/resource
+                                    slurp
+                                    sql/query-athena
+                                    (map #(update % :date coerce/to-sql-date)))]
                  (if (env :jdbc-athena-uri)
                    (dw-f)
                    (athena-f))))

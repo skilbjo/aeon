@@ -2,7 +2,8 @@
   (:require [clojure.string :as string]
             [clojure.java.jdbc :as jdbc]
             [environ.core :refer [env]])
-  (:import [java.sql DriverManager Connection]))
+  (:import [java.sql DriverManager Connection]
+           [java.util Properties]))
 
 (clojure.lang.RT/loadClassForName "org.postgresql.Driver")
 
