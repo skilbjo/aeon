@@ -15,7 +15,7 @@ COPY deploy/default/vimrc        /root/.vimrc
 
 RUN apk add -U openjdk8 \
     ca-certificates && update-ca-certificates && apk add -U openssl \
-    bash bash-completion vim \
+    bash bash-completion vim curl \
     tzdata coreutils && \
     cp /usr/share/zoneinfo/America/Los_Angeles /etc/localtime && \
     echo "America/Los_Angeles" >/etc/timezone
