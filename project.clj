@@ -16,6 +16,7 @@
                  [ring/ring-defaults "0.3.1" ]
                  [ring/ring-json "0.4.0"]
                  [venantius/ultra "0.5.1" :exclusions [instaparse]]]
+  :plugins [[lein-cloverage "1.0.10"]]
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
                                   [ring/ring-mock "0.3.0"]]
                    :plugins [[lein-environ "1.1.0"]
