@@ -15,15 +15,18 @@
 
 (defn dashboard []
   (let [data (fn []
-               (let [dw-f     (fn []
+               (let [dir      (if (env :jdbc-athena-uri)
+                                "athena"
+                                "dw")
+                     dw-f     (fn []
                                 (jdbc/with-db-connection [cxn (env :ro-jdbc-db-uri)]
-                                  (->> "sql/dashboard.sql"
+                                  (->> (str dir "/dashboard.sql")
                                        io/resource
                                        slurp
                                        (jdbc/query cxn)
                                        (map #(update % :date coerce/to-sql-date)))))
                      athena-f (fn []
-                                (->> "athena/dashboard.sql"
+                                (->> (str dir "/dashboard.sql")
                                      io/resource
                                      slurp
                                      sql/query-athena
