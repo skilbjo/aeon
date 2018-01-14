@@ -5,6 +5,7 @@
 [![CircleCI](https://circleci.com/gh/skilbjo/compojure/tree/master.svg?style=svg)](https://circleci.com/gh/skilbjo/compojure/tree/master)
 [![quay.io](https://quay.io/repository/skilbjo/compojure/status "Docker Repository on Quay")](https://quay.io/repository/skilbjo/compojure)
 [![Known Vulnerabilities](https://snyk.io/test/github/skilbjo/compojure/badge.svg?targetFile=dev-resources%2Fpom.xml)](https://snyk.io/test/github/skilbjo/compojure?targetFile=dev-resources%2Fpom.xml)
+[![codecov](https://codecov.io/gh/skilbjo/compojure/branch/master/graph/badge.svg)](https://codecov.io/gh/skilbjo/compojure)
 
 ## TODOs
 
@@ -34,6 +35,18 @@ ssh to the prod servers, start tmux, and fire:
 ssh [alias].
 tm
 deploy/bin/run-docker
+```
+
+### environment variables
+
+```bash
+export ro_jdbc_db_uri='jdbc:postgresql://[host]:[port]/[db_name]?sslmode=require&user=[user]&password=[pass]'
+export quandl_api_key=''
+# to run athena queries
+export jdbc_athena_uri='jdbc:awsathena://athena.[region].amazonaws.com:[port]'
+export s3_staging_dir='s3://aws-athena-query-results-[id]-[region]'
+export aws_access_key_id=''
+export aws_secret_access_key=''
 ```
 
 ## Debugging
