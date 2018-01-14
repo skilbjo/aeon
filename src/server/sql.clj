@@ -53,7 +53,7 @@
      (let [sql     (-> sql
                        (string/replace #";" "")
                        (string/replace #"--" "")
-                       (string/replace #"\/" "")
+                       #_(string/replace #"\/" "") ; removes America/Los_Angeles
                        (string/replace #"\/\*" "")
                        (string/replace #"\*\\" "")
                        (prepare-statement params))

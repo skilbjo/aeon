@@ -1,14 +1,25 @@
 with date as (
-  select (now() at time zone 'pst')::date now
+  select cast((current_timestamp at time zone 'America/Los_Angeles') as date) now
+), _currency as (
+  select
+    dataset,
+    ticker,
+    currency,
+    cast(date as date)               as date,
+    cast(rate as decimal(24,14))     as rate,
+    cast(high_est as decimal(24,14)) as high_est,
+    cast(low_est as decimal(24,14))  as low_est
+  from
+    dw.currency
 ), data as (
   select
     row_number() over (partition by currency order by date desc) as rn,
     currency, date, rate
   from
-    dw.currency
+    _currency
   where
     currency in ('GBP', 'EUR')
-    and date between ( select now - interval '30 day' from date )
+    and date between ( select now - interval '30' day from date )
              and     ( select now from date )
   group by
     currency, date, rate
