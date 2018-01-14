@@ -48,7 +48,7 @@ with_athena(){
     bash
 }
 
-if [[ ! -z $jdbc_athena_uri ]]; then
+if [[ -z $jdbc_athena_uri ]]; then
   with_db
 else
   with_athena
