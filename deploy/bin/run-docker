@@ -18,17 +18,41 @@ img="quay.io/skilbjo/$app_name:$arch"
 job_cmd="usr/local/deploy/bin/run-job"
 
 # Create it
-docker run --rm \
-  --name="$app_name" \
-  --detach \
-  --tty \
-  -p 8080:8080 \
-  -p 8443:8443 \
-  -e ro_jdbc_db_uri="$(echo $ro_jdbc_db_uri)" \
-  -e quandl_api_key="$(echo $quandl_api_key)" \
-  -e jdbc_athena_uri="$(echo $jdbc_athena_uri)" \
-  "$img" \
-  bash
+with_db() {
+  docker run --rm \
+    --name="$app_name" \
+    --detach \
+    --tty \
+    -p 8080:8080 \
+    -p 8443:8443 \
+    -e ro_jdbc_db_uri="$(echo $ro_jdbc_db_uri)" \
+    -e quandl_api_key="$(echo $quandl_api_key)" \
+    "$img" \
+    bash
+}
+
+with_athena(){
+  docker run --rm \
+    --name="$app_name" \
+    --detach \
+    --tty \
+    -p 8080:8080 \
+    -p 8443:8443 \
+    -e ro_jdbc_db_uri="$(echo $ro_jdbc_db_uri)" \
+    -e quandl_api_key="$(echo $quandl_api_key)" \
+    -e jdbc_athena_uri="$(echo $jdbc_athena_uri)" \
+    -e s3_staging_dir="$(echo $s3_staging_dir)" \
+    -e aws_access_key_id="$(echo $aws_access_key_id)" \
+    -e aws_secret_access_key="$(echo $aws_secret_access_key)" \
+    "$img" \
+    bash
+}
+
+if [[ ! -z $jdbc_athena_uri ]]; then
+  with_db
+else
+  with_athena
+fi
 
 # Drop in the file. Env var won't work :/
 docker cp ~/java_key_store "${app_name}:/java_key_store"
