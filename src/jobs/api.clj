@@ -25,13 +25,16 @@
                   (let [dir (if (env :jdbc-athena-uri)
                               "athena"
                               "dw")
-                        f   (if (env :jdbc-athena-uri)
-                              'sql/query-athena
-                              'sql/query')]
+                        f   (fn [m]
+                              (println m)
+                              (if (env :jdbc-athena-uri)
+                                ('sql/query-athena m)
+                                ('sql/query' m)))]
                     (->> (-> (str dir "/latest.sql")
                              io/resource
                              slurp
-                             (f {:table dataset}))
+                             (sql/query-athena {:table dataset}))
+                             util/print-it
                          (map #(update % :date coerce/to-sql-date)))))
           data' (memoize data)]
       {:body (data')})))
