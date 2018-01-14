@@ -3,8 +3,48 @@ set -eou pipefail
 
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 app_name=$(basename $(dirname $dir))
+job_cmd="usr/local/deploy/bin/run-job"
 
-docker run -it --rm \
-  -p 8080:8080 \
-  -e ro_db_jdbc_uri="$(echo $ro_db_jdbc_uri)" \
-  "$app_name":dev bash
+with_db() {
+  docker run --rm \
+    --name="$app_name" \
+    --detach \
+    --tty \
+    -p 8080:8080 \
+    -p 8443:8443 \
+    -e ro_jdbc_db_uri="$(echo $ro_jdbc_db_uri)" \
+    -e quandl_api_key="$(echo $quandl_api_key)" \
+    "$app_name":dev bash
+}
+
+with_athena(){
+  docker run --rm \
+    --name="$app_name" \
+    --detach \
+    --tty \
+    -p 8080:8080 \
+    -p 8443:8443 \
+    -e ro_jdbc_db_uri="$(echo $ro_jdbc_db_uri)" \
+    -e quandl_api_key="$(echo $quandl_api_key)" \
+    -e jdbc_athena_uri="$(echo $jdbc_athena_uri)" \
+    -e s3_staging_dir="$(echo $s3_staging_dir)" \
+    -e aws_access_key_id="$(echo $aws_access_key_id)" \
+    -e aws_secret_access_key="$(echo $aws_secret_access_key)" \
+    "$app_name":dev bash
+}
+
+#athena=''
+athena='yes'
+
+if [[ -z $athena ]]; then
+  with_db
+else
+  with_athena
+fi
+
+# Drop in the file. Env var won't work :/
+docker cp "${dir}/../ssl-certs/java_key_store" "${app_name}:/java_key_store"
+
+# Start it with the intended entrypoint
+docker exec "$app_name" \
+  "$job_cmd"
