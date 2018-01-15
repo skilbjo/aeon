@@ -32,12 +32,18 @@ with_db() {
 }
 
 with_athena(){
-  docker run --rm \
+  # long story with this, but it seems portforwarding 443->8443 seems to bork the
+  # server's understanding of SSL. when app makes calls to other services using ssl
+  # ie athena is served over 443, and compojure fails
+  # full error: https://confluence.atlassian.com/kb/connecting-to-ssl-services-802171215.html
+  # javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+  # https://curl.haxx.se/docs/sslcerts.html
+  sudo docker run --rm \
     --name="$app_name" \
     --detach \
     --tty \
-    -p 8080:8080 \
-    -p 8443:8443 \
+    -p 80:8080 \
+    -p 443:8443 \
     -e ro_jdbc_db_uri="$(echo $ro_jdbc_db_uri)" \
     -e quandl_api_key="$(echo $quandl_api_key)" \
     -e jdbc_athena_uri="$(echo $jdbc_athena_uri)" \

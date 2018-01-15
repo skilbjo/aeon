@@ -14,7 +14,6 @@ COPY deploy/default/bashrc       /root/.bashrc
 COPY deploy/default/vimrc        /root/.vimrc
 
 RUN apk add -U openjdk8 \
-    ca-certificates && update-ca-certificates && apk add -U openssl \
     bash bash-completion vim curl \
     tzdata coreutils && \
     cp /usr/share/zoneinfo/America/Los_Angeles /etc/localtime && \
