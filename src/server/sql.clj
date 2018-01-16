@@ -35,21 +35,11 @@
                        (.executeQuery sql))]
        (jdbc/metadata-result results)))))
 
-(defn get-athena-conn []
-  (DriverManager/getConnection
-   (env :jdbc-athena-uri)
-   (doto (Properties.)
-     (.put "user"           (env :aws-access-key-id))
-     (.put "password"       (env :aws-secret-access-key))
-     (.put "s3_staging_dir" (env :s3-staging-dir))
-     #_(.put "log_path"       "/tmp/athenalog.out")
-     #_(.put "log_level"      "DEBUG"))))
-
 (defn query-athena
   ([sql]
    (query-athena sql {}))
   ([sql params]
-   (with-open [conn (get-athena-conn)]
+   (with-open [conn (DriverManager/getConnection (env :jdbc-athena-uri))]
      (let [sql     (-> sql
                        (string/replace #";" "")
                        (string/replace #"--" "")
