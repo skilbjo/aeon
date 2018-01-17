@@ -1,5 +1,23 @@
 create schema dw;
 
+drop table if exists dw.markets;
+create external table dw.markets (
+  dataset     string,
+  ticker      string,
+  description string
+)
+row format serde
+  'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+stored as inputformat
+  'org.apache.hadoop.mapred.TextInputFormat'
+outputformat
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+location
+  's3://skilbjo-data/datalake/markets-etl/markets'
+tblproperties (
+  "skip.header.line.count"="1"
+);
+
 drop table if exists dw.currency;
 create external table dw.currency (
   date            string,
