@@ -11,7 +11,8 @@
             [ring.middleware.defaults :as ring-defaults]
             [ring.middleware.json :as ring-json]
             [ring.middleware.session :as session]
-            [ring.util.response :refer [response]])
+            [ring.util.response :refer [response]]
+            [server.util :as util])
   (:gen-class))
 
 (defroutes site-routes
@@ -60,6 +61,10 @@
                                             :secure  true}})))
 
 (defn -main []  ; java -jar app.jar uses this as the entrypoint
+  ; schedule the healthchecks
+  (util/schedule-healthchecks.io)
+
+  ; start the server
   (jetty/run-jetty app
                    {:send-server-version? false
                     :port                 8080

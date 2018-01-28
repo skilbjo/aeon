@@ -8,6 +8,7 @@
                  [compojure "1.5.1" :exclusions [ring/ring-core]]
                  [de.ubercode.clostache/clostache "1.3.1"]
                  [environ "1.1.0"]
+                 [jarohen/chime "0.2.2"]
                  [markdown-clj "0.9.99"]
                  [net.sf.uadetector/uadetector-resources "2013.02"]
                  [org.clojure/data.json "0.2.6"]
