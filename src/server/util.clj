@@ -53,6 +53,12 @@
 (def now' (formatter/unparse (formatter/formatters :date)
                              (time/now)))
 
+(def every-half-hour (-> 30 time/minutes))
+
+(def once-an-hour (-> 1 time/hours))
+
+(def every-six-hours (-> 6 time/hours))
+
 (def once-a-day (-> 1 time/days))
 
 ; -- data types ----------------------------------------
@@ -82,7 +88,7 @@
 
 (defn schedule-healthchecks.io []
   (let [schedule    (periodic/periodic-seq now
-                                           once-a-day)
+                                           every-half-hour)
         callback-fn (fn [time]
                       (println time)
                       (notify-healthchecks-io (env :healthchecks-io-compojure)))]
