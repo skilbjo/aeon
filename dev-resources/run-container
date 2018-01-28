@@ -14,6 +14,7 @@ with_db() {
     -p 8443:8443 \
     -e ro_jdbc_db_uri="$(echo $ro_jdbc_db_uri)" \
     -e quandl_api_key="$(echo $quandl_api_key)" \
+    -e healthchecks_io_compojure="$(echo $healthchecks_io_compojure)" \
     "$app_name":dev bash
 }
 
@@ -27,14 +28,12 @@ with_athena(){
     -e ro_jdbc_db_uri="$(echo $ro_jdbc_db_uri)" \
     -e quandl_api_key="$(echo $quandl_api_key)" \
     -e jdbc_athena_uri="$(echo $jdbc_athena_uri)" \
-    -e s3_staging_dir="$(echo $s3_staging_dir)" \
-    -e aws_access_key_id="$(echo $aws_access_key_id)" \
-    -e aws_secret_access_key="$(echo $aws_secret_access_key)" \
+    -e healthchecks_io_compojure="$(echo $healthchecks_io_compojure)" \
     "$app_name":dev bash
 }
 
-#athena=''
-athena='yes'
+athena=''
+#athena='yes'
 
 if [[ -z $athena ]]; then
   with_db
