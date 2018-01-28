@@ -53,11 +53,13 @@ with_athena(){
     bash
 }
 
+set +u
 if [[ -z $jdbc_athena_uri ]]; then
   with_db
 else
   with_athena
 fi
+set -u
 
 # Drop in the file. Env var won't work :/
 docker cp ~/java_key_store "${app_name}:/java_key_store"
