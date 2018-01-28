@@ -51,7 +51,7 @@
 (def now (time/now))
 
 (def now' (formatter/unparse (formatter/formatters :date)
-                            (time/now)))
+                             (time/now)))
 
 (def once-a-day (-> 1 time/days))
 
