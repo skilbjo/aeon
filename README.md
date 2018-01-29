@@ -6,6 +6,9 @@
 [![quay.io](https://quay.io/repository/skilbjo/compojure/status "Docker Repository on Quay")](https://quay.io/repository/skilbjo/compojure)
 [![codecov](https://codecov.io/gh/skilbjo/compojure/branch/master/graph/badge.svg)](https://codecov.io/gh/skilbjo/compojure)
 
+[![compojure_sfo](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/dLkCKQze/compojure_sfo.svg)](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/dLkCKQze/compojure_sfo.svg)
+[![compojure_aws](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/bKryWOrC/compojure_aws.svg)](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/bKryWOrC/compojure_aws.svg)
+
 ## TODOs
 
 - [X] Escape SQL injection (note: no decent sql injection escaping libaries out there); used `clojure.string/escape`
