@@ -93,7 +93,7 @@
        :value-fn (fn [k v]
                    (condp = k
                      :date     (coerce/to-sql-date v)
-                     :rate     (with-precision 1 :rounding HALF_UP (java.math.BigDecimal. v))
-                     :high_est (with-precision 1 :rounding HALF_UP (java.math.BigDecimal. v))
-                     :low_est  (with-precision 1 :rounding HALF_UP (java.math.BigDecimal. v))
+                     :rate     (-> v java.math.BigDecimal. (.setScale 14 BigDecimal/ROUND_UP))
+                     :high_est (-> v java.math.BigDecimal. (.setScale 14 BigDecimal/ROUND_UP))
+                     :low_est  (-> v java.math.BigDecimal. (.setScale 14 BigDecimal/ROUND_UP))
                      v)))))

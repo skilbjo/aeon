@@ -15,5 +15,3 @@
                        :body
                        (map #(update % :date coerce/to-sql-date))))
            (latest "currency")))))
-                ;:body
-                ;(map #(update % :date coerce/to-sql-date))
