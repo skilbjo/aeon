@@ -62,7 +62,7 @@
 
 (defn -main []  ; java -jar app.jar uses this as the entrypoint
   ; schedule the healthchecks
-  (util/schedule-healthchecks.io)
+  (util/schedule-healthchecks-io)
 
   ; start the server
   (jetty/run-jetty app
