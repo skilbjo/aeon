@@ -1,15 +1,16 @@
 (ns fixtures.api
-  (:require [clojure.data.json :as json]))
+  (:require [clj-time.coerce :as coerce]
+            [clojure.data.json :as json]))
 
 (def api-response-from-currency
   "{\"body\": [{
    \"dataset\":  \"CURRFX\",
    \"ticker\":   \"GBPUSD\",
    \"currency\": \"GBP\",
-   \"date\":     \"2018-01-25T08:00:00Z\",
-   \"rate\":     1.4150274991989,
-   \"high_est\": 1.4281226396561,
-   \"low_est\":  1.4147073030472
+   \"date\":     \"2017-12-15T08:00:00Z\",
+   \"rate\":     1.34329152107240,
+   \"high_est\": 1.34498989582060,
+   \"low_est\":  1.33081364631650
    }]}")
 
 ;(def to-fix
@@ -87,4 +88,12 @@
 
 (def result
   (-> api-response-from-currency
-      (json/read-str :key-fn keyword)))
+      (json/read-str
+       :key-fn keyword
+       :value-fn (fn [k v]
+                   (condp = k
+                     :date     (coerce/to-sql-date v)
+                     :rate     (with-precision 1 :rounding HALF_UP (java.math.BigDecimal. v))
+                     :high_est (with-precision 1 :rounding HALF_UP (java.math.BigDecimal. v))
+                     :low_est  (with-precision 1 :rounding HALF_UP (java.math.BigDecimal. v))
+                     v)))))

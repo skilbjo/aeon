@@ -1,5 +1,6 @@
 (ns jobs.api-test
-  (:require [clojure.test :refer :all]
+  (:require [clj-time.coerce :as coerce]
+            [clojure.test :refer :all]
             [jobs.api :refer :all]
             [fixtures.api :as f]
             [fixtures.fixtures :refer [*cxn*] :as fix]))
@@ -8,5 +9,11 @@
 
 (deftest integration-test
   (testing "api integration test"
-    (is (= f/result
+    (is (= (assoc {}
+                  :body
+                  (->> f/result
+                       :body
+                       (map #(update % :date coerce/to-sql-date))))
            (latest "currency")))))
+                ;:body
+                ;(map #(update % :date coerce/to-sql-date))
