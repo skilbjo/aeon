@@ -86,7 +86,7 @@
   (http/get (str "https://hchk.io/"
                  api-key)))
 
-(defn schedule-healthchecks.io []
+(defn schedule-healthchecks-io []
   (let [schedule    (periodic/periodic-seq now
                                            every-half-hour)
         callback-fn (fn [time]
