@@ -7,6 +7,7 @@
 (use-fixtures :each (fix/with-database))
 
 #_(deftest integration-test
-    (testing "currency integration test"
+    (testing "jobs.static integration test"
       (is (= 1
-             1))))
+             (dashboard)
+             ))))

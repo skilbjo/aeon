@@ -8,7 +8,7 @@
 (use-fixtures :each (fix/with-database))
 
 (deftest integration-test
-  (testing "api integration test"
+  (testing "jobs.api integration test"
     (is (= (assoc {}
                   :body
                   (->> f/result
