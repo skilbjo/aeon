@@ -13,10 +13,6 @@
            io/resource
            slurp
            (jdbc/execute! *cxn*))
-      (->> "test/insert-source-data.sql"
-           io/resource
-           slurp
-           (jdbc/execute! *cxn*))
       (f)
       (->> "drop schema dw cascade;"
            (jdbc/execute! *cxn*)))))
