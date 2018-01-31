@@ -1,13 +1,18 @@
 (ns jobs.static-test
   (:require [clojure.test :refer :all]
-            [jobs.static :refer :all]
-            [fixtures.api :as f]
-            [fixtures.fixtures :refer [*cxn*] :as fix]))
+            [clojure.java.io :as io]
+            [clojure.java.jdbc :as jdbc]
+            [fixtures.fixtures :refer [*cxn*] :as fix]
+            [fixtures.static :as f]
+            [jobs.static :refer :all]))
 
 (use-fixtures :each (fix/with-database))
 
-#_(deftest integration-test
-    (testing "jobs.static integration test"
-      (is (= 1
-             (dashboard)
-             ))))
+(deftest integration-test
+  (->> "test/insert-source-data.sql"
+       io/resource
+       slurp
+       (jdbc/execute! *cxn*))
+  (testing "jobs.static integration test"
+    (is (= f/result
+           (dashboard)))))
