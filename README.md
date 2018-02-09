@@ -9,6 +9,12 @@
 [![compojure_sfo](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/dLkCKQze/compojure_sfo.svg)](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/dLkCKQze/compojure_sfo.svg)
 [![compojure_aws](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/bKryWOrC/compojure_aws.svg)](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/bKryWOrC/compojure_aws.svg)
 
+## What
+
+A webserver in LISP FTW.
+
+<img src='dev-resources/img/ns-hierarchy.png' width=900>
+
 ## TODOs
 
 - [X] Escape SQL injection (note: no decent sql injection escaping libaries out there); used `clojure.string/escape`
