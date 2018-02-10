@@ -17,6 +17,17 @@ esac
 img="quay.io/skilbjo/$app_name:$arch"
 job_cmd="usr/local/deploy/bin/run-job"
 
+get_current_artifacts(){
+  # any scripts need updating?
+  git pull -f
+
+  # remove all app containers
+  docker ps -a | grep "$app_name" | awk '{print $1}' | uniq | xargs docker rm -f
+
+  # remove all app images
+  docker images | grep "$app_name" | awk '{print $3}' | uniq | xargs docker rmi -f
+}
+
 # Create it
 with_db() {
   docker run --rm \
@@ -53,13 +64,20 @@ with_athena(){
     bash
 }
 
-set +u
-if [[ -z $jdbc_athena_uri ]]; then
-  with_db
-else
-  with_athena
-fi
-set -u
+# Download the image, and start the app detached
+start_detached(){
+  set +u
+  if [[ -z $jdbc_athena_uri ]]; then
+    with_db
+  else
+    with_athena
+  fi
+  set -u
+}
+
+# Update repo, clear cache
+get_current_artifacts &&
+  start_detached
 
 # Drop in the file. Env var won't work :/
 docker cp ~/java_key_store "${app_name}:/java_key_store"
