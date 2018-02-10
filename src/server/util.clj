@@ -8,7 +8,8 @@
             [clojure.string :as string]
             [clostache.parser :as clostache]
             [environ.core :refer [env]]
-            [markdown.core :as markdown]))
+            [markdown.core :as markdown])
+  (:import  [org.joda.time DateTimeZone]))
 
 ; -- dev -----------------------------------------------
 (defn print-it [coll]
@@ -83,14 +84,14 @@
 
 ; -- alerts --------------------------------------------
 (defn notify-healthchecks-io [api-key]
-  (http/get (str "https://hchk.io/"
-                 api-key)))
+  (future (http/get (str "https://hchk.io/"
+                         api-key))))
 
 (defn schedule-healthchecks-io []
-  (let [schedule    (periodic/periodic-seq now
+  (let [schedule    (periodic/periodic-seq (-> now
+                                               (.withTime 0 0 0 0))
                                            every-half-hour)
         callback-fn (fn [time]
-                      (println time)
                       (notify-healthchecks-io (env :healthchecks-io-compojure)))]
     (chime/chime-at schedule
                     callback-fn)))

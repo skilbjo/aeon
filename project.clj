@@ -13,6 +13,7 @@
                  [net.sf.uadetector/uadetector-resources "2013.02"]
                  [org.clojure/data.json "0.2.6"]
                  [org.clojure/java.jdbc "0.7.3"]
+                 [org.slf4j/slf4j-log4j12 "1.6.4"]
                  [org.postgresql/postgresql "42.1.4"]
                  [ring "1.6.3"]
                  [ring/ring-anti-forgery "1.1.0"]
