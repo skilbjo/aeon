@@ -2,6 +2,7 @@
   (:require [clj-time.coerce :as coerce]
             [clojure.java.io :as io]
             [clojure.java.jdbc :as jdbc]
+            [clojure.tools.logging :as log]
             [environ.core :refer [env]]
             [server.sql :as sql]
             [server.util :as util]))
@@ -19,18 +20,24 @@
                                 "athena"
                                 "dw")
                      dw-f     (fn []
-                                (jdbc/with-db-connection [cxn (env :ro-jdbc-db-uri)]
+                                (try
+                                  (jdbc/with-db-connection [cxn (-> :ro-jdbc-db-uri env)]
+                                    (->> (str dir "/dashboard.sql")
+                                         io/resource
+                                         slurp
+                                         (jdbc/query cxn)
+                                         (map #(update % :date coerce/to-sql-date))))
+                                  (catch Exception ex
+                                    (log/error ex "There was a problem fetching data from the db"))))
+                     athena-f (fn []
+                                (try
                                   (->> (str dir "/dashboard.sql")
                                        io/resource
                                        slurp
-                                       (jdbc/query cxn)
-                                       (map #(update % :date coerce/to-sql-date)))))
-                     athena-f (fn []
-                                (->> (str dir "/dashboard.sql")
-                                     io/resource
-                                     slurp
-                                     sql/query-athena
-                                     (map #(update % :date coerce/to-sql-date))))]
+                                       sql/query-athena
+                                       (map #(update % :date coerce/to-sql-date)))
+                                  (catch Exception ex
+                                    (log/error ex "There was a problem fetching data from the db"))))]
                  (if (env :jdbc-athena-uri)
                    (athena-f)
                    (dw-f))))

@@ -9,6 +9,11 @@
 
 (use-fixtures :each (fix/with-database))
 
+(deftest unit-tests
+  (testing "jobs.api unit tests"
+    (is (= {:error {:msg "Error: '/api/made_up_dataset' is not a valid endpoint.\n                           Try /api/equities or /api/currency."}}
+           (latest "made_up_dataset")))))
+
 (deftest integration-test
   (->> "test/insert-source-data.sql"
        io/resource
