@@ -63,15 +63,6 @@
 
 (def once-a-day (-> 1 time/days))
 
-; -- data types ----------------------------------------
-(defn string->decimal [n]
-  (try
-    (BigDecimal. n)
-    (catch NumberFormatException e
-      n)
-    (catch NullPointerException e
-      n)))
-
 ; -- collections ---------------------------------------
 (defn sequentialize [x]
   (if (sequential? x)
