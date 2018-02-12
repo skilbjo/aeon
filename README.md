@@ -125,6 +125,7 @@ VBoxManage controlvm "default" natpf1 "tcp-port8443,tcp,,8443,,8443";
 ```bash
 sudo nmap -v -sS -A -T4 $(nslookup [host]-aws.duckdns.org | grep Address | tail -n1 | awk '{print $2}')
 sudo nmap -sS -O $(nslookup [host]-aws.duckdns.org | grep Address | tail -n1 | awk '{print $2}')
+nmap --top-ports 5000 -T4 -sC $(nslookup [host]-aws.duckdns.org | grep Address | tail -n1 | awk '{print $2}')
 ```
 
 ### Third party observations

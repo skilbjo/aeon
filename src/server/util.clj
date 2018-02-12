@@ -6,6 +6,7 @@
             [clj-time.periodic :as periodic]
             [clojure.pprint :as pprint]
             [clojure.string :as string]
+            [clojure.tools.logging :as log]
             [clostache.parser :as clostache]
             [environ.core :refer [env]]
             [markdown.core :as markdown])
@@ -84,8 +85,12 @@
 
 ; -- alerts --------------------------------------------
 (defn notify-healthchecks-io [api-key]
-  (future (http/get (str "https://hchk.io/"
-                         api-key))))
+  (log/debug "Notifying healthchecks... ")
+  (try
+    (future (http/get (str "https://hchk.io/"
+                           api-key)))
+    (catch Exception ex
+      (log/error ex "Error calling healthchecks. Check API key; or hchk.io status..."))))
 
 (defn schedule-healthchecks-io []
   (let [schedule    (periodic/periodic-seq (-> now
