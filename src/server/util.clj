@@ -76,7 +76,6 @@
 
 ; -- alerts --------------------------------------------
 (defn notify-healthchecks-io [api-key]
-  (log/debug "Notifying healthchecks... ")
   (try
     (future (http/get (str "https://hchk.io/"
                            api-key)))
@@ -88,6 +87,7 @@
                                                (.withTime 0 0 0 0))
                                            every-half-hour)
         callback-fn (fn [time]
+                      (log/debug "Notifying healthchecks.io at " time)
                       (notify-healthchecks-io (env :healthchecks-io-compojure)))]
     (chime/chime-at schedule
                     callback-fn)))

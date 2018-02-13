@@ -1,17 +1,19 @@
 (ns server.routes
   (:require [clojure.string :as string]
+            [clojure.tools.logging :as log]
             [compojure.core :refer :all]
             [compojure.route :as route]
             [environ.core :refer [env]]
             [jobs.api :as jobs.api]
             [jobs.static :as jobs.static]
-            [server.middleware-policy :as policy]
             [ring.adapter.jetty :as jetty]
             [ring.middleware.anti-forgery :as anti-forgery]
             [ring.middleware.defaults :as ring-defaults]
             [ring.middleware.json :as ring-json]
             [ring.middleware.session :as session]
             [ring.util.response :refer [response]]
+            [server.error :as error]
+            [server.middleware-policy :as policy]
             [server.util :as util])
   (:gen-class))
 
@@ -61,6 +63,9 @@
                                             :secure  true}})))
 
 (defn -main []  ; java -jar app.jar uses this as the entrypoint
+  (log/info "Starting compojure webserver ... ")
+  (error/set-default-error-handler)
+
   ; schedule the healthchecks
   (util/schedule-healthchecks-io)
 

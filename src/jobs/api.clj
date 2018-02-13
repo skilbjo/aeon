@@ -1,7 +1,6 @@
 (ns jobs.api
   (:require [clj-time.coerce :as coerce]
             [clojure.java.io :as io]
-            [clojure.tools.logging :as log]
             [environ.core :refer [env]]
             [server.sql :as sql]
             [server.util :as util]))

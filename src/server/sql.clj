@@ -1,7 +1,6 @@
 (ns server.sql
   (:require [clojure.string :as string]
             [clojure.java.jdbc :as jdbc]
-            [clojure.tools.logging :as log]
             [environ.core :refer [env]])
   (:import [java.sql DriverManager Connection]
            [java.util Properties]))
@@ -23,10 +22,7 @@
   ([sql]
    (query' sql {}))
   ([sql params]
-   (with-open [cxn (try
-                     (-> :ro-jdbc-db-uri env DriverManager/getConnection)
-                     (catch Exception ex
-                       (log/error ex "There was an error creating a db cxn")))]
+   (with-open [cxn (-> :ro-jdbc-db-uri env DriverManager/getConnection)]
      (let [sql     (-> sql
                        (string/replace #";" "")
                        (string/replace #"--" "")
@@ -37,19 +33,13 @@
            results (-> cxn
                        (.createStatement)
                        (.executeQuery sql))]
-       (try
-         (jdbc/metadata-result results)
-         (catch Exception ex
-           (log/error ex "There was a problem fetching data from the db")))))))
+       (jdbc/metadata-result results)))))
 
 (defn query-athena
   ([sql]
    (query-athena sql {}))
   ([sql params]
-   (with-open [conn (try
-                      (-> :jdbc-athena-uri env DriverManager/getConnection)
-                      (catch Exception ex
-                        (log/error ex "There was an error creating a db cxn")))]
+   (with-open [conn (-> :jdbc-athena-uri env DriverManager/getConnection)]
      (let [sql     (-> sql
                        (string/replace #";" "")
                        (string/replace #"--" "")
@@ -60,7 +50,4 @@
            results (-> conn
                        (.createStatement)
                        (.executeQuery sql))]
-       (try
-         (jdbc/metadata-result results)
-         (catch Exception ex
-           (log/error ex "There was a problem fetching data from the db")))))))
+       (jdbc/metadata-result results)))))
