@@ -13,12 +13,12 @@
 
 A webserver in LISP FTW.
 
-<img src='dev-resources/img/ns-hierarchy.png' width=900>
+<img src='dev-resources/img/ns-hierarchy.png' width='900' />
 
 ## TODOs
 
 - [X] Escape SQL injection (note: no decent sql injection escaping libaries out there); used `clojure.string/escape`
-- [ ] Check if datasets conform to allowed map of datasets. Else, give a 404 instead of throwing an exception
+- [X] Check if datasets conform to allowed map of datasets. Else, give a 404 instead of throwing an exception
 - [ ] Seeing this error: `java.lang.OutOfMemoryError: Java heap space`
 
 Note: formerly valid sql injection: `http://localhost:8080/api/equities'select%201'--/latest`
@@ -51,11 +51,33 @@ deploy/bin/run-docker
 export ro_jdbc_db_uri='jdbc:postgresql://[host]:[port]/[db_name]?sslmode=require&user=[user]&password=[pass]'
 export quandl_api_key=''
 # to run athena queries
-export jdbc_athena_uri='jdbc:awsathena://athena.[region].amazonaws.com:[port]'
-export s3_staging_dir='s3://aws-athena-query-results-[id]-[region]'
-export aws_access_key_id=''
-export aws_secret_access_key=''
+export jdbc_athena_uri='jdbc:awsathena://athena.[region].amazonaws.com:[port]?s3_staging_dir=s3://aws-athena-query-results-[id]-[region]&query_results_encryption_option=SSE_S3&user=$aws_access_key_id&password=$aws_secret_access_key'
 ```
+
+## Rotating SSL certificates
+<https://letsencrypt.org/> certificates are only good for 3 months; as such,
+this neccessitates a periodic rotation of certificates.
+
+<img src='dev-resources/img/expired_certificate.png' width='400' />
+
+The SSL termination hosted by pfsense is automated automated by the pfsense
+ACME package's cron job, which runs at `16 3 * * *`. If for some reason it
+hasn't renewed, ssh onto pfsense and run the command:
+`/usr/local/pkg/acme/acme_command.sh "renewall"`. It may fail because it can't
+write a txt record to a duckdns subdomain. The fix is confirm the subdomains
+for the certificate and duckdns are the same. Also confirm the api keys for the
+various subdomains. After that, HAproxy may restart, and the new certificate
+will be live: minimal effort!
+
+<img src='dev-resources/img/renewed_automatically.png' width='400' />
+
+For externally hosted sites, run the
+`dev-resources/ssl-certs-renew-externally-hosted` script. You just need to be
+on the VPN so `pfsense.` resolves. The script can be run as a shell script, or
+each command individually/interactively. After completion, log in to the
+external server's tmux session and restart the server.
+
+<img src='dev-resources/img/external_renewal.png' width='400' />
 
 ## Debugging
 

@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -eoux pipefail
+
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+app=$(basename $(dirname $dir))
+
+cd "${dir}/.."
+
+# make sure the pfsense ACME packaage has run; ie pfsense has new SSL certs
+
+# we need to get the keyfile, and cert from pfsense, stored in /conf/acme
+ssh pfsense. "cat /conf/acme/skilbjo.duckdns.org.key" >ssl-certs/keyfile
+ssh pfsense. "cat /conf/acme/skilbjo.duckdns.org.crt" >ssl-certs/certfile
+
+# now generate the java_key_store file
+dev-resources/create-java-key-store ssl-certs/keyfile ssl-certs/certfile
+
+mv java_key_store ssl-certs/java_key_store
+rm key_crt.p12
+
+# copy it to s3
+aws --profile personal \
+  s3 cp ssl-certs/java_key_store s3://skilbjo/java_key_store
+
+# download to server
+ssh aws "aws s3 cp s3://skilbjo/java_key_store java_key_store"

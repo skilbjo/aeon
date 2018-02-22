@@ -22,10 +22,12 @@ get_current_artifacts(){
   git pull -f
 
   # remove all app containers
+  set +e
   docker ps -a | grep "$app_name" | awk '{print $1}' | uniq | xargs docker rm -f
 
   # remove all app images
   docker images | grep "$app_name" | awk '{print $3}' | uniq | xargs docker rmi -f
+  set -e
 }
 
 # Create it
