@@ -1,7 +1,7 @@
 FROM gliderlabs/alpine:3.6
 
 ENV JAVA_HOME="/usr/lib/jvm/java-1.8-openjdk" \
-    JAVA_OPTS="-Xms256m -Xmx512m -XX:MaxMetaspaceSize=128m -Duser.timezone=PST8PDT" \
+    JAVA_OPTS="-Xms256m -Xmx512m -XX:MaxMetaspaceSize=128m -Duser.timezone=PST8PDT -XX:-HeapDumpOnOutOfMemoryError" \
     PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/bin:/usr/lib/jvm/java-1.8-openjdk/bin"
 
 

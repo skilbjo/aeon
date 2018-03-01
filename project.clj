@@ -47,4 +47,6 @@
              ; https://stackoverflow.com/questions/28572783/no-log4j2-configuration-file-found-using-default-configuration-logging-only-er
              "-Dlog4j.configurationFile=resources/log4j.properties"
              ; https://stackoverflow.com/questions/4659151/recurring-exception-without-a-stack-trace-how-to-reset
-             "-XX:-OmitStackTraceInFastThrow"])
+             "-XX:-OmitStackTraceInFastThrow"
+             ; https://stackoverflow.com/questions/42651420/how-to-find-non-heap-space-memory-leak-in-java
+             "-XX:-HeapDumpOnOutOfMemoryError"])
