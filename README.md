@@ -1,4 +1,5 @@
-# compojure
+## c o m p o j u r e
+: (your '(LISP webserver))
 
 [CircleCI Builds](https://circleci.com/gh/skilbjo/compojure)
 
