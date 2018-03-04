@@ -37,7 +37,7 @@
          :ssl?          true}
   :target-path "target/%s"
   :main ^:skip-aot server.routes
-  :jvm-opts ["-Duser.timezone=PST8PDT"
+  :jvm-opts ["-Duser.timezone=UTC"
              ; Same JVM options as deploy/bin/run-job uses in production
              "-Xms256m"
              "-Xmx2g"
