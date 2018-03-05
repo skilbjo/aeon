@@ -141,6 +141,16 @@ Need to portforward host to guest ports.
 VBoxManage controlvm "default" natpf1 "tcp-port8080,tcp,,8080,,8080";
 VBoxManage controlvm "default" natpf1 "tcp-port8443,tcp,,8443,,8443";
 ```
+
+Optional set up:
+```bash
+docker-machine create --driver "virtualbox" --virtualbox-hostonly-cidr "192.168.99.1/24" default
+docker-machine stop default
+docker-machine start default
+docker-machine regenerate-certs default
+echo "192.168.99.100 docker" >>/etc/hosts
+```
+
 ## Security
 
 ### Port scanning
