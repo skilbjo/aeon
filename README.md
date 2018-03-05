@@ -1,3 +1,5 @@
+<img src='dev-resources/img/cover.jpg' width='900' />
+
 ## c o m p o j u r e
 : (your '(LISP webserver))
 
@@ -14,7 +16,7 @@
 
 A webserver in LISP FTW.
 
-<img src='dev-resources/img/ns-hierarchy.png' width='900' />
+<img src='dev-resources/img/lisp_warning.png' width='250' />
 
 ## TODOs
 
@@ -23,6 +25,8 @@ A webserver in LISP FTW.
 - [ ] Seeing this error: `java.lang.OutOfMemoryError: Java heap space`
 
 Note: formerly valid sql injection: `http://localhost:8080/api/equities'select%201'--/latest`
+
+<img src='dev-resources/img/ns-hierarchy.png' width='900' />
 
 ## API
 
