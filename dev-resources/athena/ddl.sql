@@ -18,6 +18,26 @@ tblproperties (
   "skip.header.line.count"="1"
 );
 
+drop table if exists dw.portfolio;
+create external table dw.portfolio (
+  dataset           string,
+  ticker            string,
+  quantity          string,
+  cost_per_share    string
+)
+row format serde
+  'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+stored as inputformat
+  'org.apache.hadoop.mapred.TextInputFormat'
+outputformat
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+location
+  's3://skilbjo-data/datalake/markets-etl/portfolio'
+tblproperties (
+  "skip.header.line.count"="1"
+);
+
+
 drop table if exists dw.currency;
 create external table dw.currency (
   date            string,
@@ -124,9 +144,12 @@ tblproperties (
 drop table if exists dw.real_estate;
 create external table dw.real_estate (
   date            string,
-  ..
+  value           string,
+  area_category   string,
+  indicator_code  string,
+  area            string,
   dataset         string,
-  ticker          string,
+  ticker          string
 )
 partitioned by (
   s3uploaddate date
@@ -148,6 +171,29 @@ msck repair table dw.economics;
 msck repair table dw.equities;
 msck repair table dw.interest_rates;
 msck repair table dw.real_estate;
+
+with _markets as (
+  select
+    dataset,
+    ticker,
+    description
+  from
+    dw.markets
+)
+select *
+from _markets
+
+with _portfolio as (
+  select
+    dataset,
+    ticker,
+    cast(quantity as decimal(10,4))      as quantity,
+    cast(cost_per_share as decimal(6,2)) as cost_per_share
+  from
+    dw.portfolio
+)
+select *
+from _portfolio
 
 with _currency as (
   select
@@ -185,12 +231,12 @@ with _equities as (
     cast(close as decimal(10,2))       as close,
     cast(low as decimal(10,2))         as low,
     cast(high as decimal(10,2))        as high,
-    cast(volume as decimal(10,2))      as volume,
+    cast(volume as decimal(20,2))      as volume,
     cast(split_ratio as decimal(10,2)) as split_ratio,
     cast(adj_open as decimal(10,2))    as adj_open,
     cast(adj_close as decimal(10,2))   as adj_close,
     cast(adj_low as decimal(10,2))     as adj_low,
-    cast(adj_volume as decimal(10,2))  as adj_volume,
+    cast(adj_volume as decimal(20,2))  as adj_volume,
     cast(ex_dividend as decimal(10,2)) as ex_dividend
   from
     dw.equities
@@ -216,7 +262,10 @@ with _real_estate as (
     dataset,
     ticker,
     cast(date as date)               as date,
-    ...
+    cast(value as decimal(10,2))     as value,
+    area_category   text,
+    indicator_code  text,
+    area            text
   from
     dw.real_estate
 )
