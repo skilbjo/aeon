@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+echo 'Go run a query on rds, select * from dw.markets and save results to csv'
+
+aws s3 cp \
+  --profile personal \
+  ~/Downloads/file.csv s3://skilbjo-data/datalake/markets-etl/markets/file.csv
