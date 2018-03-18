@@ -2,6 +2,7 @@
   :uberjar-name "app.jar"
   :repositories {"atlassian" {:url "https://maven.atlassian.com/content/repositories/atlassian-3rdparty/"}}
   :dependencies [[org.clojure/clojure "1.9.0"]
+                 [org.clojure/clojurescript "1.9.946"]
                  [clj-http "3.7.0"]
                  [clj-time "0.14.2"]
                  [com.amazonaws.athena.jdbc/AthenaJDBC41 "1.0.1-atlassian-hosted"]
@@ -21,7 +22,14 @@
                  [ring/ring-defaults "0.3.1" ]
                  [ring/ring-json "0.4.0"]
                  [venantius/ultra "0.5.1" :exclusions [instaparse]]]
-  :plugins [[lein-cloverage "1.0.10"]]
+  :plugins [[lein-cloverage "1.0.10"]
+            [lein-cljsbuild "1.1.7"]
+            [lein-figwheel "0.5.15"]]
+  :cljsbuild {:builds [{:source-paths ["src-cljs"]
+                        :id "dev"
+                        :compiler {:output-to "target/cljsbuild-main.js"
+                                   :optimizations :whitespace
+                                   :pretty-print true}}]}
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
                                   [ring/ring-mock "0.3.0"]]
                    :plugins [[lein-environ "1.1.0"]
