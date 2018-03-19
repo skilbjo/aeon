@@ -21,19 +21,36 @@
                  [ring/ring-anti-forgery "1.1.0"]
                  [ring/ring-defaults "0.3.1" ]
                  [ring/ring-json "0.4.0"]
+                 [reagent "0.7.0"]
+                 [re-frame "0.10.5"]
                  [venantius/ultra "0.5.1" :exclusions [instaparse]]]
   :plugins [[lein-cloverage "1.0.10"]
-            [lein-cljsbuild "1.1.7"]
-            [lein-figwheel "0.5.15"]]
-  :cljsbuild {:builds [{:source-paths ["src-cljs"]
-                        :id "dev"
-                        :compiler {:output-to "target/cljsbuild-main.js"
-                                   :optimizations :whitespace
-                                   :pretty-print true}}]}
+            [lein-cljsbuild "1.1.7"]]
+  :source-paths ["src"]
+  :figwheel {:css-dirs ["resources/public/css"]}
+  :clean-targets ^{:protect false} ["resources/public/js/compiled"]
+  :hooks [leiningen.cljsbuild]
+  :cljsbuild {:builds [{:id "dev"
+                        :source-paths ["src-cljs"]
+                        :figwheel     {:on-jsload "compojure-app/main"}
+                        :compiler {:main app
+                                   :output-to  "resources/public/js/compiled/app.js"
+                                   :output-dir "resources/public/js/compiled/out"
+                                   :asset-path "js/compiled/out"
+                                   :source-map-timestamp true
+                                   :pretty-print true}}
+                       {:id "prod"
+                        :source-paths ["src-cljs"]
+                        :compiler {:main app
+                                   :output-to  "resources/public/js/compiled/app.js"
+                                   :optimizations   :advanced
+                                   :closure-defines {goog.DEBUG false}
+                                   :pretty-print false}}]}
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
                                   [ring/ring-mock "0.3.0"]]
-                   :plugins [[lein-environ "1.1.0"]
-                             [lein-cljfmt "0.5.7"]
+                   :plugins [[lein-cljfmt "0.5.7"]
+                             [lein-environ "1.1.0"]
+                             [lein-figwheel "0.5.15"]
                              [lein-ring "0.12.0"]]}
              :uberjar {:aot :all}}
   :ring {:handler       server.routes/app  ; lein ring server uses this as
