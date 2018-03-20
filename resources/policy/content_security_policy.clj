@@ -23,6 +23,7 @@
                       "http://skilbjo-aws.duckdns.org"
                       "http://skilbjo-robot.duckdns.org"
                       "http://localhost:8080"
+                      "data:"
                       "https://fonts.googleapis.com/icon"
                       "https://fonts.gstatic.com/s/materialicons/v36/"
                       "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/font/material-design-icons/"

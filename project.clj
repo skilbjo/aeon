@@ -35,21 +35,15 @@
   :hooks [leiningen.cljsbuild]
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src-cljs"]
-                        :figwheel     {:on-jsload "compojure-app/main"}
-                        :compiler {:main compojure-app
+                        :figwheel     {:on-jsload "compojure-app/init!"}
+                        :compiler {
+                                   :main app/init!
                                    :output-to  "resources/public/js/app.js"
                                    :output-dir "resources/public/js/out"
-                                   :asset-path "js/compiled/out"
-                                   :source-map-timestamp true
-                                   :pretty-print true}}
-                       {:id "prod"
-                        :source-paths ["src-cljs"]
-                        :compiler {:main compojure-app
-                                   :output-to  "resources/public/js/app.js"
-                                   ;:optimizations   :advanced
+                                   :asset-path "js/out"
+                                   :optimizations   :none
                                    ;:closure-defines {goog.DEBUG false}
-                                   ;:pretty-print false
-                                   }}]}
+                                   :pretty-print true}}]}
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
                                   [ring/ring-mock "0.3.0"]]
                    :plugins [[lein-cljfmt "0.5.7"]

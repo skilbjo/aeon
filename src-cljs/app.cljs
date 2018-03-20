@@ -1,13 +1,14 @@
-(ns compojure-app
+(ns app.core
   (:require [cljsjs.jquery]
-            [reagent.core :as reagent]
-            [re-frame.core :as re-frame]))
+            #_[reagent.core :as reagent]
+            #_[re-frame.core :as re-frame]))
 
 (enable-console-print!)
 
 (println "fuck")
 
 (js/console.log "fuck")
+(js/alert "fuck")
 
 (defn main []
   (println "fuck"))
@@ -28,7 +29,8 @@
   (do
     (mount-root)
     (println "fuck")
+    (js/alert "fuck")
     (.attach js/FastClick (.-body js/document))))
 
 (init!)
-
+(main)
