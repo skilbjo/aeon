@@ -1,17 +1,34 @@
 (ns compojure-app
-  (:require [reagent.core :as reagent]
+  (:require [cljsjs.jquery]
+            [reagent.core :as reagent]
             [re-frame.core :as re-frame]))
+
+(enable-console-print!)
+
+(println "fuck")
+
+(js/console.log "fuck")
 
 (defn main []
   (println "fuck"))
 
-;; define your app data so that it doesn't get over-written on reload
-
 (defonce app-state (atom {:text "Hello world!"}))
 
+(.initializeTouchEvents js/React true)
 
-(defn on-js-reload []
-  ;; optionally touch your app-state to force rerendering depending on
-  ;; your application
-  ;; (swap! app-state update-in [:__figwheel_counter] inc)
-)
+(defn main-component []
+  (fn []
+    [:div ["hello"]
+     [:h1 ["hello"]]]))
+
+(defn mount-root []
+  #_(reagent/render [main-component] (.getElementById js/document "app")))
+
+(defn init! []
+  (do
+    (mount-root)
+    (println "fuck")
+    (.attach js/FastClick (.-body js/document))))
+
+(init!)
+

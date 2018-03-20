@@ -5,6 +5,7 @@
             [compojure.route :as route]
             [environ.core :refer [env]]
             [jobs.api :as jobs.api]
+            [jobs.clojurescript :as jobs.clojurescript]
             [jobs.static :as jobs.static]
             [ring.adapter.jetty :as jetty]
             [ring.middleware.anti-forgery :as anti-forgery]
@@ -17,7 +18,7 @@
             [server.util :as util])
   (:gen-class))
 
-(defroutes site-routes
+(defroutes server-routes
   (HEAD "/" [])
   (GET "/" []
     (jobs.static/index))
@@ -25,6 +26,10 @@
     (jobs.static/routes))
   (GET "/dashboard" []
     (jobs.static/dashboard)))
+
+(defroutes clojurescript-routes
+  (GET "/app" []
+    (jobs.clojurescript/send-app)))
 
 (defroutes api-routes
   (GET "/api/:dataset/latest" [dataset]
@@ -39,7 +44,7 @@
           response))))
 
 (defroutes combined-routes
-  (ring-defaults/wrap-defaults site-routes
+  (ring-defaults/wrap-defaults server-routes
                                (assoc
                                 ring-defaults/site-defaults
                                 :security
@@ -48,6 +53,16 @@
                                  :content-type-options :nosniff
                                  :frame-options :sameorigin
                                  :xss-protection {:enable? true :mode :block}}))
+
+  (ring-defaults/wrap-defaults  clojurescript-routes
+                               (assoc
+                                 ring-defaults/site-defaults
+                                 :security
+                                 {:anti-forgery true
+                                  :hsts true
+                                  :content-type-options :nosniff
+                                  :frame-options :sameorigin
+                                  :xss-protection {:enable? true :mode :block}}))
 
   (ring-json/wrap-json-response api-routes)
 
