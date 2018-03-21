@@ -2,7 +2,6 @@
   :uberjar-name "app.jar"
   :repositories {"atlassian" {:url "https://maven.atlassian.com/content/repositories/atlassian-3rdparty/"}}
   :dependencies [[org.clojure/clojure "1.9.0"]
-                 [org.clojure/clojurescript "1.9.946"]
                  [clj-http "3.7.0"]
                  [clj-time "0.14.2"]
                  [com.amazonaws.athena.jdbc/AthenaJDBC41 "1.0.1-atlassian-hosted"]
@@ -22,26 +21,33 @@
                  [ring/ring-anti-forgery "1.1.0"]
                  [ring/ring-defaults "0.3.1" ]
                  [ring/ring-json "0.4.0"]
-                 [cljsjs/react "0.13.3-0"]
+                 [venantius/ultra "0.5.1" :exclusions [instaparse]]
+                 ; cljs
+                 [org.clojure/clojurescript "1.9.946"]
                  [cljsjs/jquery "2.1.4-0"]
-                 [reagent "0.7.0"]
+                 [cljsjs/react "15.6.2-4"]
+                 [cljsjs/react-dom "15.6.2-4"]
                  [re-frame "0.10.5"]
-                 [venantius/ultra "0.5.1" :exclusions [instaparse]]]
+                 [reagent "0.7.0"]]
   :plugins [[lein-cloverage "1.0.10"]
             [lein-cljsbuild "1.1.7"]]
   :source-paths ["src"]
-  :figwheel {:css-dirs ["resources/public/css"]}
   :clean-targets ^{:protect false} ["resources/public/js"]
   :hooks [leiningen.cljsbuild]
+  :figwheel {:css-dirs ["resources/public/css"]
+             :ring-handler server.routes/app
+             :server-port 8081}
+             ;:server-port 3449}
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src-cljs"]
-                        :figwheel     {:on-jsload "compojure-app/init!"}
+                        :figwheel true
                         :compiler {
-                                   :main app/init!
+                                   :main "app.core"
                                    :output-to  "resources/public/js/app.js"
                                    :output-dir "resources/public/js/out"
                                    :asset-path "js/out"
                                    :optimizations   :none
+                                   :source-map true
                                    ;:closure-defines {goog.DEBUG false}
                                    :pretty-print true}}]}
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
