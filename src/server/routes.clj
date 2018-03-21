@@ -55,7 +55,7 @@
                                  :xss-protection {:enable? true :mode :block}}))
 
   (ring-defaults/wrap-defaults  clojurescript-routes
-                               (assoc
+                                (assoc
                                  ring-defaults/site-defaults
                                  :security
                                  {:anti-forgery true

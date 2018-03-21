@@ -37,19 +37,16 @@
   :figwheel {:css-dirs ["resources/public/css"]
              :ring-handler server.routes/app
              :server-port 8081}
-             ;:server-port 3449}
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src-cljs"]
                         :figwheel true
-                        :compiler {
-                                   :main "app.core"
-                                   :output-to  "resources/public/js/app.js"
-                                   :output-dir "resources/public/js/out"
-                                   :asset-path "js/out"
-                                   :optimizations   :none
-                                   :source-map true
-                                   ;:closure-defines {goog.DEBUG false}
-                                   :pretty-print true}}]}
+                        :compiler {:asset-path    "js/out"
+                                   :main          "app.core"
+                                   :optimizations :none
+                                   :output-dir    "resources/public/js/out"
+                                   :output-to     "resources/public/js/app.js"
+                                   :pretty-print  true
+                                   :source-map    true}}]}
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
                                   [ring/ring-mock "0.3.0"]]
                    :plugins [[lein-cljfmt "0.5.7"]
