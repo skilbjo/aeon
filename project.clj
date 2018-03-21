@@ -67,7 +67,7 @@
              ; Same JVM options as deploy/bin/run-job uses in production
              "-Xms256m"
              "-Xmx2g"
-             "-XX:MaxMetaspaceSize=128m"
+             "-XX:MaxMetaspaceSize=512m"
              ; https://clojure.org/reference/compilation
              "-Dclojure.compiler.direct-linking=true"
              ; https://stackoverflow.com/questions/28572783/no-log4j2-configuration-file-found-using-default-configuration-logging-only-er

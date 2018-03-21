@@ -13,7 +13,7 @@
      [:h1 "hello there"]
      [:h2 "yo"]
      [:h3 "more stuff"]
-     [:h4 (* 5 5)]]))
+     [:h4 (* 5 4)]]))
 
 (defn mount-root []
   (reagent/render [main-component] (.getElementById js/document "app")))
