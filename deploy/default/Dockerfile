@@ -1,4 +1,4 @@
-FROM gliderlabs/alpine:3.6
+FROM gliderlabs/alpine:3.5
 
 ENV JAVA_HOME="/usr/lib/jvm/java-1.8-openjdk" \
     JAVA_OPTS="-Duser.timezone=UTC -Xms256m -Xmx1g -XX:MaxMetaspaceSize=512m -XX:-HeapDumpOnOutOfMemoryError" \
