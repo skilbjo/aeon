@@ -8,24 +8,50 @@
                  [compojure "1.5.1" :exclusions [ring/ring-core]]
                  [de.ubercode.clostache/clostache "1.3.1"]
                  [environ "1.1.0"]
+                 [hiccup "1.0.5"]
                  [jarohen/chime "0.2.2"]
                  [markdown-clj "0.9.99"]
                  [net.sf.uadetector/uadetector-resources "2013.02"]
                  [org.clojure/data.json "0.2.6"]
                  [org.clojure/java.jdbc "0.7.3"]
                  [org.clojure/tools.logging "0.4.0"]
-                 [org.slf4j/slf4j-log4j12 "1.6.4"]
                  [org.postgresql/postgresql "42.1.4"]
+                 [org.slf4j/slf4j-log4j12 "1.6.4"]
                  [ring "1.6.3"]
                  [ring/ring-anti-forgery "1.1.0"]
                  [ring/ring-defaults "0.3.1" ]
                  [ring/ring-json "0.4.0"]
-                 [venantius/ultra "0.5.1" :exclusions [instaparse]]]
-  :plugins [[lein-cloverage "1.0.10"]]
+                 [venantius/ultra "0.5.1" :exclusions [instaparse]]
+                 ; cljs
+                 [org.clojure/clojurescript "1.9.946"]
+                 [cljsjs/jquery "2.1.4-0"]
+                 [cljsjs/react "15.6.2-4"]
+                 [cljsjs/react-dom "15.6.2-4"]
+                 [re-frame "0.10.5"]
+                 [reagent "0.7.0"]]
+  :plugins [[lein-cloverage "1.0.10"]
+            [lein-cljsbuild "1.1.7"]]
+  :source-paths ["src"]
+  :clean-targets ^{:protect false} ["resources/public/js"]
+  :hooks [leiningen.cljsbuild]
+  :figwheel {:css-dirs ["resources/public/css"]
+             :ring-handler server.routes/app
+             :server-port 8081}
+  :cljsbuild {:builds [{:id "dev"
+                        :source-paths ["src-cljs"]
+                        :figwheel true
+                        :compiler {:asset-path    "js/out"
+                                   :main          "app.core"
+                                   :optimizations :none
+                                   :output-dir    "resources/public/js/out"
+                                   :output-to     "resources/public/js/app.js"
+                                   :pretty-print  true
+                                   :source-map    true}}]}
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
                                   [ring/ring-mock "0.3.0"]]
-                   :plugins [[lein-environ "1.1.0"]
-                             [lein-cljfmt "0.5.7"]
+                   :plugins [[lein-cljfmt "0.5.7"]
+                             [lein-environ "1.1.0"]
+                             [lein-figwheel "0.5.15"]
                              [lein-ring "0.12.0"]]}
              :uberjar {:aot :all}}
   :ring {:handler       server.routes/app  ; lein ring server uses this as
@@ -41,7 +67,7 @@
              ; Same JVM options as deploy/bin/run-job uses in production
              "-Xms256m"
              "-Xmx2g"
-             "-XX:MaxMetaspaceSize=128m"
+             "-XX:MaxMetaspaceSize=512m"
              ; https://clojure.org/reference/compilation
              "-Dclojure.compiler.direct-linking=true"
              ; https://stackoverflow.com/questions/28572783/no-log4j2-configuration-file-found-using-default-configuration-logging-only-er
