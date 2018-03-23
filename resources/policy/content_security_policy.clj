@@ -8,7 +8,8 @@
                       "http://localhost:8080"
                       "http://localhost:8081"
                       "http://localhost:3449"
-                      :unsafe-inline]
+                      :unsafe-inline
+                      :unsafe-eval]
            :style    ["https://skilbjo.duckdns.org"
                       "https://skilbjo-sfo.duckdns.org"
                       "https://skilbjo-aws.duckdns.org"

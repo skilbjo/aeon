@@ -24,6 +24,7 @@
                  [venantius/ultra "0.5.1" :exclusions [instaparse]]
                  ; cljs
                  [org.clojure/clojurescript "1.9.946"]
+                 [binaryage/devtools "0.9.9"]
                  [cljsjs/jquery "2.1.4-0"]
                  [cljsjs/react "15.6.2-4"]
                  [cljsjs/react-dom "15.6.2-4"]
@@ -34,26 +35,30 @@
   :source-paths ["src"]
   :clean-targets ^{:protect false} ["resources/public/js"]
   :hooks [leiningen.cljsbuild]
-  :figwheel {:css-dirs ["resources/public/css"]
-             :ring-handler server.routes/app
-             :server-port 8081}
-  :cljsbuild {:builds [{:id "dev"
-                        :source-paths ["src-cljs"]
-                        :figwheel true
-                        :compiler {:asset-path    "js/out"
-                                   :main          "app.core"
-                                   :optimizations :none
-                                   :output-dir    "resources/public/js/out"
-                                   :output-to     "resources/public/js/app.js"
-                                   :pretty-print  true
-                                   :source-map    true}}]}
+  :cljsbuild {:builds {:app {:source-paths ["src-cljs"]
+                             :compiler {:asset-path    "js/out"
+                                        :main          "app.core"
+                                        :output-dir    "resources/public/js/out"
+                                        :output-to     "resources/public/js/app.js"}}}}
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
                                   [ring/ring-mock "0.3.0"]]
                    :plugins [[lein-cljfmt "0.5.7"]
                              [lein-environ "1.1.0"]
-                             [lein-figwheel "0.5.15"]
-                             [lein-ring "0.12.0"]]}
-             :uberjar {:aot :all}}
+                             [lein-figwheel "0.5.14"]
+                             [lein-ring "0.12.0"]]
+                   :figwheel {:css-dirs ["resources/public/css"]
+                              :ring-handler server.routes/app
+                              :server-port 8081}
+                   :cljsbuild {:builds {:app {:figwheel true
+                                              :compiler {:optimizations :none
+                                                         :preloads      [devtools.preload]
+                                                         :pretty-print  true
+                                                         :source-map    true
+                                                         :external-config {:devtools/config {:features-to-install :all}}}}}}}
+             :uberjar {:aot :all
+                       :cljsbuild {:builds {:app {:compiler {:closure-defines {goog.DEBUG false}
+                                                             :optimizations :advanced
+                                                             :pretty-print  false}}}}}}
   :ring {:handler       server.routes/app  ; lein ring server uses this as
          :port          8080               ; the entrypoint
          :ssl-port      8443
