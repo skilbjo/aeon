@@ -2,6 +2,7 @@
   :uberjar-name "app.jar"
   :repositories {"atlassian" {:url "https://maven.atlassian.com/content/repositories/atlassian-3rdparty/"}}
   :dependencies [[org.clojure/clojure "1.9.0"]
+                 [bk/ring-gzip "0.3.0"]
                  [clj-http "3.7.0"]
                  [clj-time "0.14.2"]
                  [com.amazonaws.athena.jdbc/AthenaJDBC41 "1.0.1-atlassian-hosted"]

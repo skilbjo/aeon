@@ -10,6 +10,7 @@
             [ring.adapter.jetty :as jetty]
             [ring.middleware.anti-forgery :as anti-forgery]
             [ring.middleware.defaults :as ring-defaults]
+            [ring.middleware.gzip :as gzip]
             [ring.middleware.json :as ring-json]
             [ring.middleware.session :as session]
             [ring.util.response :refer [response]]
@@ -75,7 +76,8 @@
       (policy/wrap-referrer-policy "strict-origin")
       anti-forgery/wrap-anti-forgery
       (session/wrap-session {:cookie-attrs {:max-age 3600
-                                            :secure  true}})))
+                                            :secure  true}})
+      gzip/wrap-gzip))
 
 (defn -main []  ; java -jar app.jar uses this as the entrypoint
   (log/info "Starting compojure webserver ... ")
