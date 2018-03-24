@@ -11,7 +11,8 @@
 
 (deftest unit-tests
   (testing "jobs.api unit tests"
-    (is (= {:error {:msg "Error: '/api/made_up_dataset' is not a valid endpoint.\n                           Try /api/equities or /api/currency."}}
+    (is (= {:status 400
+            :body "Error: '/api/made_up_dataset' is not a valid endpoint.\nTry /api/equities or /api/currency."}
            (latest "made_up_dataset")))))
 
 (deftest integration-test

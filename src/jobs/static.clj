@@ -14,7 +14,7 @@
   (util/render-markdown "routes"))
 
 (defn dashboard []
-  (let [data (fn []
+  (let [data (fn [_]
                (let [dir      (if (env :jdbc-athena-uri)
                                 "athena"
                                 "dw")
@@ -36,4 +36,4 @@
                    (dw-f))))
         data' (memoize data)]
     (util/render-markdown "static/dashboard"
-                          {:body (data')})))
+                          {:body (data' util/now')}))) ; cache the request by date

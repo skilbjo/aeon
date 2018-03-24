@@ -19,9 +19,10 @@
 
 (defn latest [dataset]
   (if (false? (allowed-endpoint? datasets dataset))
-    {:error {:msg (format "Error: '/api/%s' is not a valid endpoint.
-                           Try /api/equities or /api/currency." dataset)}}
-    (let [data  (fn []
+    {:status 400
+     :body (util/multi-line-string (format "Error: '/api/%s' is not a valid endpoint." dataset)
+                                   "Try /api/equities or /api/currency.")}
+    (let [data  (fn [_]
                   (let [dir (if (env :jdbc-athena-uri)
                               "athena"
                               "dw")
@@ -34,4 +35,4 @@
                              (f {:table dataset}))
                          (map #(update % :date coerce/to-sql-date)))))
           data' (memoize data)]
-      {:body (data')})))
+      {:body (data' util/now')}))) ; cache the request by date
