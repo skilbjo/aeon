@@ -1,8 +1,24 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-echo 'Go run a query on rds, select * from dw.portfolio and save results to csv'
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && cd "$dir"
 
-aws s3 cp \
-  --profile personal \
-  ~/Desktop/file.csv s3://skilbjo-data/datalake/markets-etl/portfolio/file.csv
+source athena
+
+get_dw_portfolio(){
+  psql $aws_db_uri -AF',' -c 'select * from dw.portfolio' | ghead -n -1 >~/Desktop/file.csv
+}
+
+upload_portfolio_to_athena(){
+  aws s3 cp \
+    --profile personal \
+    ~/Desktop/file.csv s3://skilbjo-data/datalake/markets-etl/portfolio/file.csv
+}
+
+verify_results(){
+  query 'select * from dw.portfolio'
+}
+
+get_dw_portfolio \
+  && upload_portfolio_to_athena \
+  && verify_results
