@@ -1,8 +1,24 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-echo 'Go run a query on rds, select * from dw.markets and save results to csv'
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && cd "$dir"
 
-aws s3 cp \
-  --profile personal \
-  ~/Downloads/file.csv s3://skilbjo-data/datalake/markets-etl/markets/file.csv
+source athena
+
+get_dw_markets_dim(){
+  psql $aws_db_uri -AF',' -c 'select * from dw.markets' | ghead -n -1 >~/Downloads/file.csv
+}
+
+upload_markets_dim_to_s3(){
+  aws s3 cp \
+    --profile personal \
+    ~/Downloads/file.csv s3://skilbjo-data/datalake/markets-etl/markets/file.csv
+}
+
+verify_results(){
+  query 'select * from dw.markets'
+}
+
+get_dw_markets_dim \
+  && upload_markets_dim_to_s3 \
+  && verify_results

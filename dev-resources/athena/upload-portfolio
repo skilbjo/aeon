@@ -6,13 +6,13 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && cd "$dir"
 source athena
 
 get_dw_portfolio(){
-  psql $aws_db_uri -AF',' -c 'select * from dw.portfolio' | ghead -n -1 >~/Desktop/file.csv
+  psql $aws_db_uri -AF',' -c 'select * from dw.portfolio' | ghead -n -1 >~/Downloads/file.csv
 }
 
-upload_portfolio_to_athena(){
+upload_portfolio_to_s3(){
   aws s3 cp \
     --profile personal \
-    ~/Desktop/file.csv s3://skilbjo-data/datalake/markets-etl/portfolio/file.csv
+    ~/Downloads/file.csv s3://skilbjo-data/datalake/markets-etl/portfolio/file.csv
 }
 
 verify_results(){
@@ -20,5 +20,5 @@ verify_results(){
 }
 
 get_dw_portfolio \
-  && upload_portfolio_to_athena \
+  && upload_portfolio_to_s3 \
   && verify_results
