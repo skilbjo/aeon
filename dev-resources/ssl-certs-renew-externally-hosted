@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
-set -eoux pipefail
+set -eou pipefail
 
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 app=$(basename $(dirname $dir))
 
 cd "${dir}/.."
+if [[ ! -d ssl-certs ]]; then mkdir ssl-certs; fi
 
 # make sure the pfsense ACME packaage has run; ie pfsense has new SSL certs
 
 # we need to get the keyfile, and cert from pfsense, stored in /conf/acme
-ssh pfsense. "cat /conf/acme/skilbjo.duckdns.org.key" >ssl-certs/keyfile
-ssh pfsense. "cat /conf/acme/skilbjo.duckdns.org.crt" >ssl-certs/certfile
+ssh pfsense "cat /conf/acme/skilbjo.duckdns.org.key" >ssl-certs/keyfile
+ssh pfsense "cat /conf/acme/skilbjo.duckdns.org.crt" >ssl-certs/certfile
 
 # now generate the java_key_store file
 dev-resources/create-java-key-store ssl-certs/keyfile ssl-certs/certfile
@@ -24,3 +25,4 @@ aws --profile personal \
 
 # download to server
 ssh aws "aws s3 cp s3://skilbjo/java_key_store java_key_store"
+echo 'new key uploaded. now run "ssh aws", attached the tmux session, and restart the server'
