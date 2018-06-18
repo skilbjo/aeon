@@ -33,7 +33,10 @@
                   :exclusions [com.google.code.findbugs/jsr305
                                com.fasterxml.jackson.core/jackson-core
                                org.clojure/tools.reader]]
-                 [binaryage/devtools "0.9.10"]
+
+                 [cljs-ajax "0.7.3" :exclusions [com.fasterxml.jackson.core/jackson-core
+                                                 com.fasterxml.jackson.core/jackson-dataformat-cbor
+                                                 cheshire]]
                  [cljsjs/jquery "3.2.1-0"]
                  [cljsjs/react "16.4.0-0"]
                  [cljsjs/react-dom "16.4.0-0"]
@@ -50,8 +53,14 @@
                                         :main          "app.core"
                                         :output-dir    "resources/public/js/out"
                                         :output-to     "resources/public/js/app.js"}}}}
-  :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]
-                                  [ring/ring-mock "0.3.2" :exclusions [cheshire]]]
+  :profiles {:dev {:dependencies [[binaryage/devtools "0.9.10"]
+                                  [day8.re-frame/re-frame-10x "0.3.3"
+                                   :exclusions [rewrite-clj
+                                                rewrite-cljs
+                                                com.google.code.findbugs/jsr305]]
+                                  [javax.servlet/servlet-api "2.5"]
+                                  [ring/ring-mock "0.3.2"
+                                   :exclusions [cheshire]]]
                    :plugins [[lein-cljfmt "0.5.7"]
                              [lein-environ "1.1.0"]
                              [lein-figwheel "0.5.16"]
@@ -60,11 +69,16 @@
                               :ring-handler server.routes/app
                               :server-port 8081}
                    :cljsbuild {:builds {:app {:figwheel true
-                                              :compiler {:optimizations :none
-                                                         :preloads      [devtools.preload]
-                                                         :pretty-print  true
-                                                         :source-map    true
-                                                         :external-config {:devtools/config {:features-to-install :all}}}}}}}
+                                              :compiler {:optimizations   :none
+                                                         :preloads        [devtools.preload
+                                                                           day8.re-frame-10x.preload]
+                                                         :pretty-print    true
+                                                         :source-map      true
+                                                         :source-map-timestamp true
+                                                         :closure-defines {goog.DEBUG true
+                                                                           "re_frame.trace.trace_enabled_QMARK_" true}
+                                                         :external-config {:devtools/config
+                                                                           {:features-to-install :all}}}}}}}
              :uberjar {:aot :all
                        :cljsbuild {:builds {:app {:compiler {:closure-defines {goog.DEBUG false}
                                                              :optimizations :advanced
