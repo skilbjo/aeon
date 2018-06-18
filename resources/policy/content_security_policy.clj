@@ -21,7 +21,9 @@
                       "http://localhost:8081"
                       "http://localhost:3449"
                       :unsafe-inline]
-           :img      "*"
+           :img      ["http://www.w3.org"
+                      "data:"
+                      "*"]
            :object   :none
            :font     ["http://skilbjo.duckdns.org"
                       "http://skilbjo-sfo.duckdns.org"
@@ -29,6 +31,7 @@
                       "http://skilbjo-robot.duckdns.org"
                       "https://fonts.googleapis.com/icon"
                       "https://fonts.gstatic.com/s/materialicons/v36/"
+                      "https://fonts.gstatic.com/s/materialicons/v38/"
                       "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/font/material-design-icons/"
                       "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/font/roboto/"
                       "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/fonts/"
