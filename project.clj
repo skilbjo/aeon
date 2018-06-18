@@ -55,8 +55,8 @@
                                         :output-to     "resources/public/js/app.js"}}}}
   :profiles {:dev {:dependencies [[binaryage/devtools "0.9.10"]
                                   [day8.re-frame/re-frame-10x "0.3.3"
-                                   :exclusions [rewrite-clj
-                                                rewrite-cljs
+                                   :exclusions [#_rewrite-clj
+                                                #_rewrite-cljs
                                                 com.google.code.findbugs/jsr305]]
                                   [javax.servlet/servlet-api "2.5"]
                                   [ring/ring-mock "0.3.2"
