@@ -3,9 +3,6 @@
             [reagent.core :as reagent]
             [re-frame.core :as re-frame]))
 
-(def debug?
-  ^boolean goog.DEBUG)
-
 (defn main-component []
   (fn []
     [:div ["hello"]
@@ -14,22 +11,23 @@
      [:h3 "more stuff"]
      [:h4 (* 5 4)] ]))
 
-(defn mount-root []
+(defn init! []
   (re-frame/clear-subscription-cache!)
 
-  (reagent/render [main-component]
-                  (.getElementById js/document "app")))
+  (re-frame/dispatch-sync [:initialize-db])
 
-(defn init! []
-  (when debug?
-    (do (enable-console-print!)
-        (js/console.log "we're in dev-mode!")))
+  (reagent/render [main-component]
+                  (.getElementById js/document "app"))
 
   ;; (re-frame/dispatch-sync [::events/initialize-db])
 
-  (mount-root))
+  )
 
 (defn ^:export main []
+  (when goog.DEBUG
+    (do (enable-console-print!)
+        (js/console.log "we're in dev-mode!")))
+
   (init!))
 
 (main)
