@@ -1,6 +1,7 @@
 (ns app.events
   (:require [app.db :refer [default-db stuffs->local-storage]]
             [cljs.spec.alpha :as s]
+            [day8.re-frame.tracing :refer-macros [fn-traced]]
             [re-frame.core :refer [reg-event-db
                                    reg-event-fx
                                    inject-cofx
@@ -22,15 +23,11 @@
                         (path :stuffs)
                         ->local-store])
 
-(defn allocate-next-id
-  "Returns the next todo id.
-  Assumes todos are sorted.
-  Returns one more than the current largest id."
-  [stuffs]
+(defn allocate-next-id [stuffs]
   ((fnil inc 0) (last (keys stuffs))))
 
 (reg-event-fx
   :initialize-db
   [(inject-cofx :local-store-stuffs) check-spec-interceptor]
-  (fn [{:keys [db local-store-todos]} _]
-    {:db (assoc default-db :todos local-store-todos)}))
+  (fn-traced [{:keys [db local-store-stuffs]} _]
+    {:db (assoc default-db :stuffs local-store-stuffs)}))

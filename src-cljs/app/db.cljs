@@ -1,5 +1,5 @@
 (ns app.db
-  (:require [cljs.reader]
+  (:require [cljs.reader :as reader]
             [cljs.spec.alpha :as s]
             [re-frame.core :as re-frame]))
 
@@ -26,5 +26,5 @@
   (fn [cofx _]
       (assoc cofx :local-store-stuffs
              (into (sorted-map)
-                   (some->> (.getItem js/localStorage ls-key)
-                            (cljs.reader/read-string))))))
+                   (some->> (.getItem js/localStorage "compojure")
+                            (reader/read-string))))))
