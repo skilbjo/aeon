@@ -37,9 +37,10 @@
                  [cljs-ajax "0.7.3" :exclusions [com.fasterxml.jackson.core/jackson-core
                                                  com.fasterxml.jackson.core/jackson-dataformat-cbor
                                                  cheshire]]
-                 [cljsjs/jquery "3.2.1-0"]
-                 [cljsjs/react "16.4.0-0"]
-                 [cljsjs/react-dom "16.4.0-0"]
+                 #_[cljsjs/jquery "3.2.1-0"]
+                 #_[cljsjs/react "16.4.0-0"]
+                 #_[cljsjs/react-dom "16.4.0-0"]
+                 [day8.re-frame/tracing-stubs "0.5.1"]
                  [re-frame "0.10.5"
                   :exclusions [com.google.code.findbugs/jsr305]]
                  [reagent "0.8.1"]]
@@ -58,6 +59,7 @@
                                    :exclusions [#_rewrite-clj
                                                 #_rewrite-cljs
                                                 com.google.code.findbugs/jsr305]]
+                                  [day8.re-frame/tracing "0.5.1"]
                                   [javax.servlet/servlet-api "2.5"]
                                   [ring/ring-mock "0.3.2"
                                    :exclusions [cheshire]]]
@@ -76,7 +78,8 @@
                                                          :source-map      true
                                                          :source-map-timestamp true
                                                          :closure-defines {goog.DEBUG true
-                                                                           "re_frame.trace.trace_enabled_QMARK_" true}
+                                                                           "re_frame.trace.trace_enabled_QMARK_" true
+                                                                           "day8.re_frame.tracing.trace_enabled_QMARK_" true}
                                                          :external-config {:devtools/config
                                                                            {:features-to-install :all}}}}}}}
              :uberjar {:aot :all
