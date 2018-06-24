@@ -3,6 +3,7 @@
             [re-frame.core :refer [reg-sub subscribe]]))
 
 (defn sorted-stuffs [db _]
+  (println "in subs:" db)
   (:stuffs db))
 
 (reg-sub
