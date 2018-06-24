@@ -7,10 +7,10 @@
   (:stuffs db))
 
 (reg-sub
-  :sorted-stuffs
-  sorted-stuffs)
+ :sorted-stuffs
+ sorted-stuffs)
 
 (reg-sub
-  :stuffs
-  (fn-traced [query-v _]
-    (subscribe [:sorted-stuffs])))
+ :stuffs
+ (fn-traced [query-v _]
+            (subscribe [:sorted-stuffs])))

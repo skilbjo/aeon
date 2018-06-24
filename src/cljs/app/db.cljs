@@ -18,9 +18,9 @@
   {:stuffs (sorted-map)})
 
 (re-frame/reg-cofx
-  :local-store-stuffs
-  (fn [cofx _]
-      (assoc cofx :local-store-stuffs
-             (into (sorted-map)
-                   (some->> (.getItem js/localStorage "compojure")
-                            (reader/read-string))))))
+ :local-store-stuffs
+ (fn [cofx _]
+   (assoc cofx :local-store-stuffs
+          (into (sorted-map)
+                (some->> (.getItem js/localStorage "compojure")
+                         (reader/read-string))))))
