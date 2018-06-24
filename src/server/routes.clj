@@ -15,7 +15,8 @@
             [ring.middleware.session :as session]
             [ring.util.response :refer [response]]
             [server.error :as error]
-            [server.middleware-policy :as policy]
+            [server.middleware :as middleware]
+            [server.spec :as spec]
             [server.util :as util])
   (:gen-class))
 
@@ -71,9 +72,11 @@
 
 (def app
   (-> combined-routes
-      (policy/add-content-security-policy :config-path
-                                          "policy/content_security_policy.clj")
-      (policy/wrap-referrer-policy "strict-origin")
+      (middleware/add-content-security-policy
+        :config-path
+        "policy/content_security_policy.clj")
+      (middleware/wrap-referrer-policy "strict-origin")
+      middleware/wrap-exception-handling
       anti-forgery/wrap-anti-forgery
       (session/wrap-session {:cookie-attrs {:max-age 3600
                                             :secure  true}})
