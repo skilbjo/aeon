@@ -3,7 +3,7 @@
             [cljs.spec.alpha :as s]
             [re-frame.core :as re-frame]))
 
-(def local-storage-key "compojure")
+(def local-storage-key "aion")
 
 (defn stuffs->local-storage [stuffs]
   (.setItem js/localStorage local-storage-key (str stuffs)))
@@ -18,9 +18,9 @@
   {:stuffs (sorted-map)})
 
 (re-frame/reg-cofx
-  :local-store-stuffs
-  (fn [cofx _]
-      (assoc cofx :local-store-stuffs
-             (into (sorted-map)
-                   (some->> (.getItem js/localStorage "compojure")
-                            (reader/read-string))))))
+ :local-store-stuffs
+ (fn [cofx _]
+   (assoc cofx :local-store-stuffs
+          (into (sorted-map)
+                (some->> (.getItem js/localStorage "compojure")
+                         (reader/read-string))))))

@@ -54,7 +54,8 @@
                                  :hsts true
                                  :content-type-options :nosniff
                                  :frame-options :sameorigin
-                                 :xss-protection {:enable? true :mode :block}}))
+                                 :xss-protection {:enable? true
+                                                  :mode :block}}))
 
   (ring-defaults/wrap-defaults  clojurescript-routes
                                 (assoc
@@ -64,7 +65,8 @@
                                   :hsts true
                                   :content-type-options :nosniff
                                   :frame-options :sameorigin
-                                  :xss-protection {:enable? true :mode :block}}))
+                                  :xss-protection {:enable? true
+                                                   :mode    :block}}))
 
   (ring-json/wrap-json-response api-routes)
 
@@ -76,14 +78,13 @@
        :config-path
        "policy/content_security_policy.clj")
       (middleware/wrap-referrer-policy "strict-origin")
-      middleware/wrap-exception-handling
       anti-forgery/wrap-anti-forgery
       (session/wrap-session {:cookie-attrs {:max-age 3600
                                             :secure  true}})
       gzip/wrap-gzip))
 
 (defn -main []  ; java -jar app.jar uses this as the entrypoint
-  (log/info "Starting compojure webserver ... ")
+  (log/info "Starting aoin webserver ... ")
   (error/set-default-error-handler)
 
   ; schedule the healthchecks

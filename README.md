@@ -1,22 +1,31 @@
 <img src='dev-resources/img/cover.jpg' width='900' />
 
-## c o m p o j u r e
+## a i o n
 : (your '(LISP webserver))
 
-[CircleCI Builds](https://circleci.com/gh/skilbjo/compojure)
+[CircleCI Builds](https://circleci.com/gh/skilbjo/aion)
 
-[![CircleCI](https://circleci.com/gh/skilbjo/compojure/tree/master.svg?style=svg)](https://circleci.com/gh/skilbjo/compojure/tree/master)
-[![quay.io](https://quay.io/repository/skilbjo/compojure/status "Docker Repository on Quay")](https://quay.io/repository/skilbjo/compojure)
-[![codecov](https://codecov.io/gh/skilbjo/compojure/branch/master/graph/badge.svg)](https://codecov.io/gh/skilbjo/compojure)
+[![CircleCI](https://circleci.com/gh/skilbjo/aoin/tree/master.svg?style=svg)](https://circleci.com/gh/skilbjo/aoin/tree/master)
+[![quay.io](https://quay.io/repository/skilbjo/aoin/status "Docker Repository on Quay")](https://quay.io/repository/skilbjo/aion)
+[![codecov](https://codecov.io/gh/skilbjo/aoin/branch/master/graph/badge.svg)](https://codecov.io/gh/skilbjo/aoin)
 
-[![compojure_sfo](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/dLkCKQze/compojure_sfo.svg)](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/dLkCKQze/compojure_sfo.svg)
-[![compojure_aws](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/bKryWOrC/compojure_aws.svg)](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/bKryWOrC/compojure_aws.svg)
+[![aion_sfo](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/LLt_f7oB/aoin_sfo.svg)](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/LLt_f7oB/aoin_sfo.svg)
+[![aion_aws](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/VCCU8nLh/aoin_aws.svg)]((https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/VCCU8nLh/aoin_aws.svg))
 
 ## What
 
 A webserver in LISP FTW.
 
 <img src='dev-resources/img/lisp_warning.png' width='250' />
+
+## aoin
+
+> Aion (Greek: Αἰών) is a Hellenistic deity associated with time, the orb or
+> circle encompassing the universe, and the zodiac. The "time" represented by
+> Aion is unbounded, in contrast to Chronos as empirical time divided into past,
+> present, and future. He is thus a god of eternity.
+
+<img src='dev-resources/img/aoin.jpg' />
 
 ## TODOs
 
@@ -172,8 +181,8 @@ nmap --top-ports 5000 -T4 -sC $(nslookup [host]-aws.duckdns.org | grep Address |
 
 ### Git remotes
 ```bash
-git remote add pi-vpn ssh://[user]@[bastion].:43/~/deploy/git/compojure.git
-git remote add pi-home ssh://[user]@[host]/~/deploy/git/compojure.git
+git remote add pi-vpn ssh://[user]@[bastion].:43/~/deploy/git/aion.git
+git remote add pi-home ssh://[user]@[host]/~/deploy/git/aion.git
 ```
 
 ### Pre-commit hook to update pom.xml

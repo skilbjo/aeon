@@ -26,8 +26,8 @@
     [:body
      [:div#app]
      (include-js "js/app.js"
-                 "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
-                 "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js")]]))
+                 #_"https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+                 #_"https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js")]]))
 
 (defn send-app []
   app)

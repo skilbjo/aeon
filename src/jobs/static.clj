@@ -19,18 +19,21 @@
                                 "athena"
                                 "dw")
                      dw-f     (fn []
-                                (jdbc/with-db-connection [cxn (-> :ro-jdbc-db-uri env)]
+                                (jdbc/with-db-connection [cxn (-> :ro-jdbc-db-uri
+                                                                  env)]
                                   (->> (str dir "/dashboard.sql")
                                        io/resource
                                        slurp
                                        (jdbc/query cxn)
-                                       (map #(update % :date coerce/to-sql-date)))))
+                                       (map #(update %
+                                                     :date coerce/to-sql-date)))))
                      athena-f (fn []
                                 (->> (str dir "/dashboard.sql")
                                      io/resource
                                      slurp
                                      sql/query-athena
-                                     (map #(update % :date coerce/to-sql-date))))]
+                                     (map #(update %
+                                                   :date coerce/to-sql-date))))]
                  (if (env :jdbc-athena-uri)
                    (athena-f)
                    (dw-f))))

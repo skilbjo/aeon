@@ -15,6 +15,6 @@
   [:div
    [:section#app
     [header]
-   (when @(subscribe [:stuffs])
+    (when @(subscribe [:stuffs])
       [:h2 "hey"])]
    [footer]])
