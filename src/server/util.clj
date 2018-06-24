@@ -10,7 +10,7 @@
             [clostache.parser :as clostache]
             [environ.core :refer [env]]
             [markdown.core :as markdown])
-  (:import  [org.joda.time DateTimeZone]))
+  (:import (org.joda.time DateTimeZone)))
 
 ; -- dev -----------------------------------------------
 (defn print-it [coll]
@@ -77,10 +77,11 @@
 ; -- alerts --------------------------------------------
 (defn notify-healthchecks-io [api-key]
   (try
-    (future (http/get (str "https://hchk.io/"
+    (future (http/get (str "https://hc-ping.com/"
                            api-key)))
     (catch Exception ex
-      (log/error ex "Error calling healthchecks. Check API key; or hchk.io status..."))))
+      (log/error ex "Error calling healthchecks.
+                     Check API key; or hchk.io status..."))))
 
 (defn schedule-healthchecks-io []
   (let [schedule    (periodic/periodic-seq (-> now
@@ -88,6 +89,6 @@
                                            every-half-hour)
         callback-fn (fn [time]
                       (log/debug "Notifying healthchecks.io at " time)
-                      (notify-healthchecks-io (env :healthchecks-io-compojure)))]
+                      (notify-healthchecks-io (env :healthchecks-io-aoin)))]
     (chime/chime-at schedule
                     callback-fn)))

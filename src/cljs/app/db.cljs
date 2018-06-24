@@ -3,7 +3,7 @@
             [cljs.spec.alpha :as s]
             [re-frame.core :as re-frame]))
 
-(def local-storage-key "compojure")
+(def local-storage-key "aion")
 
 (defn stuffs->local-storage [stuffs]
   (.setItem js/localStorage local-storage-key (str stuffs)))

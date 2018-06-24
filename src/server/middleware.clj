@@ -1,8 +1,8 @@
 (ns server.middleware
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io])
-  (:import [net.sf.uadetector UserAgent UserAgentStringParser]
-           [net.sf.uadetector.service UADetectorServiceFactory]))
+  (:import (net.sf.uadetector UserAgent UserAgentStringParser)
+           (net.sf.uadetector.service UADetectorServiceFactory)))
 
 ; https://github.com/ecmendenhall/malcontent/blob/master/src/malcontent/policy.clj
 ; project is not maintained however, and I need some tweaks

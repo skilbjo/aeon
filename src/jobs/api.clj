@@ -9,7 +9,9 @@
 (defn latest [dataset]
   (if (false? (s/allowed-endpoint? s/datasets dataset))
     {:status 400
-     :body (util/multi-line-string (format "Error: '/api/%s' is not a valid endpoint." dataset)
+     :body (util/multi-line-string (format
+                                    "Error: '/api/%s' is not a valid endpoint."
+                                    dataset)
                                    "Try /api/equities or /api/currency.")}
     (let [data  (fn [_]
                   (let [dir (if (env :jdbc-athena-uri)

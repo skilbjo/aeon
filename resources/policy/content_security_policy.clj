@@ -8,6 +8,7 @@
                       "http://localhost:8080"
                       "http://localhost:8081"
                       "http://localhost:3449"
+                      "http://docker:8080"
                       :unsafe-inline
                       :unsafe-eval]
            :style    ["https://skilbjo.duckdns.org"
@@ -20,6 +21,7 @@
                       "http://localhost:8080"
                       "http://localhost:8081"
                       "http://localhost:3449"
+                      "http://docker:8080"
                       :unsafe-inline]
            :img      ["http://www.w3.org"
                       "data:"
@@ -37,6 +39,8 @@
                       "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/fonts/"
                       "http://localhost:8080"
                       "http://localhost:8081"
+                      "http://localhost:3449"
+                      "http://docker:8080"
                       "data:"]
            :connect  ["http://skilbjo.duckdns.org"
                       "http://skilbjo-sfo.duckdns.org"
@@ -44,6 +48,8 @@
                       "http://skilbjo-robot.duckdns.org"
                       "http://localhost:8080"
                       "http://localhost:8081"
+                      "http://localhost:3449"
+                      "http://docker:8080"
                       "ws://localhost:3449"
                       "ws:"]
            :child    :self}}

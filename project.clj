@@ -1,4 +1,4 @@
-(defproject compojure "0.1.0"
+(defproject aion "0.1.0"
   :uberjar-name "app.jar"
   :repositories {"atlassian"
                  {:url "https://maven.atlassian.com/content/repositories/atlassian-3rdparty/"}}
@@ -46,10 +46,12 @@
                  [reagent "0.8.1"]]
   :plugins [[lein-cloverage "1.0.10"]
             [lein-cljsbuild "1.1.7"]]
+  ;:source-paths ["src/jobs" "src/server"]
   :source-paths ["src"]
+  :test-paths ["test"]
   :clean-targets ^{:protect false} ["resources/public/js"]
   :hooks [leiningen.cljsbuild]
-  :cljsbuild {:builds {:app {:source-paths ["src-cljs"]
+  :cljsbuild {:builds {:app {:source-paths ["src/cljs"]
                              :compiler {:asset-path    "js/out"
                                         :main          "app.core"
                                         :output-dir    "resources/public/js/out"
