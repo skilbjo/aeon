@@ -1,5 +1,5 @@
 (ns app.views
-  (:require [reagent.core  :as reagent]
+  (:require [reagent.core :as reagent]
             [re-frame.core :refer [subscribe dispatch]]))
 
 (defn header []
@@ -8,12 +8,13 @@
 
 (defn footer []
   [:footer#footer
-   [:h3 "footer"]])
+   [:h3 "footer"]
+   [:h3 "what the f@! up with these errors"]])
 
 (defn the-app []
   [:div
    [:section#app
     [header]
-   #_(when (seq @(subscribe [:stuffs]))
+   (when @(subscribe [:stuffs])
       [:h2 "hey"])]
    [footer]])

@@ -1,21 +1,16 @@
 (ns app.core
-  (:require [app.events]
+  (:require [reagent.core :as reagent]
+            [re-frame.core :as re-frame]
+            [app.events]
             [app.subs]
-            [app.views :as views]
-            [reagent.core :as reagent]
-            [re-frame.core :as re-frame]))
+            [app.spec]
+            [app.views :as views]))
 
 (defn init! []
   (re-frame/clear-subscription-cache!)
 
-  (re-frame/dispatch-sync [:initialize-db])
-
   (reagent/render [views/the-app]
-                  (.getElementById js/document "app"))
-
-  ;; (re-frame/dispatch-sync [::events/initialize-db])
-
-  )
+                  (.getElementById js/document "app")))
 
 (defn ^:export main []
   (when goog.DEBUG
@@ -24,4 +19,5 @@
 
   (init!))
 
+(re-frame/dispatch-sync [:initialize-db])
 (main)
