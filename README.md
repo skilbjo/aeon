@@ -5,9 +5,9 @@
 
 [CircleCI Builds](https://circleci.com/gh/skilbjo/aion)
 
-[![CircleCI](https://circleci.com/gh/skilbjo/compojure/tree/master.svg?style=svg)](https://circleci.com/gh/skilbjo/compojure/tree/master)
-[![quay.io](https://quay.io/repository/skilbjo/compojure/status "Docker Repository on Quay")](https://quay.io/repository/skilbjo/aion)
-[![codecov](https://codecov.io/gh/skilbjo/compojure/branch/master/graph/badge.svg)](https://codecov.io/gh/skilbjo/compojure)
+[![CircleCI](https://circleci.com/gh/skilbjo/aoin/tree/master.svg?style=svg)](https://circleci.com/gh/skilbjo/aoin/tree/master)
+[![quay.io](https://quay.io/repository/skilbjo/aoin/status "Docker Repository on Quay")](https://quay.io/repository/skilbjo/aion)
+[![codecov](https://codecov.io/gh/skilbjo/aoin/branch/master/graph/badge.svg)](https://codecov.io/gh/skilbjo/aoin)
 
 [![aion_sfo](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/LLt_f7oB/aoin_sfo.svg)](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/LLt_f7oB/aoin_sfo.svg)
 [![aion_aws](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/VCCU8nLh/aoin_aws.svg)]((https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/VCCU8nLh/aoin_aws.svg))
