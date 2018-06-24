@@ -1,4 +1,4 @@
-(ns server.middleware-policy
+(ns server.middleware
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io])
   (:import [net.sf.uadetector UserAgent UserAgentStringParser]
@@ -156,3 +156,10 @@
       (assoc-in response
                 [:headers "Referrer-Policy"]
                 policy))))
+
+(defn wrap-exception-handling [handler]
+  (fn [request]
+    (try
+      (handler request)
+      (catch Exception e
+        {:status 400 :body "Invalid data"}))))
