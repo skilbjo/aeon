@@ -73,8 +73,8 @@
 (def app
   (-> combined-routes
       (middleware/add-content-security-policy
-        :config-path
-        "policy/content_security_policy.clj")
+       :config-path
+       "policy/content_security_policy.clj")
       (middleware/wrap-referrer-policy "strict-origin")
       middleware/wrap-exception-handling
       anti-forgery/wrap-anti-forgery

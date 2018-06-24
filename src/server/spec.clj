@@ -3,7 +3,6 @@
             [clojure.tools.logging :as log]
             [server.util :as util]))
 
-
 (def valid? s/valid?)
 
 (s/def ::dataset string?)
