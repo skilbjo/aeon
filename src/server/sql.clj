@@ -5,7 +5,13 @@
   (:import (java.sql DriverManager Connection)
            (java.util Properties)))
 
-(clojure.lang.RT/loadClassForName "org.postgresql.Driver")
+(defn escape [s]
+  (-> s
+      (string/replace #"\;" "")
+      (string/replace #"\-" "")
+      (string/replace #"\/" "")
+      (string/replace #"\/\*" "")
+      (string/replace #"\*\\" "")))
 
 (defn- prepare-statement
   [sql params]

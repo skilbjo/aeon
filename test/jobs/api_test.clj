@@ -5,17 +5,17 @@
             [clojure.test :refer :all]
             [fixtures.api :as f]
             [fixtures.fixtures :refer [*cxn*] :as fix]
-            [jobs.api :refer :all]))
+            [jobs.api :as api]))
 
 (use-fixtures :each (fix/with-database))
 
-(deftest unit-tests
+(deftest v1.unit-tests
   (testing "jobs.api unit tests"
     (is (= {:status 400
             :body "Error: '/api/made_up_dataset' is not a valid endpoint.\nTry /api/equities or /api/currency."}
-           (latest "made_up_dataset")))))
+           (api/v1.latest "made_up_dataset")))))
 
-(deftest integration-test
+(deftest v1.integration-test
   (->> "test/insert-source-data.sql"
        io/resource
        slurp
@@ -26,4 +26,4 @@
                   (->> f/result
                        :body
                        (map #(update % :date coerce/to-sql-date))))
-           (latest "currency")))))
+           (api/v1.latest "currency")))))

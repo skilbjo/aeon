@@ -9,6 +9,11 @@
                  [clj-time "0.14.4"]
                  [com.amazonaws.athena.jdbc/AthenaJDBC41 "1.0.1-atlassian-hosted"]
                  [compojure "1.6.1" :exclusions [ring/ring-core]]
+                 [metosin/compojure-api "2.0.0-alpha20"
+                  :exclusions [cheshire
+                               com.fasterxml.jackson.dataformat/jackson-dataformat-cbor
+                               com.fasterxml.jackson.dataformat/jackson-dataformat-smile
+                               com.google.code.findbugs/jsr305]]
                  [de.ubercode.clostache/clostache "1.4.0"]
                  [environ "1.1.0"]
                  [hiccup "1.0.5"]
@@ -43,7 +48,8 @@
                  [day8.re-frame/tracing-stubs "0.5.1"]
                  [re-frame "0.10.5"
                   :exclusions [com.google.code.findbugs/jsr305]]
-                 [reagent "0.8.1"]]
+                 [reagent "0.8.1"]
+                 [secretary "1.2.3"]]
   :plugins [[lein-cloverage "1.0.10"]
             [lein-cljsbuild "1.1.7"]]
   ;:source-paths ["src/jobs" "src/server"]
