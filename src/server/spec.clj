@@ -6,6 +6,12 @@
 (def valid? s/valid?)
 
 (s/def ::dataset string?)
+(s/def ::ticker string?)
+(s/def ::date string?)
+
+(def dataset ::dataset)
+(def ticker ::ticker)
+(def date ::date)
 
 (def datasets
   #{:currency

@@ -4,6 +4,7 @@
             [clj-time.core :as time]
             [clj-time.format :as formatter]
             [clj-time.periodic :as periodic]
+            [clojure.java.io :as io]
             [clojure.pprint :as pprint]
             [clojure.string :as string]
             [clojure.tools.logging :as log]
@@ -24,7 +25,7 @@
 ; -- web -----------------------------------------------
 (defn read-template [template-name]
   (-> (str "views/" template-name ".mustache")
-      (clojure.java.io/resource)
+      io/resource
       slurp))
 
 (defn render-template [template-file params]
@@ -33,13 +34,13 @@
 
 (defn read-markdown [template-name]
   (let [header        (-> (str "views/template/header.md")
-                          (clojure.java.io/resource)
+                          io/resource
                           slurp)
         body          (-> (str "views/" template-name ".md")
-                          (clojure.java.io/resource)
+                          io/resource
                           slurp)
         footer        (-> (str "views/template/footer.md")
-                          (clojure.java.io/resource)
+                          io/resource
                           slurp)]
     (markdown/md-to-html-string (str header body footer))))
 
@@ -49,6 +50,7 @@
   ([template-file params]
    (clostache/render (read-markdown template-file)
                      params)))
+
 ; -- time ----------------------------------------------
 (def now (time/now))
 
