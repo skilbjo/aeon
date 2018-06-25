@@ -65,6 +65,10 @@
 
 (def once-a-day (-> 1 time/days))
 
+; -- data transformation -------------------------------
+(def lower-trim
+  (comp string/lower-case string/trim))
+
 ; -- collections ---------------------------------------
 (defn sequentialize [x]
   (if (sequential? x)

@@ -13,6 +13,14 @@
       (string/replace #"\/\*" "")
       (string/replace #"\*\\" "")))
 
+(defn escape' [s]
+  (-> s
+      (string/replace #"\;" "")
+      (string/replace #"\--" "")
+      (string/replace #"\/" "")
+      (string/replace #"\/\*" "")
+      (string/replace #"\*\\" "")))
+
 (defn- prepare-statement
   [sql params]
   (loop [sql sql

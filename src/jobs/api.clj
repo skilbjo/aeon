@@ -31,9 +31,7 @@
 
 (defn v1.quote [dataset ticker date]
   (log/info "params are: " dataset ticker date)
-  (if (every? true (and (s/allowed-endpoint? s/datasets dataset)
-                        (s/valid? s/ticker ticker)
-                        (s/valid? s/date date)))
+  (if (not (s/allowed-endpoint? s/datasets dataset))
     {:status 400
      :body (util/multi-line-string
             "Error: problem with dataset, ticker, or date."
