@@ -9,7 +9,11 @@
                  [clj-time "0.14.4"]
                  [com.amazonaws.athena.jdbc/AthenaJDBC41 "1.0.1-atlassian-hosted"]
                  [compojure "1.6.1" :exclusions [ring/ring-core]]
-                 [metosin/compojure-api "2.0.0-alpha20"]
+                 [metosin/compojure-api "2.0.0-alpha20"
+                  :exclusions [cheshire
+                               com.fasterxml.jackson.dataformat/jackson-dataformat-cbor
+                               com.fasterxml.jackson.dataformat/jackson-dataformat-smile
+                               com.google.code.findbugs/jsr305]]
                  [de.ubercode.clostache/clostache "1.4.0"]
                  [environ "1.1.0"]
                  [hiccup "1.0.5"]
