@@ -35,27 +35,6 @@
   (GET "/app" []
     (jobs.clojurescript/send-app)))
 
-#_(defroutes api-routes'
-    (GET "/api/v1/:dataset/latest" [dataset]
-      (let [dataset-trusted (-> dataset
-                                (string/replace #"\;" "")
-                                (string/replace #"\-" "")
-                                (string/replace #"\/" "")
-                                (string/replace #"\/\*" "")
-                                (string/replace #"\*\\" ""))
-            response'  (jobs.api/v1.latest dataset-trusted)]
-        (-> response'
-            response)))
-    (GET "/api/v1/:dataset" [dataset ticker date]
-      (let [dataset-trusted (sql/escape dataset)
-            ticker-trusted  (sql/escape ticker)
-            date-trusted    (sql/escape date)
-            response'       (jobs.api/v1.quote dataset-trusted
-                                               ticker-trusted
-                                               date-trusted)]
-        (-> response'
-            response))))
-
 (def api-routes
   (api/context "/api/v1" []
     :tags ["api"]
