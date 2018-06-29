@@ -25,64 +25,62 @@
 (defroutes server-routes
   (HEAD "/" [])
   (GET "/" []
-       (jobs.static/index))
+    (jobs.static/index))
   (GET "/routes" []
-       (jobs.static/routes))
+    (jobs.static/routes))
   (GET "/dashboard" []
-       (jobs.static/dashboard)))
+    (jobs.static/dashboard)))
 
 (defroutes clojurescript-routes
   (GET "/app" []
-       (jobs.clojurescript/send-app)))
+    (jobs.clojurescript/send-app)))
 
 #_(defroutes api-routes'
-  (GET "/api/v1/:dataset/latest" [dataset]
-       (let [dataset-trusted (-> dataset
-                                 (string/replace #"\;" "")
-                                 (string/replace #"\-" "")
-                                 (string/replace #"\/" "")
-                                 (string/replace #"\/\*" "")
-                                 (string/replace #"\*\\" ""))
-             response'  (jobs.api/v1.latest dataset-trusted)]
-         (-> response'
-             response)))
-  (GET "/api/v1/:dataset" [dataset ticker date :as r]
-       (let [dataset-trusted (sql/escape dataset)
-             _ (println "PARAMS: " dataset ticker date)
-             _ (println "R:  " r)
-             ticker-trusted  (sql/escape ticker)
-             date-trusted    (sql/escape date)
-             response'       (jobs.api/v1.quote dataset-trusted
-                                                ticker-trusted
-                                                date-trusted)]
-         (-> response'
-             response))))
+    (GET "/api/v1/:dataset/latest" [dataset]
+      (let [dataset-trusted (-> dataset
+                                (string/replace #"\;" "")
+                                (string/replace #"\-" "")
+                                (string/replace #"\/" "")
+                                (string/replace #"\/\*" "")
+                                (string/replace #"\*\\" ""))
+            response'  (jobs.api/v1.latest dataset-trusted)]
+        (-> response'
+            response)))
+    (GET "/api/v1/:dataset" [dataset ticker date]
+      (let [dataset-trusted (sql/escape dataset)
+            ticker-trusted  (sql/escape ticker)
+            date-trusted    (sql/escape date)
+            response'       (jobs.api/v1.quote dataset-trusted
+                                               ticker-trusted
+                                               date-trusted)]
+        (-> response'
+            response))))
 
 (def api-routes
   (api/context "/api/v1" []
     :tags ["api"]
     :coercion :spec
 
-  (api/context "/:dataset" [dataset]
-    (api/GET "/latest" []
-      :summary "Latest prices"
-      (let [dataset-trusted (-> dataset sql/escape util/lower-trim)
-            response'       (jobs.api/v1.latest dataset-trusted)]
-        (-> response'
-            response)))
+    (api/context "/:dataset" [dataset]
+      (api/GET "/latest" []
+        :summary "Latest prices"
+        (let [dataset-trusted (-> dataset sql/escape util/lower-trim)
+              response'       (jobs.api/v1.latest dataset-trusted)]
+          (-> response'
+              response)))
 
-    (api/GET "/" []
-      :summary "Price for a specific date"
-      :query-params [ticker :- :server.spec/ticker
-                     date   :- :server.spec/date]
-      (let [dataset-trusted (-> dataset sql/escape util/lower-trim)
-            ticker-trusted  (-> ticker sql/escape util/lower-trim)
-            date-trusted    (-> date sql/escape' util/lower-trim)
-            response'       (jobs.api/v1.quote dataset-trusted
-                                               ticker-trusted
-                                               date-trusted)]
-        (-> response'
-            response))))))
+      (api/GET "/" []
+        :summary "Price for a specific date"
+        :query-params [ticker :- :server.spec/ticker
+                       date   :- :server.spec/date]
+        (let [dataset-trusted (-> dataset sql/escape util/lower-trim)
+              ticker-trusted  (-> ticker sql/escape util/lower-trim)
+              date-trusted    (-> date sql/escape' util/lower-trim)
+              response'       (jobs.api/v1.quote dataset-trusted
+                                                 ticker-trusted
+                                                 date-trusted)]
+          (-> response'
+              response))))))
 
 (def api-routes
   (-> {:swagger
@@ -124,8 +122,8 @@
 (def app
   (-> combined-routes
       (middleware/add-content-security-policy
-        :config-path
-        "policy/content_security_policy.clj")
+       :config-path
+       "policy/content_security_policy.clj")
       (middleware/wrap-referrer-policy "strict-origin")
       anti-forgery/wrap-anti-forgery
       (session/wrap-session {:cookie-attrs {:max-age 3600
