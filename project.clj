@@ -19,11 +19,11 @@
                  [hiccup "1.0.5"]
                  [jarohen/chime "0.2.2"]
                  [markdown-clj "1.0.2"]
+                 [metosin/spec-tools "0.7.1" :exclusions [com.fasterxml.jackson.core/jackson-core]]
                  [net.sf.uadetector/uadetector-resources "2014.10"]
                  [org.clojure/data.json "0.2.6"]
-                 [org.clojure/java.jdbc "0.7.6"]
+                 [org.clojure/java.jdbc "0.7.7"]
                  [org.clojure/tools.logging "0.4.1"]
-                 [org.clojure/tools.reader "1.2.2"]
                  [org.postgresql/postgresql "42.2.2"]
                  [org.slf4j/slf4j-log4j12 "1.7.25"
                   :exclusions [org.clojure/tools.reader
@@ -34,23 +34,19 @@
                  [ring/ring-json "0.4.0"]
 
                  ;; cljs
-                 [org.clojure/clojurescript "1.10.312"
+                 [org.clojure/clojurescript "1.10.339"
                   :exclusions [com.google.code.findbugs/jsr305
-                               com.fasterxml.jackson.core/jackson-core
-                               org.clojure/tools.reader]]
+                               com.fasterxml.jackson.core/jackson-core]]
 
                  [cljs-ajax "0.7.3" :exclusions [com.fasterxml.jackson.core/jackson-core
                                                  com.fasterxml.jackson.core/jackson-dataformat-cbor
                                                  cheshire]]
-                 #_[cljsjs/jquery "3.2.1-0"]
-                 #_[cljsjs/react "16.4.0-0"]
-                 #_[cljsjs/react-dom "16.4.0-0"]
                  [day8.re-frame/tracing-stubs "0.5.1"]
                  [re-frame "0.10.5"
                   :exclusions [com.google.code.findbugs/jsr305]]
                  [reagent "0.8.1"]
                  [secretary "1.2.3"]]
-  :plugins [[lein-cloverage "1.0.10"]
+  :plugins [[lein-cloverage "1.0.11"]
             [lein-cljsbuild "1.1.7"]]
   ;:source-paths ["src/jobs" "src/server"]
   :source-paths ["src"]

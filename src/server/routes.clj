@@ -1,7 +1,8 @@
 (ns server.routes
   (:require [clojure.string :as string]
             [clojure.tools.logging :as log]
-            [compojure.core :refer :all]
+            [compojure.api.sweet :as api]
+            [compojure.core :refer [defroutes HEAD GET]]
             [compojure.route :as route]
             [environ.core :refer [env]]
             [jobs.api :as jobs.api]
@@ -16,9 +17,9 @@
             [ring.util.response :refer [response]]
             [server.error :as error]
             [server.middleware :as middleware]
-            [server.spec :as spec]
             [server.sql :as sql]
-            [server.util :as util])
+            [server.util :as util]
+            [spec-tools.spec :as spec])
   (:gen-class))
 
 (defroutes server-routes
@@ -34,28 +35,41 @@
   (GET "/app" []
     (jobs.clojurescript/send-app)))
 
-(defroutes api-routes
-  (GET "/api/v1/:dataset/latest" [dataset]
-    (let [dataset-trusted (-> dataset
-                              (string/replace #"\;" "")
-                              (string/replace #"\-" "")
-                              (string/replace #"\/" "")
-                              (string/replace #"\/\*" "")
-                              (string/replace #"\*\\" ""))
-          response'  (jobs.api/v1.latest dataset-trusted)]
-      (-> response'
-          response)))
-  (GET "/api/v1/:dataset" [dataset ticker date :as r]
-    (let [dataset-trusted (sql/escape dataset)
-          _ (println "PARAMS: " dataset ticker date)
-          _ (println "R:  " r)
-          ticker-trusted  (sql/escape ticker)
-          date-trusted    (sql/escape date)
-          response'       (jobs.api/v1.quote dataset-trusted
-                                             ticker-trusted
-                                             date-trusted)]
-      (-> response'
-          response))))
+(def api-routes
+  (api/context "/api/v1" []
+    :tags ["api"]
+    :coercion :spec
+
+    (api/context "/:dataset" [dataset]
+      (api/GET "/latest" []
+        :summary "Latest prices"
+        (let [dataset-trusted (-> dataset sql/escape util/lower-trim)
+              response'       (jobs.api/v1.latest dataset-trusted)]
+          (-> response'
+              response)))
+
+      (api/GET "/" []
+        :summary "Price for a specific date"
+        :query-params [ticker :- :server.spec/ticker
+                       date   :- :server.spec/date]
+        (let [dataset-trusted (-> dataset sql/escape util/lower-trim)
+              ticker-trusted  (-> ticker sql/escape util/lower-trim)
+              date-trusted    (-> date sql/escape' util/lower-trim)
+              response'       (jobs.api/v1.quote dataset-trusted
+                                                 ticker-trusted
+                                                 date-trusted)]
+          (-> response'
+              response))))))
+
+(def api-routes
+  (-> {:swagger
+       {:ui   "/swagger"
+        :spec "/swagger.json"
+        :middleware [[ring-json/wrap-json-response]]
+        :data {:info {:title       "Aoin API"
+                      :description "A webserver in LISP FTW"
+                      :version     "1.0.0"}}}}
+      (api/api api-routes)))
 
 (defroutes combined-routes
   (ring-defaults/wrap-defaults server-routes
@@ -80,7 +94,7 @@
                                   :xss-protection {:enable? true
                                                    :mode    :block}}))
 
-  (ring-json/wrap-json-response api-routes)
+  api-routes
 
   (route/not-found "<h1>Not Found</h1>"))
 
