@@ -34,7 +34,6 @@
                  [ring/ring-json "0.4.0"]
 
                  ;; cljs
-                 ;[org.clojure/clojurescript "1.10.312"
                  [org.clojure/clojurescript "1.10.339"
                   :exclusions [com.google.code.findbugs/jsr305
                                com.fasterxml.jackson.core/jackson-core]]
@@ -42,9 +41,6 @@
                  [cljs-ajax "0.7.3" :exclusions [com.fasterxml.jackson.core/jackson-core
                                                  com.fasterxml.jackson.core/jackson-dataformat-cbor
                                                  cheshire]]
-                 #_[cljsjs/jquery "3.2.1-0"]
-                 #_[cljsjs/react "16.4.0-0"]
-                 #_[cljsjs/react-dom "16.4.0-0"]
                  [day8.re-frame/tracing-stubs "0.5.1"]
                  [re-frame "0.10.5"
                   :exclusions [com.google.code.findbugs/jsr305]]
