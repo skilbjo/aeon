@@ -20,7 +20,8 @@
                  [hiccup "1.0.5"]
                  [jarohen/chime "0.2.2"]
                  [markdown-clj "1.0.2"]
-                 [metosin/spec-tools "0.7.1" :exclusions [com.fasterxml.jackson.core/jackson-core]]
+                 [metosin/spec-tools "0.7.1"
+                  :exclusions [com.fasterxml.jackson.core/jackson-core]]
                  [net.sf.uadetector/uadetector-resources "2014.10"]
                  [org.clojure/data.json "0.2.6"]
                  [org.clojure/java.jdbc "0.7.7"]

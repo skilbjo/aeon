@@ -16,6 +16,7 @@
             [ring.middleware.json :as ring-json]
             [ring.middleware.session :as session]
             [ring.util.response :refer [response]]
+            [server.auth :as auth]
             [server.error :as error]
             [server.middleware :as middleware]
             [server.sql :as sql]
@@ -66,12 +67,12 @@
       (api/GET "/portfolio" []
         :summary "How's the portfolio doing?"
         :header-params [authorization :- :server.spec/authorization]
-        :middleware [middleware/authenticated
-                     buddy/wrap-authentication]
+        :middleware [[middleware/authenticated]
+                     [buddy/wrap-authentication]]
         (-> {:msg "You made it!"}
             response)))))
 
-(def api-routes
+(def swagger
   (-> {:swagger
        {:ui   "/swagger"
         :spec "/swagger.json"
@@ -104,7 +105,7 @@
                                   :xss-protection {:enable? true
                                                    :mode    :block}}))
 
-  api-routes
+  swagger
 
   (route/not-found "<h1>Not Found</h1>"))
 

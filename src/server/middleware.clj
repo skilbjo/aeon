@@ -2,7 +2,7 @@
   (:require [buddy.auth :refer [authenticated?]]
             [clojure.edn :as edn]
             [clojure.java.io :as io]
-            [ring.util/http-response :refer [unauthorized]])
+            [ring.util.response :refer [response]])
   (:import (net.sf.uadetector UserAgent UserAgentStringParser)
            (net.sf.uadetector.service UADetectorServiceFactory)))
 
@@ -165,4 +165,5 @@
   (fn [request]
     (if (authenticated? request)
       (handler request)
-      (unauthorized {:error "Not authorized"}))))
+      {:status 401
+       :body   {:error "unauthorized"}})))
