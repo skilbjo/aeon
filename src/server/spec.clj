@@ -8,6 +8,7 @@
 (s/def ::dataset string?)
 (s/def ::ticker string?)
 (s/def ::date string?)
+(s/def ::authorization string?)
 
 (def dataset ::dataset)
 (def ticker ::ticker)

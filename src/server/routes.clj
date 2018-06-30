@@ -1,5 +1,6 @@
 (ns server.routes
-  (:require [clojure.string :as string]
+  (:require [buddy.auth.middleware :as buddy]
+            [clojure.string :as string]
             [clojure.tools.logging :as log]
             [compojure.api.sweet :as api]
             [compojure.core :refer [defroutes HEAD GET]]
@@ -40,7 +41,7 @@
     :tags ["api"]
     :coercion :spec
 
-    (api/context "/:dataset" [dataset]
+    (api/context "/prices/:dataset" [dataset]
       (api/GET "/latest" []
         :summary "Latest prices"
         (let [dataset-trusted (-> dataset sql/escape util/lower-trim)
@@ -59,7 +60,16 @@
                                                  ticker-trusted
                                                  date-trusted)]
           (-> response'
-              response))))))
+              response))))
+
+    (api/context "/reports" []
+      (api/GET "/portfolio" []
+        :summary "How's the portfolio doing?"
+        :header-params [authorization :- :server.spec/authorization]
+        :middleware [middleware/authenticated
+                     buddy/wrap-authentication]
+        (-> {:msg "You made it!"}
+            response)))))
 
 (def api-routes
   (-> {:swagger

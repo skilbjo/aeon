@@ -5,6 +5,7 @@
   :dependencies [;; clj
                  [org.clojure/clojure "1.9.0"]
                  [bk/ring-gzip "0.3.0"]
+                 [buddy/buddy-auth "2.1.0"]
                  [clj-http "3.9.0"]
                  [clj-time "0.14.4"]
                  [com.amazonaws.athena.jdbc/AthenaJDBC41 "1.0.1-atlassian-hosted"]
@@ -48,7 +49,6 @@
                  [secretary "1.2.3"]]
   :plugins [[lein-cloverage "1.0.11"]
             [lein-cljsbuild "1.1.7"]]
-  ;:source-paths ["src/jobs" "src/server"]
   :source-paths ["src"]
   :test-paths ["test"]
   :clean-targets ^{:protect false} ["resources/public/js"]
