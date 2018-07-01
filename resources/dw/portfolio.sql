@@ -22,9 +22,9 @@ with now as (
   where
     date in ( select today from date )
     or (case when markets.ticker in ('VGWAX') and date is null then 1 else 0 end)
-       = 1 -- VGWAX is too "new" of a ticker; hopefull will be added soon
+       = 1
     or (case when markets.ticker in ('VMMXX') and date in (select yesterday from date) then 1 else 0 end)
-       = 1 -- VMMXX is only updated as of yesterday, by Morningstar
+       = 1
   group by
     1,2
 ), yesterday as (

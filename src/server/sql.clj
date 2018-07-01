@@ -17,7 +17,7 @@
   (-> s
       (string/replace #"\;" "")
       (string/replace #"\--" "")
-      (string/replace #"\/" "")
+      #_(string/replace #"\/" "")
       (string/replace #"\/\*" "")
       (string/replace #"\*\\" "")))
 
@@ -38,11 +38,20 @@
   ([sql params]
    (with-open [cxn (-> :ro-jdbc-db-uri env DriverManager/getConnection)]
      (let [sql     (-> sql
-                       (string/replace #";" "")
-                       (string/replace #"--" "")
-                       (string/replace #"\/" "")
-                       (string/replace #"\/\*" "")
-                       (string/replace #"\*\\" "")
+                       escape
+                       (prepare-statement params))
+           results (-> cxn
+                       (.createStatement)
+                       (.executeQuery sql))]
+       (jdbc/metadata-result results)))))
+
+(defn query''
+  ([sql]
+   (query'' sql {}))
+  ([sql params]
+   (with-open [cxn (-> :ro-jdbc-db-uri env DriverManager/getConnection)]
+     (let [sql     (-> sql
+                       escape'
                        (prepare-statement params))
            results (-> cxn
                        (.createStatement)

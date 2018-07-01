@@ -27,6 +27,26 @@
       {:token "2f904e245c1f5"}
       unauthorized)))
 
+(defn v1.portfolio []
+  (let [data  (fn [_]
+                (let [dir (if (env :jdbc-athena-uri)
+                            "athena"
+                            "dw")
+                      f   (if (env :jdbc-athena-uri)
+                            sql/query-athena
+                            sql/query'')]
+                  (->> (-> (str dir
+                                "/portfolio"
+                                (when (env :jdbc-athena-uri)
+                                  "_athena")
+                                ".sql")
+                           io/resource
+                           slurp
+                           f)
+                       (map #(update % :date coerce/to-sql-date)))))
+        data' (memoize data)]
+    {:body (data' util/now')}))
+
 (defn v1.latest [dataset]
   (if (false? (s/allowed-endpoint? s/datasets dataset))
     {:status 400

@@ -46,8 +46,12 @@
     (api/context "" []
       :tags ["login"]
       ;; TODO does CSRF on /login make sense? How to make it work with swagger?
+      ;; per https://github.com/edbond/CSRF - CSRF + ring + POST does not work
+      ;; with compojure 1.2.0+ (we are on 1.6.1)
       #_:middleware #_[anti-forgery/wrap-anti-forgery]
       #_:header-params #_[{x-csrf-token :- :server.spec/authorization nil}]
+      :middleware [anti-forgery/wrap-anti-forgery]
+      :header-params [{x-csrf-token :- :server.spec/authorization nil}]
       (api/POST "/login" []
         :summary "Login, for an authentication token"
         :body-params [user     :- :server.spec/user
@@ -91,7 +95,7 @@
         :summary "How's the portfolio doing?"
         :header-params [authorization :- :server.spec/authorization]
         :middleware [auth/token-auth middleware/authenticated]
-        (-> {:msg "You made it!"}
+        (-> (jobs.api/v1.portfolio)
             response)))))
 
 (def swagger
@@ -107,14 +111,14 @@
 (defroutes combined-routes
   (-> swagger
       (ring-defaults/wrap-defaults (assoc
-                                     ring-defaults/api-defaults
-                                     :security
-                                     {:anti-forgery false ; for POST to work
-                                      :hsts true
-                                      :content-type-options :nosniff
-                                      :frame-options :sameorigin
-                                      :xss-protection {:enable? true
-                                                       :mode :block}})))
+                                    ring-defaults/api-defaults
+                                    :security
+                                    {:anti-forgery false ; for POST to work
+                                     :hsts true
+                                     :content-type-options :nosniff
+                                     :frame-options :sameorigin
+                                     :xss-protection {:enable? true
+                                                      :mode :block}})))
 
   (-> server-routes
       (ring-defaults/wrap-defaults (assoc
