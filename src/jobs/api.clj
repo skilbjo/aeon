@@ -7,6 +7,26 @@
             [server.sql :as sql]
             [server.util :as util]))
 
+(defn v1.login [{:keys [user password]}]
+  (let [user-query (util/multi-line-string "select                  "
+                                           " username,              "
+                                           " password               "
+                                           "from aoin.users         "
+                                           "where                   "
+                                           " username = ':user' and "
+                                           " password = ':password' "
+                                           "limit 1                 ")
+        result (-> user-query
+                   (sql/query' {:user user
+                                :password password})
+                   first)
+        unauthorized {:status 401
+                      :body "Wrong username, password, or both, bucko"}]
+    (if (and (= (:username result) user)
+             (= (:password result) password))
+      {:body {:token "2f904e245c1f5"}}
+      unauthorized)))
+
 (defn v1.latest [dataset]
   (if (false? (s/allowed-endpoint? s/datasets dataset))
     {:status 400

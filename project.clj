@@ -6,6 +6,7 @@
                  [org.clojure/clojure "1.9.0"]
                  [bk/ring-gzip "0.3.0"]
                  [buddy/buddy-auth "2.1.0"]
+                 [buddy/buddy-core "1.4.0"]
                  [clj-http "3.9.0"]
                  [clj-time "0.14.4"]
                  [com.amazonaws.athena.jdbc/AthenaJDBC41 "1.0.1-atlassian-hosted"]

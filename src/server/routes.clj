@@ -1,5 +1,7 @@
 (ns server.routes
-  (:require [clojure.string :as string]
+  (:require [buddy.core.hash :as hash]
+            [buddy.core.codecs :as codecs]
+            [clojure.string :as string]
             [clojure.tools.logging :as log]
             [compojure.api.sweet :as api]
             [compojure.core :refer [defroutes HEAD GET]]
@@ -41,6 +43,22 @@
     :tags ["api"]
     :coercion :spec
 
+    (api/context "" []
+      (api/POST "/login" []
+        :summary "Login, for an authentication token"
+        :header-params [{x-csrf-token :- :server.spec/authorization nil}]
+        :body-params [user     :- :server.spec/user
+                      password :- :server.spec/password]
+        (let [user-trusted     (-> user sql/escape util/lower-trim)
+              password-trusted (-> password
+                                   sql/escape'
+                                   util/lower-trim
+                                   hash/sha256
+                                   codecs/bytes->hex)]
+          (-> {:user user-trusted
+               :password password-trusted}
+              jobs.api/v1.login))))
+
     (api/context "/prices/:dataset" [dataset]
       (api/GET "/latest" []
         :summary "Latest prices"
@@ -74,34 +92,37 @@
   (-> {:swagger
        {:ui   "/swagger"
         :spec "/swagger.json"
-        :middleware [[ring-json/wrap-json-response]]
+        :middleware [ring-json/wrap-json-response
+                     anti-forgery/wrap-anti-forgery]
         :data {:info {:title       "Aoin API"
                       :description "A webserver in LISP FTW"
                       :version     "1.0.0"}}}}
       (api/api api-routes)))
 
 (defroutes combined-routes
-  (ring-defaults/wrap-defaults server-routes
-                               (assoc
-                                ring-defaults/site-defaults
-                                :security
-                                {:anti-forgery true
-                                 :hsts true
-                                 :content-type-options :nosniff
-                                 :frame-options :sameorigin
-                                 :xss-protection {:enable? true
-                                                  :mode :block}}))
+  (-> server-routes
+      (ring-defaults/wrap-defaults (assoc
+                                    ring-defaults/site-defaults
+                                    :security
+                                    {:anti-forgery false
+                                     :hsts true
+                                     :content-type-options :nosniff
+                                     :frame-options :sameorigin
+                                     :xss-protection {:enable? true
+                                                      :mode :block}}))
+      #_anti-forgery/wrap-anti-forgery)
 
-  (ring-defaults/wrap-defaults  clojurescript-routes
-                                (assoc
-                                 ring-defaults/site-defaults
-                                 :security
-                                 {:anti-forgery true
-                                  :hsts true
-                                  :content-type-options :nosniff
-                                  :frame-options :sameorigin
-                                  :xss-protection {:enable? true
-                                                   :mode    :block}}))
+  (-> clojurescript-routes
+      (ring-defaults/wrap-defaults (assoc
+                                    ring-defaults/site-defaults
+                                    :security
+                                    {:anti-forgery false
+                                     :hsts true
+                                     :content-type-options :nosniff
+                                     :frame-options :sameorigin
+                                     :xss-protection {:enable? true
+                                                      :mode    :block}}))
+      #_anti-forgery/wrap-anti-forgery)
 
   swagger
 
@@ -109,13 +130,12 @@
 
 (def app
   (-> combined-routes
-      (middleware/add-content-security-policy
-       :config-path
-       "policy/content_security_policy.clj")
-      (middleware/wrap-referrer-policy "strict-origin")
-      anti-forgery/wrap-anti-forgery
-      (session/wrap-session {:cookie-attrs {:max-age 3600
-                                            :secure  true}})
+      #_(middleware/add-content-security-policy
+         :config-path
+         "policy/content_security_policy.clj")
+      #_(middleware/wrap-referrer-policy "strict-origin")
+      #_(session/wrap-session {:cookie-attrs {:max-age 3600
+                                              :secure  true}})
       gzip/wrap-gzip))
 
 (defn -main []  ; java -jar app.jar uses this as the entrypoint

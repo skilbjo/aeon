@@ -1,5 +1,7 @@
 begin;
 
+  create extension pgcrypto;
+
   create schema if not exists aoin;
 
   create table if not exists aoin.users (
@@ -8,8 +10,8 @@ begin;
     password    text
   );
 
-  insert into aoin.user (username, password) values
-    ('skilbjo','god')
+  insert into aoin.users (username, password) values
+    ('skilbjo', encode(digest('god','sha256'),'hex'))
   ;
 
 commit;

@@ -9,10 +9,17 @@
 (s/def ::ticker string?)
 (s/def ::date string?)
 (s/def ::authorization string?)
+(s/def ::user string?)
+(s/def ::password string?)
+(s/def ::csrf string?)
 
 (def dataset ::dataset)
 (def ticker ::ticker)
 (def date ::date)
+(def authorization ::authorization)
+(def user ::user)
+(def password ::password)
+(def csrf ::csrf)
 
 (def datasets
   #{:currency
