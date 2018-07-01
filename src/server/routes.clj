@@ -1,6 +1,5 @@
 (ns server.routes
-  (:require [buddy.auth.middleware :as buddy]
-            [clojure.string :as string]
+  (:require [clojure.string :as string]
             [clojure.tools.logging :as log]
             [compojure.api.sweet :as api]
             [compojure.core :refer [defroutes HEAD GET]]
@@ -67,8 +66,7 @@
       (api/GET "/portfolio" []
         :summary "How's the portfolio doing?"
         :header-params [authorization :- :server.spec/authorization]
-        :middleware [[middleware/authenticated]
-                     [buddy/wrap-authentication]]
+        :middleware [auth/token-auth middleware/authenticated]
         (-> {:msg "You made it!"}
             response)))))
 
