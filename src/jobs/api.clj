@@ -24,7 +24,7 @@
                       :body "Wrong username, password, or both, bucko"}]
     (if (and (= (:username result) user)
              (= (:password result) password))
-      {:body {:token "2f904e245c1f5"}}
+      {:token "2f904e245c1f5"}
       unauthorized)))
 
 (defn v1.latest [dataset]

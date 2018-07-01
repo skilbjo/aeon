@@ -44,9 +44,12 @@
     :coercion :spec
 
     (api/context "" []
+      :tags ["login"]
+      ;; TODO does CSRF on /login make sense? How to make it work with swagger?
+      #_:middleware #_[anti-forgery/wrap-anti-forgery]
+      #_:header-params #_[{x-csrf-token :- :server.spec/authorization nil}]
       (api/POST "/login" []
         :summary "Login, for an authentication token"
-        :header-params [{x-csrf-token :- :server.spec/authorization nil}]
         :body-params [user     :- :server.spec/user
                       password :- :server.spec/password]
         (let [user-trusted     (-> user sql/escape util/lower-trim)
@@ -57,9 +60,11 @@
                                    codecs/bytes->hex)]
           (-> {:user user-trusted
                :password password-trusted}
-              jobs.api/v1.login))))
+              jobs.api/v1.login
+              response))))
 
     (api/context "/prices/:dataset" [dataset]
+      :tags ["prices"]
       (api/GET "/latest" []
         :summary "Latest prices"
         (let [dataset-trusted (-> dataset sql/escape util/lower-trim)
@@ -81,6 +86,7 @@
               response))))
 
     (api/context "/reports" []
+      :tags ["reports"]
       (api/GET "/portfolio" []
         :summary "How's the portfolio doing?"
         :header-params [authorization :- :server.spec/authorization]
@@ -92,50 +98,58 @@
   (-> {:swagger
        {:ui   "/swagger"
         :spec "/swagger.json"
-        :middleware [ring-json/wrap-json-response
-                     anti-forgery/wrap-anti-forgery]
+        :middleware [ring-json/wrap-json-response]
         :data {:info {:title       "Aoin API"
                       :description "A webserver in LISP FTW"
                       :version     "1.0.0"}}}}
       (api/api api-routes)))
 
 (defroutes combined-routes
+  (-> swagger
+      (ring-defaults/wrap-defaults (assoc
+                                     ring-defaults/api-defaults
+                                     :security
+                                     {:anti-forgery false ; for POST to work
+                                      :hsts true
+                                      :content-type-options :nosniff
+                                      :frame-options :sameorigin
+                                      :xss-protection {:enable? true
+                                                       :mode :block}})))
+
   (-> server-routes
       (ring-defaults/wrap-defaults (assoc
                                     ring-defaults/site-defaults
                                     :security
-                                    {:anti-forgery false
+                                    {:anti-forgery true
                                      :hsts true
                                      :content-type-options :nosniff
                                      :frame-options :sameorigin
                                      :xss-protection {:enable? true
                                                       :mode :block}}))
-      #_anti-forgery/wrap-anti-forgery)
+      anti-forgery/wrap-anti-forgery)
 
   (-> clojurescript-routes
       (ring-defaults/wrap-defaults (assoc
                                     ring-defaults/site-defaults
                                     :security
-                                    {:anti-forgery false
+                                    {:anti-forgery true
                                      :hsts true
                                      :content-type-options :nosniff
                                      :frame-options :sameorigin
                                      :xss-protection {:enable? true
                                                       :mode    :block}}))
-      #_anti-forgery/wrap-anti-forgery)
-
-  swagger
+      anti-forgery/wrap-anti-forgery)
 
   (route/not-found "<h1>Not Found</h1>"))
 
 (def app
   (-> combined-routes
-      #_(middleware/add-content-security-policy
-         :config-path
-         "policy/content_security_policy.clj")
-      #_(middleware/wrap-referrer-policy "strict-origin")
-      #_(session/wrap-session {:cookie-attrs {:max-age 3600
-                                              :secure  true}})
+      (middleware/add-content-security-policy
+       :config-path
+       "policy/content_security_policy.clj")
+      (middleware/wrap-referrer-policy "strict-origin")
+      (session/wrap-session {:cookie-attrs {:max-age 3600
+                                            :secure  true}})
       gzip/wrap-gzip))
 
 (defn -main []  ; java -jar app.jar uses this as the entrypoint

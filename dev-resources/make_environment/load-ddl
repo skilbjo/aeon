@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+cp ~/dev/markets-etl/dev-resources/test/ddl.sql ddl.sql
+
+psql $docker_psql_uri -f ddl.sql
