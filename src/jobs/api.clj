@@ -8,18 +8,19 @@
             [server.util :as util]))
 
 (defn v1.login [{:keys [user password]}]
-  (let [user-query (util/multi-line-string "select                  "
-                                           " username,              "
-                                           " password               "
-                                           "from aoin.users         "
-                                           "where                   "
-                                           " username = ':user' and "
-                                           " password = ':password' "
-                                           "limit 1                 ")
-        result (-> user-query
-                   (sql/query' {:user user
-                                :password password})
-                   first)
+  (let [dir     (if (env :jdbc-athena-uri)
+                  "athena"
+                  "dw")
+        f       (if (env :jdbc-athena-uri)
+                  sql/query-athena
+                  sql/query'')
+        result  (->> "/login.sql"
+                     (str dir)
+                     io/resource
+                     slurp
+                     (f {:user user
+                         :password password})
+                     first)
         unauthorized {:status 401
                       :body "Wrong username, password, or both, bucko"}]
     (if (and (= (:username result) user)

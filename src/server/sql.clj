@@ -17,7 +17,7 @@
   (-> s
       (string/replace #"\;" "")
       (string/replace #"\--" "")
-      #_(string/replace #"\/" "")
+      #_(string/replace #"\/" "") ; removes America/Los_Angeles
       (string/replace #"\/\*" "")
       (string/replace #"\*\\" "")))
 
@@ -64,11 +64,7 @@
   ([sql params]
    (with-open [conn (-> :jdbc-athena-uri env DriverManager/getConnection)]
      (let [sql     (-> sql
-                       (string/replace #";" "")
-                       (string/replace #"--" "")
-                       #_(string/replace #"\/" "") ; removes America/Los_Angeles
-                       (string/replace #"\/\*" "")
-                       (string/replace #"\*\\" "")
+                       escape'
                        (prepare-statement params))
            results (-> conn
                        (.createStatement)
