@@ -24,6 +24,8 @@
                   "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css"
                   "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css")]
     [:body
+     [:noscript
+      "You need to enable Javascript to run this app."]
      [:div#app]
      (include-js "js/app.js"
                  #_"https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"

@@ -10,17 +10,17 @@
 
 (def ->local-store (re-frame/after stuffs->local-storage))
 
-(defn allocate-next-id [stuffs]
-  ((fnil inc 0) (last (keys stuffs))))
+(defn set-user-ls [user]
+  (.setItem js/localStorage local-storage-key (str user)))
 
 ;; main
 (def default-db
   {:stuffs (sorted-map)})
 
 (re-frame/reg-cofx
- :local-store-stuffs
+ :local-store-user
  (fn [cofx _]
-   (assoc cofx :local-store-stuffs
+   (assoc cofx :local-store-user
           (into (sorted-map)
-                (some->> (.getItem js/localStorage "compojure")
+                (some->> (.getItem js/localStorage local-storage-key)
                          (reader/read-string))))))

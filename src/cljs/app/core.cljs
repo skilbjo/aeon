@@ -1,11 +1,14 @@
 (ns app.core
   (:require-macros [secretary.core :refer [defroute]])
-  (:require [reagent.core :as reagent]
-            [re-frame.core :as re-frame]
-            [app.events]
+  (:require [app.events]
             [app.subs]
             [app.spec]
-            [app.views :as views])
+            [app.views :as views]
+            [goog.events :as gevents]
+            [goog.history.EventType :as EventType]
+            [re-frame.core :as re-frame]
+            [reagent.core :as reagent]
+            [secretary.core :as secretary])
   (:import goog.History))
 
 ;; -- Routes and Navigation ---------------------------------------------------
@@ -22,16 +25,16 @@
         profile nil]
     (secretary/set-config! :prefix "#")
 
-    (defroute "/" []
-      (dispatch #_[:set-active-page {:page :home}]))
-    (defroute "/login" []
-      (dispatch #_[:set-active-page {:page :login}]))
-    (defroute "/register" []
-      (dispatch #_[:set-active-page {:page :register}]))
-    (defroute "/logout" []
-      (dispatch #_[:logout]))
-    (defroute "/:profile" [profile]
-      (dispatch #_[:set-active-page {:page :profile :profile (subs profile 1)}]))
+    #_(defroute "/" []
+        (dispatch #_[:set-active-page {:page :home}]))
+    #_(defroute "/login" []
+        (dispatch #_[:set-active-page {:page :login}]))
+    #_(defroute "/register" []
+        (dispatch #_[:set-active-page {:page :register}]))
+    #_(defroute "/logout" []
+        (dispatch #_[:logout]))
+    #_(defroute "/:profile" [profile]
+        (dispatch #_[:set-active-page {:page :profile :profile (subs profile 1)}]))
 
     (hook-browser-navigation!)))
 

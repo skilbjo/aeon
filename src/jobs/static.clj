@@ -38,5 +38,5 @@
                    (athena-f)
                    (dw-f))))
         data' (memoize data)]
-    (util/render-markdown "static/dashboard"
-                          {:body (data' util/now')}))) ; cache the request by date
+    (util/render-markdown "static/dashboard"           ; cache the request
+                          {:body (data' util/now')}))) ; by date

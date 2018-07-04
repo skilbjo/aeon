@@ -27,7 +27,7 @@
 
 (defroutes server-routes
   (HEAD "/" [])
-  (GET "/" []
+  (GET "/index" []
     (jobs.static/index))
   (GET "/routes" []
     (jobs.static/routes))
@@ -35,7 +35,7 @@
     (jobs.static/dashboard)))
 
 (defroutes clojurescript-routes
-  (GET "/app" []
+  (GET "/" []
     (jobs.clojurescript/send-app)))
 
 (def api-routes
