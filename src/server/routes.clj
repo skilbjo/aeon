@@ -36,6 +36,8 @@
 
 (defroutes clojurescript-routes
   (GET "/" []
+    (jobs.clojurescript/send-app))
+  (GET "/cljs" []
     (jobs.clojurescript/send-app)))
 
 (def api-routes

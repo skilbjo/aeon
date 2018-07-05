@@ -14,3 +14,13 @@
  :stuffs
  (fn-traced [query-v _]
             (subscribe [:sorted-stuffs])))
+
+(reg-sub
+ :active-page           ;; usage: (subscribe [:showing])
+ (fn-traced [db _]             ;; db is the (map) value stored in the app-db atom
+            (:active-page db)))  ;; extract a value from the application state
+
+(reg-sub
+ :user  ;; usage: (subscribe [:user])
+ (fn-traced [db _]
+            (:user db)))

@@ -39,7 +39,11 @@
     (hook-browser-navigation!)))
 
 (defn init! []
+  (re-frame/dispatch-sync [:initialize-db])
+
   (re-frame/clear-subscription-cache!)
+
+  (routes)
 
   (reagent/render [views/the-app]
                   (.getElementById js/document "app")))
@@ -51,5 +55,5 @@
 
   (init!))
 
-(re-frame/dispatch-sync [:initialize-db])
+
 (main)

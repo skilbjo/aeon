@@ -13,9 +13,12 @@
 (defn set-user-ls [user]
   (.setItem js/localStorage local-storage-key (str user)))
 
+(defn remote-user-ls [user]
+  (.removeItem js/localStorage local-storage-key))
+
 ;; main
 (def default-db
-  {:stuffs (sorted-map)})
+  {:active-page :home})
 
 (re-frame/reg-cofx
  :local-store-user
@@ -23,4 +26,4 @@
    (assoc cofx :local-store-user
           (into (sorted-map)
                 (some->> (.getItem js/localStorage local-storage-key)
-                         (reader/read-string))))))
+                         (reader/read-string)))))) ; EDN map -> map
