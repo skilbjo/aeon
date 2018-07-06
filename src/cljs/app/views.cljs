@@ -19,9 +19,9 @@
            [:li.nav-item
             [:a.nav-link {:href "#/" :class (when (= active-page :home) "active")} "Home"]]
            [:li.nav-item
-            [:a.nav-link {:href "#/login" :class (when (= active-page :login) "active")} "Sign in"]]
+            [:a.nav-link {:href "#/login" :class (when (= active-page :login) "active")} "Login"]]
            [:li.nav-item
-            [:a.nav-link {:href "#/register" :class (when (= active-page :register) "active")} "Sign up"]]])
+            [:a.nav-link {:href "#/register" :class (when (= active-page :register) "active")} "Register"]]])
         (do
           (println "not empty")
           [:ul.nav.navbar-nav.pull-xs-right
@@ -47,7 +47,7 @@
   (.preventDefault event)
   #_(dispatch [:register-user registration]))
 
-(defn register []
+#_(defn register []
   #_(let [default {:username "" :email "" :password ""}
           registration (reagent/atom default)]
       (fn []
@@ -120,10 +120,89 @@
              [:a.nav-link {:href (str "#/@" (:username profile) "/favorites") :class (when (:favorites filter) "nav-link active")} "Favorited Articles"]]]]
           [articles-list articles (:articles loading)]]]]]))
 
-(defn the-app []
+;; -- Home --------------------------------------------------------------------
+;;
+
+(defn home []
+  [:div.home-page
+   [:p "home"]])
+
+(defn login []
+  [:div.home-page
+   [:p "login"]])
+
+(defn register []
+  [:div.home-page
+   [:p "register"]])
+
+#_(defn home []
+  (let [filter @(subscribe [:filter])
+        tags @(subscribe [:tags])
+        loading @(subscribe [:loading])
+        articles @(subscribe [:articles])
+        articles-count @(subscribe [:articles-count])
+        user @(subscribe [:user])]
+    [:div.home-page
+     (when (empty? user)
+       [:div.banner
+        [:div.container
+         [:h1.logo-font "conduit"]
+         [:p "A place to share your knowledge."]]])
+     [:div.container.page
+      [:div.row
+       [:div.col-md-9
+        [:div.feed-toggle
+         [:ul.nav.nav-pills.outline-active
+          (when-not (empty? user)
+            [:li.nav-item
+             [:a.nav-link {:href ""
+                           :class (when (:feed filter) "active")
+                           :on-click #(get-feed-articles % {:offset 0 :limit 10})} "Your Feed"]])
+          [:li.nav-item
+           [:a.nav-link {:href ""
+                         :class (when-not (or (:tag filter) (:feed filter)) "active")
+                         :on-click #(get-articles % {:offset 0 :limit 10})} "Global Feed"]] ;; first argument: % is browser event, second: map of filter params
+          (when (:tag filter)
+            [:li.nav-item
+             [:a.nav-link.active
+              [:i.ion-pound] (str " " (:tag filter))]])]]
+        [articles-list articles (:articles loading)]
+        (when-not (or (:articles loading) (< articles-count 10))
+          [:ul.pagination
+           (for [offset (range (/ articles-count 10))]
+             ^{:key offset} [:li.page-item {:class (when (= (* offset 10) (:offset filter)) "active")
+                                            :on-click #(get-articles % {:offset (* offset 10) :tag (:tag filter) :limit 10})}
+                             [:a.page-link {:href ""} (+ 1 offset)]])])]
+
+       [:div.col-md-3
+        [:div.sidebar
+         [:p "Popular Tags"]
+         (if (:tags loading)
+           [:p "Loading tags ..."]
+           [:div.tag-list
+            (for [tag tags]
+              ^{:key tag} [:a.tag-pill.tag-default {:href ""
+                                                    :on-click #(get-articles % {:tag tag :limit 10 :offset 0})} tag])])]]]]]))
+
+#_(defn the-app []
   [:div
    [header]
    [:section#app
     (when @(subscribe [:stuffs])
       [:h2 "hey"])]
    [footer]])
+
+(defn pages [page-name]
+  (case page-name
+    :home     [home]
+    :login    [login]
+    :register [register]
+    [home]
+    ))
+
+(defn the-app []
+  (let [active-page @(subscribe [:active-page])]
+    [:div
+     [header]
+     [pages active-page]
+     [footer]]))
