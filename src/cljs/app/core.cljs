@@ -26,17 +26,18 @@
     (secretary/set-config! :prefix "#")
 
     (defroute "/" []
-        (rf/dispatch #_[:set-active-page {:page :home}]))
+        (rf/dispatch [:set-active-page {:page :home}]))
     (defroute "/login" []
-        (rf/dispatch #_[:set-active-page {:page :login}]))
-    #_(defroute "/register" []
-        (rf/dispatch #_[:set-active-page {:page :register}]))
-    #_(defroute "/logout" []
-        (rf/dispatch #_[:logout]))
-    #_(defroute "/:profile" [profile]
-        (rf/dispatch #_[:set-active-page {:page :profile :profile (subs profile 1)}]))
+        (rf/dispatch [:set-active-page {:page :login}]))
+    (defroute "/register" []
+        (rf/dispatch [:set-active-page {:page :register}]))
 
-    (hook-browser-navigation!)))
+    #_(defroute "/logout" []
+        (rf/dispatch [:logout]))
+    #_(defroute "/:profile" [profile]
+        (rf/dispatch [:set-active-page {:page :profile :profile (subs profile 1)}]))
+
+    #_(hook-browser-navigation!)))
 
 (defn init! []
   (rf/dispatch-sync [:initialize-db])
