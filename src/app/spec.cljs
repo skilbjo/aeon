@@ -1,6 +1,6 @@
 (ns app.spec
   (:require [cljs.spec.alpha :as s]
-            [re-frame.core :as re-frame]))
+            #_[re-frame.core :as rf]))
 
 (def valid? s/valid?)
 (def explain-str s/explain-str)
@@ -21,5 +21,4 @@
     (throw (ex-info (str "spec check failed: " (s/explain-str a-spec db))
                     {}))))
 
-(def check-spec-interceptor (re-frame/after (partial check-and-throw
-                                                     ::db)))
+#_(def check-spec-interceptor (rf/after (partial check-and-throw)))

@@ -55,7 +55,7 @@
   :test-paths ["test"]
   :clean-targets ^{:protect false} ["resources/public/js"]
   :hooks [leiningen.cljsbuild]
-  :cljsbuild {:builds {:app {:source-paths ["src/cljs"]
+  :cljsbuild {:builds {:app {:source-paths ["src/app"]
                              :compiler {:asset-path    "js/out"
                                         :main          "app.core"
                                         :output-dir    "resources/public/js/out"

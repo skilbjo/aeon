@@ -1,7 +1,5 @@
 (ns app.events
   (:require [app.db :as db]
-            [app.spec :as s]
-            [cljs.spec.alpha :as spec]
             [clojure.string :as string]
             [day8.re-frame.tracing :refer-macros [fn-traced]]
             [ajax.core :refer [json-request-format json-response-format]]
@@ -25,27 +23,27 @@
       nil)))
 
 (rf/reg-event-fx  ;; usage: (dispatch [:initialise-db])
-  :initialize-db  ;; sets up initial application state
-  [(rf/inject-cofx :local-store-user) #_s/check-spec-interceptor]
-  (fn-traced [{:keys [db local-store-user]} _]
-             {:db (-> db/default-db
-                      (assoc :user local-store-user))}))
+ :initialize-db  ;; sets up initial application state
+ [(rf/inject-cofx :local-store-user) #_s/check-spec-interceptor]
+ (fn-traced [{:keys [db local-store-user]} _]
+            {:db (-> db/default-db
+                     (assoc :user local-store-user))}))
 
 (rf/reg-event-fx    ;; usage: (dispatch [:set-active-page {:page :home})
-  :set-active-page  ;; when user clicks on a link to go to a another page
-  (fn-traced [{:keys [db]} [_ {:keys [page    ;; destructure 2nd parameter
-                                      slug    ;; to obtain keys
-                                      profile
-                                      favorited]}]]
-             (let [set-page (assoc db :active-page page)]
-               (case page
+ :set-active-page  ;; when user clicks on a link to go to a another page
+ (fn-traced [{:keys [db]} [_ {:keys [page    ;; destructure 2nd parameter
+                                     slug    ;; to obtain keys
+                                     profile
+                                     favorited]}]]
+            (let [set-page (assoc db :active-page page)]
+              (case page
                  ;; -- URL @ "/" --------------------------------------------------------
-                 :home {:db set-page}
+                :home {:db set-page}
 
                  ;; -- URL @ "/login" | "/register" -------------------------------------
-                 (:login :register) {:db set-page}
+                (:login :register) {:db set-page}
                  ;; -- URL @ "/:profile" ------------------------------------------------
-                 ))))
+))))
 
 (rf/reg-event-fx                        ;; usage (dispatch [:login user])
  :login                              ;; triggered when a users submits login form

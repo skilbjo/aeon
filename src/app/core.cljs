@@ -1,7 +1,7 @@
 (ns app.core
   (:require-macros [secretary.core :refer [defroute]])
-  (:require [app.events]
-            [app.subs]
+  (:require [app.events] ;; force compiler to include
+            [app.subs]   ;; these namespaces
             [app.spec]
             [app.views :as views]
             [goog.events :as events]
@@ -24,18 +24,17 @@
     (secretary/set-config! :prefix "#")
 
     (defroute "/" []
-        (rf/dispatch [:set-active-page {:page :home}]))
+      (rf/dispatch [:set-active-page {:page :home}]))
     (defroute "/login" []
-        (rf/dispatch [:set-active-page {:page :login}]))
+      (rf/dispatch [:set-active-page {:page :login}]))
     (defroute "/register" []
-        (rf/dispatch [:set-active-page {:page :register}]))
+      (rf/dispatch [:set-active-page {:page :register}]))
 
     #_(defroute "/logout" []
         (rf/dispatch [:logout]))
     #_(defroute "/:profile" [profile]
-        (rf/dispatch [:set-active-page {:page :profile :profile (subs profile 1)}]))
-
-    ))
+        (rf/dispatch [:set-active-page {:page    :profile
+                                        :profile (subs profile 1)}]))))
 
 (defn init! []
   (rf/dispatch-sync [:initialize-db])
@@ -53,6 +52,5 @@
         (js/console.log "we're in dev-mode!")))
 
   (init!))
-
 
 (main)

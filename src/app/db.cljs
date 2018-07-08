@@ -1,6 +1,5 @@
 (ns app.db
   (:require [cljs.reader :as reader]
-            [cljs.spec.alpha :as s]
             [re-frame.core :as rf]))
 
 (def local-storage-key "aion")
