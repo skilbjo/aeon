@@ -4,20 +4,18 @@
             [app.subs]
             [app.spec]
             [app.views :as views]
-            [goog.events :as gevents]
-            [goog.history.EventType :as EventType]
+            [goog.events :as events]
             [re-frame.core :as rf]
             [reagent.core :as reagent]
             [secretary.core :as secretary])
-  (:import goog.History))
+  (:import (goog History)
+           (goog.history EventType)))
 
 ;; -- Routes and Navigation ---------------------------------------------------
-(defn hook-browser-navigation! []
+(def history
   (doto (History.)
-    (gevents/listen
-     EventType/NAVIGATE
-     (fn [event]
-       (secretary/dispatch! (.-token event))))
+    (events/listen EventType.NAVIGATE
+                   (fn [event] (secretary/dispatch! (.-token event))))
     (.setEnabled true)))
 
 (defn routes []
@@ -37,7 +35,7 @@
     #_(defroute "/:profile" [profile]
         (rf/dispatch [:set-active-page {:page :profile :profile (subs profile 1)}]))
 
-    #_(hook-browser-navigation!)))
+    ))
 
 (defn init! []
   (rf/dispatch-sync [:initialize-db])

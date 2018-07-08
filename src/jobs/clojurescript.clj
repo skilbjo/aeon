@@ -20,6 +20,7 @@
      [:meta {:name "apple-mobile-web-app-title" :content title}]
      [:meta {:name "apple-mobile-web-app-status-bar-style" :content "black-translucent"}]
 
+     (include-css "https://demo.productionready.io/main.css")
      #_(include-css "https://fonts.googleapis.com/icon?family=Material+Icons"
                     "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css"
                     "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css")]
