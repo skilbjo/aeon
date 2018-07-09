@@ -5,14 +5,15 @@
             [ajax.core :refer [json-request-format json-response-format]]
             [re-frame.core :as rf]))
 
-(def set-user-interceptor [(rf/path :user)         ;; `:user` path within `db`, rather than the full `db`.
-                           (rf/after db/set-user-ls)  ;; write user to localstore (after)
-                           rf/trim-v])             ;; removes first (event id) element from the event vec
+;; -- utils -------------------------------------------------------------------
+(def set-user-interceptor [(rf/path :user)
+                           (rf/after db/set-user-ls)
+                           rf/trim-v])
 
 (def remove-user-interceptor [(rf/after db/remove-user-ls)])
 
 (defn endpoint [& params]
-  (let [api-url "localhost:8081/cljs"]
+  (let [api-url "localhost:8081/api/v1/"]
     (string/join "/" (concat [api-url] params))))
 
 (defn auth-header [db]
@@ -22,62 +23,75 @@
       [:Authorization (str "Token " token)]
       nil)))
 
+(rf/reg-fx
+ :set-hash
+ (fn [{:keys [hash]}]
+   (set! (.-hash js/location) hash)))
+
+;; -- init --------------------------------------------------------------------
 (rf/reg-event-fx  ;; usage: (dispatch [:initialise-db])
- :initialize-db  ;; sets up initial application state
+ :initialize-db
  [(rf/inject-cofx :local-store-user) #_s/check-spec-interceptor]
  (fn-traced [{:keys [db local-store-user]} _]
             {:db (-> db/default-db
                      (assoc :user local-store-user))}))
 
 (rf/reg-event-fx    ;; usage: (dispatch [:set-active-page {:page :home})
- :set-active-page  ;; when user clicks on a link to go to a another page
+ :set-active-page   ;; when user clicks on a link to go to a another page
  (fn-traced [{:keys [db]} [_ {:keys [page    ;; destructure 2nd parameter
                                      slug    ;; to obtain keys
-                                     profile
-                                     favorited]}]]
+                                     profile]}]]
             (let [set-page (assoc db :active-page page)]
               (case page
-                 ;; -- URL @ "/" --------------------------------------------------------
+        ;; -- URL @ "/" ----------------------------------------------
                 :home {:db set-page}
+        ;; -- URL @ "/login" | "/register" ---------------------------
+                (:login :register) {:db set-page}))))
 
-                 ;; -- URL @ "/login" | "/register" -------------------------------------
-                (:login :register) {:db set-page}
-                 ;; -- URL @ "/:profile" ------------------------------------------------
-))))
-
-(rf/reg-event-fx                        ;; usage (dispatch [:login user])
- :login                              ;; triggered when a users submits login form
- (fn-traced [{:keys [db]} [_ credentials]]  ;; credentials = {:email ... :password ...}
+;; -- POST Login @ /api/login -------------------------------------------------
+(rf/reg-event-fx
+ :login
+ (fn-traced [{:keys [db]} [_ credentials]]
             {:db         (assoc-in db [:loading :login] true)
              :http-xhrio {:method          :post
-                          :uri             (endpoint "users" "login")                ;; evaluates to "api/users/login"
-                          :params          {:user credentials}                       ;; {:user {:email ... :password ...}}
-                          :format          (json-request-format)                     ;; make sure it's json
-                          :response-format (json-response-format {:keywords? true})  ;; json response and all keys to keywords
-                          :on-success      [:login-success]                          ;; trigger login-success
-                          :on-failure      [:api-request-error :login]}}))           ;; trigger api-request-error with :login
+                          :uri             (endpoint "login")
+                          :params          {:user credentials}
+                          :format          (json-request-format)
+                          :response-format (json-response-format
+                                            {:keywords? true})
+                          :on-success      [:login-success]
+                          :on-failure      [:api-request-error :login]}}))
 
 (rf/reg-event-fx
  :login-success
- ;; The standard set of interceptors, defined above, which we
- ;; use for all user-modifying event handlers. Looks after
- ;; writing user to localStorage.
- ;; NOTE: this chain includes `path` and `trim-v`
  set-user-interceptor
-
- ;; The event handler function.
- ;; The "path" interceptor in `set-user-interceptor` means 1st parameter is the
- ;; value at `:user` path within `db`, rather than the full `db`.
- ;; And, further, it means the event handler returns just the value to be
- ;; put into `:user` path, and not the entire `db`.
- ;; So, a path interceptor makes the event handler act more like clojure's `update-in`
  (fn-traced [{user :db} [{props :user}]]
             {:db (merge user props)}))
 
-(rf/reg-event-fx  ;; usage (dispatch [:logout])
+(rf/reg-event-fx
  :logout
  remove-user-interceptor
  (fn-traced [{:keys [db]} _]
             {:db      (dissoc db :user)
              :dispatch [:set-active-page {:page :home}]}))
 
+;; -- POST Registration @ /api/user -------------------------------------------
+(rf/reg-event-fx
+ :register-user
+ (fn [{:keys [db]} [_ registration]]
+   {:db         (assoc-in db [:loading :register-user] true)
+    :http-xhrio {:method          :post
+                 :uri             (endpoint "users")
+                 :params          {:user registration}
+                 :format          (json-request-format)
+                 :response-format (json-response-format {:keywords? true})
+                 :on-success      [:register-user-success]
+                 :on-failure      [:api-request-error :register-user]}}))
+
+(rf/reg-event-fx
+ :register-user-success
+ set-user-interceptor
+ (fn [{user :db} [{props :user}]]
+   {:db (merge user props)
+    :dispatch [:complete-request :register-user]
+    :set-hash {:hash "/"}}))

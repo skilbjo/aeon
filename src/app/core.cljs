@@ -29,9 +29,10 @@
       (rf/dispatch [:set-active-page {:page :login}]))
     (defroute "/register" []
       (rf/dispatch [:set-active-page {:page :register}]))
-
-    #_(defroute "/logout" []
-        (rf/dispatch [:logout]))
+    (defroute "/logout" []
+      (rf/dispatch [:logout]))
+    (defroute "/portfolio" []
+      (rf/dispatch [:set-active-page {:page :portfolio}]))
     #_(defroute "/:profile" [profile]
         (rf/dispatch [:set-active-page {:page    :profile
                                         :profile (subs profile 1)}]))))
@@ -43,7 +44,7 @@
 
   (routes)
 
-  (reagent/render [views/the-app]
+  (reagent/render [views/send-app]
                   (.getElementById js/document "app")))
 
 (defn ^:export main []

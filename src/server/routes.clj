@@ -8,7 +8,7 @@
             [compojure.route :as route]
             [environ.core :refer [env]]
             [jobs.api :as jobs.api]
-            [jobs.clojurescript :as jobs.clojurescript]
+            [jobs.cljs :as jobs.cljs]
             [jobs.static :as jobs.static]
             [ring.adapter.jetty :as jetty]
             [ring.middleware.anti-forgery :as anti-forgery]
@@ -34,11 +34,11 @@
   (GET "/dashboard" []
     (jobs.static/dashboard)))
 
-(defroutes clojurescript-routes
+(defroutes cljs-routes
   (GET "/" []
-    (jobs.clojurescript/send-app))
+    jobs.cljs/app)
   (GET "/cljs" []
-    (jobs.clojurescript/send-app)))
+    jobs.cljs/app))
 
 (def api-routes
   (api/context "/api/v1" []
@@ -134,7 +134,7 @@
                                                       :mode :block}}))
       anti-forgery/wrap-anti-forgery)
 
-  (-> clojurescript-routes
+  (-> cljs-routes
       (ring-defaults/wrap-defaults (assoc
                                     ring-defaults/site-defaults
                                     :security

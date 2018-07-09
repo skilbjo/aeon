@@ -1,11 +1,10 @@
-(ns jobs.clojurescript
+(ns jobs.cljs
   (:require [hiccup.core :refer [html]]
             [hiccup.page :refer [include-js include-css]]
             [environ.core :refer [env]]
             [server.util :as util]))
 
-(def title
-  "skilbjo + clojurescript")
+(def title "aoin")
 
 (def app
   (html
@@ -24,12 +23,8 @@
                   "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css"
                   "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css")]
     [:body
-     [:noscript
-      "You need to enable Javascript to run this app."]
+     [:noscript "You need to enable Javascript to run this app."]
      [:div#app]
      (include-js "js/app.js"
                  #_"https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
-                 #_"https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js")]]))
-
-(defn send-app []
-  app)
+                 "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js")]]))

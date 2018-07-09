@@ -4,11 +4,6 @@
 
 (def local-storage-key "aion")
 
-(defn stuffs->local-storage [stuffs]
-  (.setItem js/localStorage local-storage-key (str stuffs)))
-
-(def ->local-store (rf/after stuffs->local-storage))
-
 (defn set-user-ls [user]
   (.setItem js/localStorage local-storage-key (str user)))
 
