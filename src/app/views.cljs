@@ -45,10 +45,6 @@
    [:h4 "Aoin"]
    [:p "Not much here... go login!"]])
 
-(defn register []
-  [:div
-   [:p "register"]])
-
 (defn portfolio []
   [:div
    [:p "portfolio"]])

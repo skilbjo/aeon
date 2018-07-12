@@ -26,5 +26,5 @@
      [:noscript "You need to enable Javascript to run this app."]
      [:div#app]
      (include-js "js/app.js"
-                 #_"https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+                 "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
                  "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js")]]))
