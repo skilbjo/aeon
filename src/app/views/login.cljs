@@ -21,31 +21,37 @@
           [:div.col.s6.offset-s3.z-depth-1
            [:h5#title "login form"]
            (when (:login errors)
-             [util/errors-list (:login errors)])
-           [:form {:on-submit #(login-user % @credentials)}
-            [:div#username.input-field
-             [:input.validate {:type        "text"
-                               :placeholder "user"
-                               :value       user
-                               :on-change   #(swap! credentials assoc
-                                                    :user
-                                                    (-> % .-target .-value))
-                               :disabled    (when (:login loading))}]
-             #_[:label {:for "username"} "username"]]
-            [:div#password.input-field
-             [:input.validate {:type        "text"
-                               :placeholder "password"
-                               :value       password
-                               :on-change   #(swap! credentials assoc
-                                                    :user
-                                                    (-> % .-target .-value))
-                               :disabled    (when (:login loading))}]
+             [util/error (:login errors)])
+           [:form.col.s12 {:on-submit #(login-user % @credentials)}
+            [:div.input-field.col.s6
+             [:input#username.validate {:type        "text"
+                                        :placeholder "user"
+                                        :value       user
+                                        :disabled    (when (:login loading))
+                                        :on-change   #(swap! credentials assoc
+                                                             :user
+                                                             (-> %
+                                                                 .-target
+                                                                 .-value))}]
+             [:label {:for "username"} "username"]]
+            [:div.input-field.col.s6
+             [:input#password.validate {:type        "password"
+                                        :placeholder "password"
+                                        :value       password
+                                        :disabled    (when (:login loading))
+                                        #_:on-change #_(fn [c]
+                                                         (println (:user @credentials))
+                                                         (swap! credentials assoc
+                                                                :password
+                                                                (-> c
+                                                                    .-target
+                                                                    .-value)))
+                                        :on-change   #(swap! credentials assoc
+                                                             :password
+                                                             (-> %
+                                                                 .-target
+                                                                 .-value))}]
              [:label {:for "password"} "password"]]
-            [:p
-             [:input#remember {:type "checkbox"}]
-             [:label#checkbox {:for "remember"} "Remember me"]]
-            [:a#loginbtn.waves-effect.waves-light.btn
-             {:class (when (:login loading) "disabled")} "Login"]
-            #_[:button {:class (when (:login loading) "disabled")}
-               "Sign in"]]]]]))))
-
+            [:button.waves-effect.waves-light.btn
+             {:class (when (:login loading) "disabled")}
+             "Sign in"]]]]]))))

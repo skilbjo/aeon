@@ -14,13 +14,13 @@
         f       (if (env :jdbc-athena-uri)
                   sql/query-athena
                   sql/query'')
-        result  (->> "/login.sql"
-                     (str dir)
-                     io/resource
-                     slurp
-                     (f {:user user
-                         :password password})
-                     first)
+        result  (-> (->> "/login.sql"
+                         (str dir)
+                         io/resource
+                         slurp)
+                    (f {:user user
+                        :password password})
+                    first)
         unauthorized {:status 401
                       :body "Wrong username, password, or both, bucko"}]
     (if (and (= (:username result) user)

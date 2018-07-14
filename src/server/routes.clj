@@ -50,10 +50,8 @@
       ;; TODO does CSRF on /login make sense? How to make it work with swagger?
       ;; per https://github.com/edbond/CSRF - CSRF + ring + POST does not work
       ;; with compojure 1.2.0+ (we are on 1.6.1)
-      #_:middleware #_[anti-forgery/wrap-anti-forgery]
+      #_:middleware    #_[anti-forgery/wrap-anti-forgery]
       #_:header-params #_[{x-csrf-token :- :server.spec/authorization nil}]
-      :middleware [anti-forgery/wrap-anti-forgery]
-      :header-params [{x-csrf-token :- :server.spec/authorization nil}]
       (api/POST "/login" []
         :summary "Login, for an authentication token"
         :body-params [user     :- :server.spec/user
@@ -118,9 +116,9 @@
                                     {:anti-forgery false ; for POST to work
                                      :hsts true
                                      :content-type-options :nosniff
-                                     :frame-options :sameorigin
+                                     :frame-options        :sameorigin
                                      :xss-protection {:enable? true
-                                                      :mode :block}})))
+                                                      :mode    :block}})))
 
   (-> server-routes
       (ring-defaults/wrap-defaults (assoc
@@ -129,9 +127,9 @@
                                     {:anti-forgery true
                                      :hsts true
                                      :content-type-options :nosniff
-                                     :frame-options :sameorigin
+                                     :frame-options        :sameorigin
                                      :xss-protection {:enable? true
-                                                      :mode :block}}))
+                                                      :mode    :block}}))
       anti-forgery/wrap-anti-forgery)
 
   (-> cljs-routes
@@ -141,7 +139,7 @@
                                     {:anti-forgery true
                                      :hsts true
                                      :content-type-options :nosniff
-                                     :frame-options :sameorigin
+                                     :frame-options        :sameorigin
                                      :xss-protection {:enable? true
                                                       :mode    :block}}))
       anti-forgery/wrap-anti-forgery)

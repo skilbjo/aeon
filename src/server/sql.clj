@@ -1,7 +1,8 @@
 (ns server.sql
   (:require [clojure.string :as string]
             [clojure.java.jdbc :as jdbc]
-            [environ.core :refer [env]])
+            [environ.core :refer [env]]
+            [server.util :as util])
   (:import (java.sql DriverManager Connection)
            (java.util Properties)))
 

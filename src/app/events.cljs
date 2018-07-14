@@ -1,8 +1,9 @@
 (ns app.events
   (:require [app.db :as db]
-            [clojure.string :as string]
-            [day8.re-frame.tracing :refer-macros [fn-traced]]
             [ajax.core :refer [json-request-format json-response-format]]
+            [clojure.string :as string]
+            [day8.re-frame.http-fx] ;; :http-xhrio self-register with re-frame
+            [day8.re-frame.tracing :refer-macros [fn-traced]]
             [re-frame.core :as rf]))
 
 ;; -- utils -------------------------------------------------------------------
@@ -13,7 +14,7 @@
 (def remove-user-interceptor [(rf/after db/remove-user-ls)])
 
 (defn endpoint [& params]
-  (let [api-url "localhost:8081/api/v1/"]
+  (let [api-url "http://localhost:8081/api/v1"]
     (string/join "/" (concat [api-url] params))))
 
 (defn auth-header [db]
@@ -51,11 +52,12 @@
 ;; -- POST Login @ /api/login -------------------------------------------------
 (rf/reg-event-fx
  :login
- (fn-traced [{:keys [db]} [_ credentials]]
+ (fn-traced [{:keys [db]} [_ body]]
             {:db         (assoc-in db [:loading :login] true)
              :http-xhrio {:method          :post
                           :uri             (endpoint "login")
-                          :params          {:user credentials}
+                          :headers         (auth-header db)
+                          :params          body
                           :format          (json-request-format)
                           :response-format (json-response-format
                                             {:keywords? true})
@@ -65,8 +67,11 @@
 (rf/reg-event-fx
  :login-success
  set-user-interceptor
- (fn-traced [{user :db} [{props :user}]]
-            {:db (merge user props)}))
+ (fn-traced [{user :db} response]
+            #_[:Authorization (str "Token " token)]
+            (let [token (-> response first :token)]
+              {:db (assoc user
+                          :auth [:Authorization (str "Token " token)])})))
 
 (rf/reg-event-fx
  :logout
@@ -95,3 +100,18 @@
    {:db (merge user props)
     :dispatch [:complete-request :register-user]
     :set-hash {:hash "/"}}))
+
+;; -- Request Handlers -----------------------------------------------------------
+(rf/reg-event-db
+ :complete-request
+ (fn-traced [db [_ request-type]]
+            (assoc-in db
+                      [:loading request-type] false)))
+
+(rf/reg-event-fx
+ :api-request-error
+ (fn-traced [{:keys [db]} [_ request-type response]]
+            {:db (assoc-in db
+                           [:errors request-type]
+                           (-> response :status-text))
+             :dispatch [:complete-request request-type]}))
