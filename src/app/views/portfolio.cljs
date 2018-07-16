@@ -5,4 +5,6 @@
 
 ;; -- portfolio ---------------------------------------------------------------
 (defn portfolio []
-  nil)
+  [:div.container
+   [:div.row
+    [:p "the portfolio awaits!"]]])
