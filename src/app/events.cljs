@@ -70,7 +70,7 @@
 (rf/reg-event-fx
  :login-success
  set-user-interceptor
- (fn-traced [{user :db} response] ;; try [_ params] and then {:token "token"}
+ (fn-traced [{user :db} response]
             (let [token (-> response first :token)]
               {:db (assoc user
                           :token token)
@@ -101,8 +101,8 @@
 (rf/reg-event-fx
  :portfolio-success
  set-user-interceptor
- (fn-traced [{user :db} response]
-            {:db (assoc-in [:loading :portfolio] false)
+ (fn-traced [{:keys [db]} response]
+            {:db (assoc-in db [:loading :portfolio] false)
              :dispatch-n (list [:complete-request :portfolio]
                                [:set-active-page {:page :portfolio}])}))
 
