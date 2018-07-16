@@ -14,12 +14,14 @@
 (def remove-user-interceptor [(rf/after db/remove-user-ls)])
 
 (defn endpoint [& params]
-  (let [api-url "http://localhost:8081/api/v1"]
+  (let [api-url "/api/v1"]
+    (println "endpoint is: " (string/join "/" (concat [api-url] params)))
     (string/join "/" (concat [api-url] params))))
 
 (defn auth-header [db]
   "Get user token and format for API authorization"
-  (let [token (get-in db [:user :token])]
+  (let [token (-> db :user :token)]
+    (println "auth-header called. token is: " token)
     (if token
       [:Authorization (str "Token " token)]
       nil)))
@@ -44,10 +46,11 @@
                                      profile]}]]
             (let [set-page (assoc db :active-page page)]
               (case page
-        ;; -- URL @ "/" ----------------------------------------------
-                :home {:db set-page}
         ;; -- URL @ "/login" | "/register" ---------------------------
-                (:login :register) {:db set-page}))))
+                (:home :login :register) {:db set-page}
+        ;; -- URL @ "/" ----------------------------------------------
+                :portfolio {:db       set-page
+                            :dispatch [:portfolio]}))))
 
 ;; -- POST Login @ /api/login -------------------------------------------------
 (rf/reg-event-fx
@@ -68,38 +71,39 @@
  :login-success
  set-user-interceptor
  (fn-traced [{user :db} response]
-            #_[:Authorization (str "Token " token)]
             (let [token (-> response first :token)]
               {:db (assoc user
-                          :auth [:Authorization (str "Token " token)])})))
+                          :token token)
+               :dispatch-n (list [:complete-request :login]
+                                 [:set-active-page {:page :home}])})))
 
 (rf/reg-event-fx
  :logout
  remove-user-interceptor
  (fn-traced [{:keys [db]} _]
-            {:db      (dissoc db :user)
+            {:db      (dissoc db :user :loading :errors)
              :dispatch [:set-active-page {:page :home}]}))
 
-;; -- POST Registration @ /api/user -------------------------------------------
+;; -- GET Portfolio @ api/v1/reports/portfolio --------------------------------
 (rf/reg-event-fx
- :register-user
- (fn [{:keys [db]} [_ registration]]
-   {:db         (assoc-in db [:loading :register-user] true)
-    :http-xhrio {:method          :post
-                 :uri             (endpoint "users")
-                 :params          {:user registration}
-                 :format          (json-request-format)
-                 :response-format (json-response-format {:keywords? true})
-                 :on-success      [:register-user-success]
-                 :on-failure      [:api-request-error :register-user]}}))
+ :portfolio
+ (fn-traced [{:keys [db]} [_ body]]
+            {:db         (assoc-in db [:loading :portfolio] true)
+             :http-xhrio {:method          :get
+                          :uri             (endpoint "reports" "portfolio")
+                          :headers         (auth-header db)
+                          :format          (json-request-format)
+                          :response-format (json-response-format
+                                            {:keywords? true})
+                          :on-success      [:portfolio-success]
+                          :on-failure      [:api-request-error :portfolio]}}))
 
 (rf/reg-event-fx
- :register-user-success
+ :portfolio-success
  set-user-interceptor
- (fn [{user :db} [{props :user}]]
-   {:db (merge user props)
-    :dispatch [:complete-request :register-user]
-    :set-hash {:hash "/"}}))
+ (fn-traced [{user :db} response]
+            {:dispatch-n (list [:complete-request :portfolio]
+                               [:set-active-page {:page :portfolio}])}))
 
 ;; -- Request Handlers -----------------------------------------------------------
 (rf/reg-event-db

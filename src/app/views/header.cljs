@@ -21,6 +21,7 @@
           [:a {:href "#/register"} "Register"]])
        (when-not anon?
          [:li {:class (when (= active-page :portfolio) "active")}
-          [:a {:href "#/logout"} "Portfolio"]]
+          [:a {:href "#/portfolio"} "Portfolio"]])
+       (when-not anon?
          [:li {:class (when (= active-page :logout) "active")}
           [:a {:href "#/logout"} "Logout"]])]]]))

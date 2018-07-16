@@ -2,6 +2,7 @@
   (:require [app.views.footer :as footer]
             [app.views.header :as header]
             [app.views.login :as login]
+            [app.views.portfolio :as portfolio]
             [app.views.register :as register]
             [re-frame.core :refer [subscribe dispatch]]
             [reagent.core :as reagent]))
@@ -45,19 +46,16 @@
    [:h4 "Aoin"]
    [:p "Not much here... go login!"]])
 
-(defn portfolio []
-  [:div
-   [:p "portfolio"]])
-
 (defn logout []
   [:div
    [:p "logout"]])
 
 (defn pages [page-name]
   (case page-name
-    :home     [home]
-    :login    [login/login]
-    :register [register/register]
+    :home      [home]
+    :login     [login/login]
+    :register  [register/register]
+    :portfolio [portfolio/portfolio]
     [home]))
 
 (defn send-app []

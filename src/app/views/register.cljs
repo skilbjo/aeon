@@ -4,9 +4,9 @@
             [re-frame.core :refer [subscribe dispatch]]))
 
 ;; -- register ----------------------------------------------------------------
-(defn register-user [event registration]
-  (.preventDefault event)
-  (dispatch [:register-user registration]))
+#_(defn register-user [event registration]
+    (.preventDefault event)
+    (dispatch [:register-user registration]))
 
 (defn register []
   [:div
