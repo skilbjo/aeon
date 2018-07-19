@@ -21,3 +21,8 @@
  :loading
  (fn [db _]
    (:loading db)))
+
+(rf/reg-sub
+ :portfolio
+ (fn-traced [db _]
+            (:portfolio db)))

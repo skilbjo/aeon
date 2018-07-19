@@ -5,6 +5,10 @@
 
 ;; -- portfolio ---------------------------------------------------------------
 (defn portfolio []
-  [:div.container
-   [:div.row
-    [:p "the portfolio awaits!"]]])
+  (let [portfolio        @(subscribe [:portfolio])]
+   [:div.container
+    [:div.row
+     [:p "Portfolio is"]
+     [:p portfolio]
+     #_(when portfolio)
+      [:p portfolio]]]))

@@ -1,5 +1,6 @@
 (ns app.events
   (:require [app.db :as db]
+            [app.util :as util]
             [ajax.core :refer [json-request-format json-response-format]]
             [clojure.string :as string]
             [day8.re-frame.http-fx] ;; :http-xhrio self-register with re-frame
@@ -101,10 +102,12 @@
 (rf/reg-event-fx
  :portfolio-success
  set-user-interceptor
- (fn-traced [{:keys [db]} response]
-            {:db (assoc-in db [:loading :portfolio] false)
-             :dispatch-n (list [:complete-request :portfolio]
-                               [:set-active-page {:page :portfolio}])}))
+ (fn-traced [{:keys [db]} [_ result]]
+            {:db (-> db
+                     (assoc-in [:loading :portfolio] false)
+                     util/print-it
+                     (assoc :portfolio result))
+             :dispatch-n [:complete-request :portfolio]}))
 
 ;; -- Request Handlers -----------------------------------------------------------
 (rf/reg-event-db
