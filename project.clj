@@ -44,10 +44,12 @@
                  [cljs-ajax "0.7.3" :exclusions [com.fasterxml.jackson.core/jackson-core
                                                  com.fasterxml.jackson.core/jackson-dataformat-cbor
                                                  cheshire]]
+                 [com.andrewmcveigh/cljs-time "0.5.2"]
                  [day8.re-frame/http-fx "0.1.6"]
                  [day8.re-frame/tracing-stubs "0.5.1"]
                  [re-frame "0.10.5"
                   :exclusions [com.google.code.findbugs/jsr305]]
+                 [re-frame-datatable "0.6.0"]
                  [reagent "0.8.1"]
                  [secretary "1.2.3"]]
   :plugins [[lein-cloverage "1.0.11"]

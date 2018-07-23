@@ -14,13 +14,13 @@
 
 (rf/reg-sub
  :errors
- (fn [db _]
-   (:errors db)))
+ (fn-traced [db _]
+            (:errors db)))
 
 (rf/reg-sub
  :loading
- (fn [db _]
-   (:loading db)))
+ (fn-traced [db _]
+            (:loading db)))
 
 (rf/reg-sub
  :portfolio

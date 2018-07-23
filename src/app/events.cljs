@@ -50,8 +50,7 @@
         ;; -- URL @ "/login" | "/register" ---------------------------
                 (:home :login :register) {:db set-page}
         ;; -- URL @ "/" ----------------------------------------------
-                :portfolio {:db       set-page
-                            :dispatch [:portfolio]}))))
+                :portfolio {:dispatch [:portfolio]}))))
 
 ;; -- POST Login @ /api/login -------------------------------------------------
 (rf/reg-event-fx
@@ -82,7 +81,12 @@
  :logout
  remove-user-interceptor
  (fn-traced [{:keys [db]} _]
-            {:db      (dissoc db :user :loading :errors)
+            {:db      (dissoc db
+                              :user
+                              :portfolio
+                              :loading
+                              :errors
+                              :re-frame-datatable.core/re-frame-datatable)
              :dispatch [:set-active-page {:page :home}]}))
 
 ;; -- GET Portfolio @ api/v1/reports/portfolio --------------------------------
@@ -101,13 +105,12 @@
 
 (rf/reg-event-fx
  :portfolio-success
- set-user-interceptor
- (fn-traced [{:keys [db]} [_ result]]
+ (fn-traced [{:keys [db]} [_ {result :body}]]
             {:db (-> db
                      (assoc-in [:loading :portfolio] false)
-                     util/print-it
+                     (assoc :active-page :portfolio)
                      (assoc :portfolio result))
-             :dispatch-n [:complete-request :portfolio]}))
+             :dispatch-n (list [:complete-request :portfolio])}))
 
 ;; -- Request Handlers -----------------------------------------------------------
 (rf/reg-event-db

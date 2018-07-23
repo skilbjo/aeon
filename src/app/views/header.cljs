@@ -7,9 +7,7 @@
         anon?       (empty? user)]
     [:nav
      [:div.nav-wrapper
-      [:a.brand-logo.center {:href "#/"}
-       [:i.material-icons "cloud"]
-       "aoin"]
+      [:a.brand-logo.center {:href "#/"} "aoin"]
       [:ul#nav-mobile.left
        [:li {:class (when (= active-page :home) "active")}
         [:a {:href "#/"} "Home"]]
