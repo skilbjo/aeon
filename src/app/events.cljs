@@ -75,7 +75,7 @@
               {:db (assoc user
                           :token token)
                :dispatch-n (list [:complete-request :login]
-                                 [:set-active-page {:page :home}])})))
+                                 [:set-active-page {:page :portfolio}])})))
 
 (rf/reg-event-fx
  :logout

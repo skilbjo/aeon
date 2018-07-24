@@ -25,7 +25,7 @@
                       :body "Wrong username, password, or both, bucko"}]
     (if (and (= (:username result) user)
              (= (:password result) password))
-      {:token "2f904e245c1f5"}
+      {:token password} ;; TODO password is hashed, but is there a better way?
       unauthorized)))
 
 (defn v1.portfolio []

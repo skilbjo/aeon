@@ -1,5 +1,5 @@
 with now as (
-  select (now() at time zone 'pst')::date now
+  select ((now() at time zone 'pst')::date - interval '1 day')::date now
 ), date as (
   select
     (select now from now) today,
@@ -66,9 +66,9 @@ with now as (
   select
     description, cost_basis::int , market_value::int,
     today_gain_loss::int,
-    (today_gain_loss / market_value * 100)::decimal(8,2) || '%'  "today_gain_loss_%",
+    (today_gain_loss / market_value * 100)::decimal(8,2) "today_gain_loss_%",
     gain_loss::int total_gain_loss,
-    (gain_loss / cost_basis * 100)::decimal(8,2) || '%'  "total_gain_loss_%"
+    (gain_loss / cost_basis * 100)::decimal(8,2)         "total_gain_loss_%"
   from
     _union
 )
