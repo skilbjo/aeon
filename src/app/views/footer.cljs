@@ -8,7 +8,7 @@
    [:div.footer-copyright
     [:div.container
      [:a.grey-text.text-lighten-4.left
-      {:href "https://github.com/skilbjo/aoin"}
+      {:href "https://github.com/skilbjo/aeon"}
       "source code"]]
     [:div.container
      [:a.grey-text.text-lighten-4.right {:href "/swagger"} "swagger api"]]]])

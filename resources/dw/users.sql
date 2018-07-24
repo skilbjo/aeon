@@ -2,7 +2,7 @@ select
   username,
   password,
 from
-  aoin.users
+  aeon.users
 where
   username     = ':user'
   and password = ':password'

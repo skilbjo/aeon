@@ -1,16 +1,16 @@
 <img src='dev-resources/img/cover.jpg' width='900' />
 
-## a i o n
+## a e o n
 : (your '(LISP webserver))
 
 [CircleCI Builds](https://circleci.com/gh/skilbjo/aion)
 
-[![CircleCI](https://circleci.com/gh/skilbjo/aoin/tree/master.svg?style=svg)](https://circleci.com/gh/skilbjo/aoin/tree/master)
-[![quay.io](https://quay.io/repository/skilbjo/aoin/status "Docker Repository on Quay")](https://quay.io/repository/skilbjo/aion)
-[![codecov](https://codecov.io/gh/skilbjo/aoin/branch/master/graph/badge.svg)](https://codecov.io/gh/skilbjo/aoin)
+[![CircleCI](https://circleci.com/gh/skilbjo/aeon/tree/master.svg?style=svg)](https://circleci.com/gh/skilbjo/aeon/tree/master)
+[![quay.io](https://quay.io/repository/skilbjo/aeon/status "Docker Repository on Quay")](https://quay.io/repository/skilbjo/aion)
+[![codecov](https://codecov.io/gh/skilbjo/aeon/branch/master/graph/badge.svg)](https://codecov.io/gh/skilbjo/aeon)
 
-[![aion_sfo](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/LLt_f7oB/aoin_sfo.svg)](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/LLt_f7oB/aoin_sfo.svg)
-[![aion_aws](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/VCCU8nLh/aoin_aws.svg)]((https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/VCCU8nLh/aoin_aws.svg))
+[![aeon_sfo]( https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/h2mXKjDZ/aeon_sfo.svg)]( https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/h2mXKjDZ/aeon_sfo.svg)
+[![aeon_aws](https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/rVUTU2Qy/aeon_aws.svg)]((https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/rVUTU2Qy/aeon_aws.svg))
 
 ## What
 
@@ -18,14 +18,14 @@ A webserver in LISP FTW.
 
 <img src='dev-resources/img/lisp_warning.png' width='250' />
 
-## aoin
+## aeon
 
 > Aion (Greek: Αἰών) is a Hellenistic deity associated with time, the orb or
 > circle encompassing the universe, and the zodiac. The "time" represented by
 > Aion is unbounded, in contrast to Chronos as empirical time divided into past,
 > present, and future. He is thus a god of eternity.
 
-<img src='dev-resources/img/aoin.jpg' />
+<img src='dev-resources/img/aeon.jpg' />
 
 ## TODOs
 

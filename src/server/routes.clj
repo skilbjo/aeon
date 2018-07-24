@@ -103,7 +103,7 @@
        {:ui   "/swagger"
         :spec "/swagger.json"
         :middleware [ring-json/wrap-json-response]
-        :data {:info {:title       "Aoin API"
+        :data {:info {:title       "Aeon API"
                       :description "A webserver in LISP FTW"
                       :version     "1.0.0"}}}}
       (api/api api-routes)))
@@ -157,7 +157,7 @@
       gzip/wrap-gzip))
 
 (defn -main []  ; java -jar app.jar uses this as the entrypoint
-  (log/info "Starting aoin webserver ... ")
+  (log/info "Starting aeon webserver ... ")
   (error/set-default-error-handler)
 
   ; schedule the healthchecks

@@ -4,7 +4,7 @@
             [environ.core :refer [env]]
             [server.util :as util]))
 
-(def title "aoin")
+(def title "aeon")
 
 (def app
   (html

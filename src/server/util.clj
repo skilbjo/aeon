@@ -95,6 +95,6 @@
                                            every-half-hour)
         callback-fn (fn [time]
                       (log/debug "Notifying healthchecks.io at " time)
-                      (notify-healthchecks-io (env :healthchecks-io-aoin)))]
+                      (notify-healthchecks-io (env :healthchecks-io-aeon)))]
     (chime/chime-at schedule
                     callback-fn)))
