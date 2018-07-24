@@ -1,7 +1,7 @@
 begin;
 
-  create extension "uuid-ossp";
-  create extension pgcrypto;
+  create extension if not exists "uuid-ossp";
+  create extension if not exists pgcrypto;
 
   create schema if not exists aeon;
 
