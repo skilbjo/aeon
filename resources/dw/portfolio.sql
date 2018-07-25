@@ -22,9 +22,9 @@ with now as (
   where
     date in ( select today from date )
     or (case when markets.ticker in ('VGWAX') and date is null then 1 else 0 end)
-       = 1 -- VGWAX is too "new" of a ticker; hopefull will be added soon
+       = 1
     or (case when markets.ticker in ('VMMXX') and date in (select yesterday from date) then 1 else 0 end)
-       = 1 -- VMMXX is only updated as of yesterday, by Morningstar
+       = 1
   group by
     1,2
 ), yesterday as (
@@ -66,9 +66,9 @@ with now as (
   select
     description, cost_basis::int , market_value::int,
     today_gain_loss::int,
-    (today_gain_loss / market_value * 100)::decimal(8,2) || '%'  "today_gain_loss_%",
+    (today_gain_loss / market_value * 100)::decimal(8,2) "today_gain_loss_%",
     gain_loss::int total_gain_loss,
-    (gain_loss / cost_basis * 100)::decimal(8,2) || '%'  "total_gain_loss_%"
+    (gain_loss / cost_basis * 100)::decimal(8,2)         "total_gain_loss_%"
   from
     _union
 )

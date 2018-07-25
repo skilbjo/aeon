@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && cd "$dir"
+
+get_dw_equities(){
+  psql $aws_db_uri -c 'copy (select * from dw.equities) to stdout with csv' | \
+    ghead -n -1 >~/Downloads/equities.csv
+
+  psql $aws_db_uri -c 'copy (select * from dw.portfolio) to stdout with csv' | \
+    ghead -n -1 >~/Downloads/portfolio.csv
+}
+
+upload_to_dev(){
+  psql $docker_psql_uri -c "truncate dw.portfolio;"
+  psql $docker_psql_uri -c "\copy dw.portfolio(dataset,ticker,quantity,cost_per_share) from '~/Downloads/portfolio.csv' delimiter ',' csv;"
+
+  psql $docker_psql_uri -c "truncate dw.equities;"
+  psql $docker_psql_uri -c "\copy dw.equities(dataset,ticker,date,open,close,low,high,volume,split_ratio,adj_open,adj_close,adj_low,adj_high,adj_volume,ex_dividend) from '~/Downloads/equities.csv' delimiter ',' csv;"
+}
+
+verify_results(){
+  psql $docker_psql_uri -P pager=off -v ON_ERROR_STOP=1 \
+    -c 'select * from dw.equities limit 5;'
+
+  psql $docker_psql_uri -P pager=off -v ON_ERROR_STOP=1 \
+    -c 'select * from dw.portfolio limit 5;'
+
+  rm ~/Downloads/equities.csv
+  rm ~/Downloads/portfolio.csv
+}
+
+get_dw_equities \
+  && upload_to_dev \
+  && verify_results

@@ -10,7 +10,8 @@
             [clojure.tools.logging :as log]
             [clostache.parser :as clostache]
             [environ.core :refer [env]]
-            [markdown.core :as markdown])
+            [markdown.core :as markdown]
+            [postal.core :as postal])
   (:import (org.joda.time DateTimeZone)))
 
 ; -- dev -----------------------------------------------
@@ -65,6 +66,19 @@
 
 (def once-a-day (-> 1 time/days))
 
+; -- email ---------------------------------------------
+(defn email [subject msg]
+  (let [email (-> :email env)
+        cxn   {:host "smtp.gmail.com"
+               :ssl  true
+               :user email
+               :pass (-> :email-pw env)}]
+    (postal/send-message cxn {:from    email
+                              :to      email
+                              :subject (format (str "Aeon " subject " for: %s")
+                                               now')
+                              :body    msg})))
+
 ; -- data transformation -------------------------------
 (def lower-trim
   (comp string/lower-case string/trim))
@@ -95,6 +109,6 @@
                                            every-half-hour)
         callback-fn (fn [time]
                       (log/debug "Notifying healthchecks.io at " time)
-                      (notify-healthchecks-io (env :healthchecks-io-aoin)))]
+                      (notify-healthchecks-io (env :healthchecks-io-aeon)))]
     (chime/chime-at schedule
                     callback-fn)))

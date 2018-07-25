@@ -14,7 +14,7 @@ with_db() {
     -p 8443:8443 \
     -e ro_jdbc_db_uri="$(echo $ro_jdbc_db_uri)" \
     -e quandl_api_key="$(echo $quandl_api_key)" \
-    -e healthchecks_io_aoin="$(echo $healthchecks_io_aoin)" \
+    -e healthchecks_io_aeon="$(echo $healthchecks_io_aeon)" \
     "$app_name":dev bash
 }
 
@@ -28,7 +28,7 @@ with_athena(){
     -e ro_jdbc_db_uri="$(echo $ro_jdbc_db_uri)" \
     -e quandl_api_key="$(echo $quandl_api_key)" \
     -e jdbc_athena_uri="$(echo $jdbc_athena_uri)" \
-    -e healthchecks_io_aoin="$(echo $healthchecks_io_aoin)" \
+    -e healthchecks_io_aeon="$(echo $healthchecks_io_aeon)" \
     "$app_name":dev bash
 }
 

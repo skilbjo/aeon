@@ -1,14 +1,13 @@
 # routes
-### /api/:dataset/latest
-- [equities](./api/equities/latest)
-- [currency](./api/currency/latest)
+### swagger / api
+- [swagger](./swagger)
 
-### clojurescript app
-- [app](./app)
+### cljs
+- [/](./)
 
 ### /dashboard
 - [dashboard](./dashboard)
 
 ### static
-- [/](./)
+- [/index](./index)
 - [/routes](./routes)

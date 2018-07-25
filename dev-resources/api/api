@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+uri="http://localhost:8081"
+
+_curl () {
+  method="$1"
+  endpoint="$2"
+  set +u
+  payload="$3"
+  set -u
+
+  case "$method" in
+    GET )
+      curl --fail \
+        -H 'Content-type: application/json' \
+        -X "$method" \
+        "${uri}/api/v1/${endpoint}"
+      ;;
+    POST )
+      curl --fail \
+        -H 'Content-type: application/json' \
+        -X "$method" \
+        --data "$payload" \
+        "${uri}/api/v1/${endpoint}"
+      ;;
+    esac
+}
+
+_curlp () {
+  endpoint="$2"
+  payload="$3"
+
+  _curl "POST" "$endpoint" "$payload"
+}
+
+_curlga () {
+  endpoint="$1"
+  auth_token="$2"
+
+  curl --fail \
+    -H 'Content-type: application/json' \
+    -H "Authorization: Token $auth_token" \
+    "${uri}/api/v1/${endpoint}"
+}
+
+_login () {
+  _curlp "POST" "login" "{\"user\": \"skilbjo\", \"password\": \"$test_pw\"}"
+}
+
+_login_bad () {
+  _curlp "POST" "login" "{\"user\": \"skilbjo\", \"password\": \"not_$test_pw\"}"
+}
+
+_portfolio () {
+  auth_token="$(_login | jq --raw-output '.token')"
+
+  #echo "auth_token is: $auth_token"
+
+  _curlga "reports/portfolio" "$auth_token" #| jq .
+}
+
+#_login
+#_login_bad
+_portfolio | jq .

@@ -1,6 +1,8 @@
 (ns server.middleware
-  (:require [clojure.edn :as edn]
-            [clojure.java.io :as io])
+  (:require [buddy.auth :refer [authenticated?]]
+            [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [ring.util.response :refer [response]])
   (:import (net.sf.uadetector UserAgent UserAgentStringParser)
            (net.sf.uadetector.service UADetectorServiceFactory)))
 
@@ -157,9 +159,11 @@
                 [:headers "Referrer-Policy"]
                 policy))))
 
-(defn wrap-exception-handling [handler]
+; -- auth ------------------
+(defn authenticated
+  [handler]
   (fn [request]
-    (try
+    (if (authenticated? request)
       (handler request)
-      (catch Exception e
-        {:status 400 :body "Invalid data"}))))
+      {:status 401
+       :body   {:error "unauthorized"}})))
