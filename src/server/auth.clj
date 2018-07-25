@@ -11,13 +11,14 @@
 
 ;; TODO passwords are hashed, but is there a better way?
 (def tokens
-  (let [f   (if (env :jdbc-athena-uri)
-              sql/query-athena
-              sql/query')]
-    (->> (util/multi-line-string "select password "
-                                 "from aeon.users "
-                                 "group by 1")
-         f)))
+  (when-not *compile-files* ;; evaluate at run-time, not at compile-time
+    (let [f   (if (env :jdbc-athena-uri)
+                sql/query-athena
+                sql/query')]
+      (->> (util/multi-line-string "select password "
+                                   "from aeon.users "
+                                   "group by 1")
+           f))))
 
 (defn authfn [request token]
   #_(if (= *auth-key-in* token) ;; TODO implement jwt
