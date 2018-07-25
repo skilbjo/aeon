@@ -3,10 +3,10 @@
 ## a e o n
 : (your '(LISP webserver))
 
-[CircleCI Builds](https://circleci.com/gh/skilbjo/aion)
+[CircleCI Builds](https://circleci.com/gh/skilbjo/aeon)
 
 [![CircleCI](https://circleci.com/gh/skilbjo/aeon/tree/master.svg?style=svg)](https://circleci.com/gh/skilbjo/aeon/tree/master)
-[![quay.io](https://quay.io/repository/skilbjo/aeon/status "Docker Repository on Quay")](https://quay.io/repository/skilbjo/aion)
+[![quay.io](https://quay.io/repository/skilbjo/aeon/status "Docker Repository on Quay")](https://quay.io/repository/skilbjo/aeon)
 [![codecov](https://codecov.io/gh/skilbjo/aeon/branch/master/graph/badge.svg)](https://codecov.io/gh/skilbjo/aeon)
 
 [![aeon_sfo]( https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/h2mXKjDZ/aeon_sfo.svg)]( https://healthchecks.io/badge/80da65e9-ff8f-45f1-b75e-109790/h2mXKjDZ/aeon_sfo.svg)
@@ -20,9 +20,9 @@ A webserver in LISP FTW.
 
 ## aeon
 
-> Aion (Greek: Αἰών) is a Hellenistic deity associated with time, the orb or
+> Aeon (Greek: Αἰών) is a Hellenistic deity associated with time, the orb or
 > circle encompassing the universe, and the zodiac. The "time" represented by
-> Aion is unbounded, in contrast to Chronos as empirical time divided into past,
+> Aeon is unbounded, in contrast to Chronos as empirical time divided into past,
 > present, and future. He is thus a god of eternity.
 
 <img src='dev-resources/img/aeon.jpg' />
@@ -181,8 +181,8 @@ nmap --top-ports 5000 -T4 -sC $(nslookup [host]-aws.duckdns.org | grep Address |
 
 ### Git remotes
 ```bash
-git remote add pi-vpn ssh://[user]@[bastion].:43/~/deploy/git/aion.git
-git remote add pi-home ssh://[user]@[host]/~/deploy/git/aion.git
+git remote add pi-vpn ssh://[user]@[bastion].:43/~/deploy/git/aeon.git
+git remote add pi-home ssh://[user]@[host]/~/deploy/git/aeon.git
 ```
 
 ### Pre-commit hook to update pom.xml

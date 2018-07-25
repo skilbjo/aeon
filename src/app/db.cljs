@@ -2,7 +2,7 @@
   (:require [cljs.reader :as reader]
             [re-frame.core :as rf]))
 
-(def local-storage-key "aion")
+(def local-storage-key "aeon")
 
 (defn set-user-ls [user]
   (.setItem js/localStorage local-storage-key (str user)))

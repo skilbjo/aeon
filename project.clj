@@ -1,4 +1,4 @@
-(defproject aion "0.1.0"
+(defproject aeon "0.1.0"
   :uberjar-name "app.jar"
   :repositories {"atlassian"
                  {:url "https://maven.atlassian.com/content/repositories/atlassian-3rdparty/"}}
