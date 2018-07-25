@@ -5,9 +5,10 @@ begin;
 
   create schema if not exists aeon;
 
+  drop table if exists aeon.users;
   create table if not exists aeon.users (
     id          uuid primary key default uuid_generate_v4(),
-    username    text,
+    username    text unique,
     password    text
   );
 

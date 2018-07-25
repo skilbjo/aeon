@@ -15,5 +15,5 @@
   (formatter/unparse (formatter/formatters :date)
                      d))
 
-(def now (-> (time/now)
+(def now (-> (time/today)
              joda-date->date-str))

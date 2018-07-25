@@ -1,5 +1,5 @@
 with now as (
-  select ((now() at time zone 'pst')::date - interval '1 day')::date now
+  select (now() at time zone 'pst')::date now
 ), date as (
   select
     (select now from now) today,

@@ -12,9 +12,11 @@ get_dw_equities(){
 }
 
 upload_to_dev(){
-  psql $docker_psql_uri -c "\copy dw.equities(dataset,ticker,date,open,close,low,high,volume,split_ratio,adj_open,adj_close,adj_low,adj_high,adj_volume,ex_dividend) from '~/Downloads/equities.csv' delimiter ',' csv;"
-
+  psql $docker_psql_uri -c "truncate dw.portfolio;"
   psql $docker_psql_uri -c "\copy dw.portfolio(dataset,ticker,quantity,cost_per_share) from '~/Downloads/portfolio.csv' delimiter ',' csv;"
+
+  psql $docker_psql_uri -c "truncate dw.equities;"
+  psql $docker_psql_uri -c "\copy dw.equities(dataset,ticker,date,open,close,low,high,volume,split_ratio,adj_open,adj_close,adj_low,adj_high,adj_volume,ex_dividend) from '~/Downloads/equities.csv' delimiter ',' csv;"
 }
 
 verify_results(){
