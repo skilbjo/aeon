@@ -20,8 +20,10 @@
          [:div.row
           [:div.col.s6.offset-s3.z-depth-1
            [:h5#title "login form"]
-           (when (:login errors)
+           (when errors
              [util/error (:login errors)])
+           (when errors
+             [util/error (:portfolio errors)])
            [:form.col.s12 {:on-submit #(login-user % @credentials)}
             [:div.input-field.col.s6
              [:input#username.validate {:type        "text"

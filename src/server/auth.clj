@@ -5,21 +5,19 @@
             [server.sql :as sql]
             [server.util :as util]))
 
-#_(def tokens #{:2f904e245c1f5 :skilbjo
-                :45c1f5e3f05d0 :foouser
-                :1})
-
-;; TODO passwords are hashed, but is there a better way?
-(def tokens
+(def tokens ;; TODO passwords are hashed, but is there a better way?
   (delay
-    (let [f   (if (env :jdbc-athena-uri)
-                sql/query-athena
-                sql/query')]
-      (->> (util/multi-line-string "select password "
-                                   "from aeon.users "
-                                   "group by 1")
-           f
-           util/print-it)))
+   (let [query  (util/multi-line-string "select password "
+                                        "from aeon.users "
+                                        "group by 1")
+         f      (if (env :jdbc-athena-uri)
+                  sql/query-athena
+                  sql/query')]
+     (->> query
+          f
+          (map #(:password %))
+          (map keyword)
+          set))))
 
 (defn authfn [request token]
   #_(if (= *auth-key-in* token) ;; TODO implement jwt
