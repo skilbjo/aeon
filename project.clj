@@ -10,6 +10,7 @@
                  [clj-http "3.9.0"]
                  [clj-time "0.14.4"]
                  [com.amazonaws.athena.jdbc/AthenaJDBC41 "1.0.1-atlassian-hosted"]
+                 [com.draines/postal "2.0.2"]
                  [compojure "1.6.1" :exclusions [ring/ring-core]]
                  [metosin/compojure-api "2.0.0-alpha20"
                   :exclusions [cheshire

@@ -10,7 +10,8 @@
             [clojure.tools.logging :as log]
             [clostache.parser :as clostache]
             [environ.core :refer [env]]
-            [markdown.core :as markdown])
+            [markdown.core :as markdown]
+            [postal.core :as postal])
   (:import (org.joda.time DateTimeZone)))
 
 ; -- dev -----------------------------------------------
@@ -64,6 +65,19 @@
 (def every-six-hours (-> 6 time/hours))
 
 (def once-a-day (-> 1 time/days))
+
+; -- email ---------------------------------------------
+(defn send-email [msg]
+  #_(when (= 0 (mod @counter 10000)) (log/info "" @counter))
+  (let [email (-> :email env)
+        cxn   {:host "smtp.gmail.com"
+               :ssl  true
+               :user email
+               :pass (-> :email-pw env)}]
+    (postal/send-message cxn {:from    email
+                              :to      email
+                              :subject (format "Aeon report for %s" now')
+                              :body    msg})))
 
 ; -- data transformation -------------------------------
 (def lower-trim

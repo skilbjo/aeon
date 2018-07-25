@@ -7,6 +7,9 @@
             [server.sql :as sql]
             [server.util :as util]))
 
+(def login-error-counter
+  (atom 0))
+
 (defn v1.login [{:keys [user password]}]
   (let [dir     (if (env :jdbc-athena-uri)
                   "athena"
@@ -21,12 +24,19 @@
                     (f {:user user
                         :password password})
                     first)
-        unauthorized {:status 401
-                      :body "Wrong username, password, or both, bucko"}]
+        unauthorized (fn [username password]
+                       (swap! login-error-counter inc)
+                       (-> (format "Attempted access with username: %s"
+                                   "password: %s "
+                                   "unauthorized login attempts: %s"
+                                   username password login-error-counter)
+                           log/warn)
+                       {:status 401
+                        :body "Wrong username, password, or both, bucko"})]
     (if (and (= (:username result) user)
              (= (:password result) password))
       {:token password} ;; TODO password is hashed, but is there a better way?
-      unauthorized)))
+      (unauthorized))))
 
 (defn v1.portfolio []
   (let [data  (fn [_]
