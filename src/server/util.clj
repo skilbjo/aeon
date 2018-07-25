@@ -67,8 +67,7 @@
 (def once-a-day (-> 1 time/days))
 
 ; -- email ---------------------------------------------
-(defn send-email [msg]
-  #_(when (= 0 (mod @counter 10000)) (log/info "" @counter))
+(defn email [subject msg]
   (let [email (-> :email env)
         cxn   {:host "smtp.gmail.com"
                :ssl  true
@@ -76,7 +75,8 @@
                :pass (-> :email-pw env)}]
     (postal/send-message cxn {:from    email
                               :to      email
-                              :subject (format "Aeon report for %s" now')
+                              :subject (format (str "Aeon " subject " for: %s")
+                                               now')
                               :body    msg})))
 
 ; -- data transformation -------------------------------

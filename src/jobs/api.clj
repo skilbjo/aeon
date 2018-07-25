@@ -24,19 +24,34 @@
                     (f {:user user
                         :password password})
                     first)
-        unauthorized (fn [username password]
+        unauthorized (fn [user password]
                        (swap! login-error-counter inc)
-                       (-> (format "Attempted access with username: %s"
-                                   "password: %s "
-                                   "unauthorized login attempts: %s"
-                                   username password login-error-counter)
-                           log/warn)
-                       {:status 401
-                        :body "Wrong username, password, or both, bucko"})]
+                       (let [msg (str "Unauthorized Login Report\n\n"
+                                      "Attempts: %s \n"
+                                      "Attempted access with \n"
+                                      "user: %s \n"
+                                      "hashed-password: %s")
+                             warn-msg (format msg
+                                              @login-error-counter
+                                              user
+                                              password)]
+
+                         (log/warn warn-msg)
+
+                         ;; email on 10 unauth'd attempts & every 5 thereafter
+                         (when (and (->> @login-error-counter
+                                         (< 10))
+                                    (-> @login-error-counter
+                                        (mod 5)
+                                        (= 0)))
+                           (util/email "Unauthorized Login Report" warn-msg))
+
+                         {:status 401
+                          :body "Wrong username, password, or both, bucko"}))]
     (if (and (= (:username result) user)
              (= (:password result) password))
       {:token password} ;; TODO password is hashed, but is there a better way?
-      (unauthorized))))
+      (unauthorized user password))))
 
 (defn v1.portfolio []
   (let [data  (fn [_]

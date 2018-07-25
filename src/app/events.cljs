@@ -122,7 +122,7 @@
 (rf/reg-event-fx
  :api-request-error
  (fn-traced [{:keys [db]} [_ request-type response]]
-            {:db (assoc-in db
-                           [:errors request-type]
-                           (-> response :status-text))
+            {:db (-> db
+                     (assoc-in [:errors request-type]
+                               (-> response :status-text)))
              :dispatch [:complete-request request-type]}))
