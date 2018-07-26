@@ -19,6 +19,11 @@ verify_results(){
   query 'select * from dw.portfolio'
 }
 
+delete_artifacts(){
+  rm ~/Downloads/file.csv
+}
+
 get_dw_portfolio \
   && upload_portfolio_to_s3 \
-  && verify_results
+  && verify_results \
+  && delete_artifacts
