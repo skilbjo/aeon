@@ -5,25 +5,25 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && cd "$dir"
 
 source athena
 
-get_dw_markets_dim(){
-  psql $aws_db_uri -AF',' -c 'select * from dw.markets' | ghead -n -1 >~/Downloads/file.csv
+get_users(){
+  psql $aws_db_uri -AF',' -c 'select * from aeon.users' | ghead -n -1 >~/Downloads/file.csv
 }
 
 upload_markets_dim_to_s3(){
   aws s3 cp \
     --profile personal \
-    ~/Downloads/file.csv s3://skilbjo-data/datalake/markets-etl/markets/file.csv
+    ~/Downloads/file.csv s3://skilbjo-data/datalake/aeon/users/file.csv
 }
 
 verify_results(){
-  query 'select * from dw.markets'
+  query 'select * from aeon.users'
 }
 
 delete_artifacts(){
   rm ~/Downloads/file.csv
 }
 
-get_dw_markets_dim \
+get_users \
   && upload_markets_dim_to_s3 \
   && verify_results \
   && delete_artifacts
