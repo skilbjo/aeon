@@ -1,5 +1,5 @@
 with now_ts as (
-  select current_timestamp at time zone 'America/Los_Angeles' as now_ts -- for a specifc date: select cast('2018-03-13' as timestamp) as now_ts
+  select current_timestamp at time zone 'America/Los_Angeles' as now_ts
 ), now as (
   select cast((select now_ts from now_ts) as date) as now
 ), date as (
@@ -53,9 +53,9 @@ with now_ts as (
   where
     date in ( select today from date )
     or (case when markets.ticker in ('VGWAX') and date is null then 1 else 0 end)
-       = 1 -- VGWAX is too "new" of a ticker; hopefull will be added soon
+       = 1
     or (case when markets.ticker in ('VMMXX') and date is null then 1 else 0 end)
-       = 1 -- VMMXX is only updated as of yesterday, by Morningstar; however because of Athena, it won't get updated
+       = 1
   group by
     1,2
 ), yesterday as (
