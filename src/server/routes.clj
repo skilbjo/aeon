@@ -59,7 +59,6 @@
         (let [user-trusted     (-> user sql/escape util/lower-trim)
               password-trusted (-> password
                                    sql/escape'
-                                   util/lower-trim
                                    hash/sha256
                                    codecs/bytes->hex)]
           (-> {:user user-trusted
