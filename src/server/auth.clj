@@ -9,7 +9,7 @@
   (delay
    (let [query  (util/multi-line-string "select password "
                                         "from aeon.users "
-                                        "group by 1")
+                                        "group by 1      ")
          f      (if (env :jdbc-athena-uri)
                   sql/query-athena
                   sql/query')]
