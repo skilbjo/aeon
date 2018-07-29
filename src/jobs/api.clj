@@ -90,7 +90,7 @@
                     (->> (-> (str dir "/latest.sql")
                              io/resource
                              slurp
-                             (f {:table dataset}))
+                             (f {:table (str dataset "_fact")}))
                          (map #(update % :date coerce/to-sql-date)))))
           data' (memoize data)]
       {:body (data' util/now')}))) ; cache the request by date
@@ -112,7 +112,7 @@
                     (->> (-> (str dir "/quote.sql")
                              io/resource
                              slurp
-                             (f {:table  dataset
+                             (f {:table  (str dataset "_fact")
                                  :ticker ticker
                                  :date   date}))
                          (map #(update % :date coerce/to-sql-date)))))

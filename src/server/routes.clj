@@ -70,7 +70,7 @@
       :tags ["prices"]
       (api/GET "/latest" []
         :summary "Latest prices"
-        (let [dataset-trusted (-> dataset sql/escape util/lower-trim (str "_fact"))
+        (let [dataset-trusted (-> dataset sql/escape util/lower-trim)
               response'       (jobs.api/v1.latest dataset-trusted)]
           (-> response'
               response)))
@@ -79,7 +79,7 @@
         :summary "Price for a specific date"
         :query-params [ticker :- :server.spec/ticker
                        date   :- :server.spec/date]
-        (let [dataset-trusted (-> dataset sql/escape util/lower-trim (str "_fact"))
+        (let [dataset-trusted (-> dataset sql/escape util/lower-trim)
               ticker-trusted  (-> ticker sql/escape util/lower-trim)
               date-trusted    (-> date sql/escape' util/lower-trim)
               response'       (jobs.api/v1.quote dataset-trusted

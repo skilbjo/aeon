@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+cp ~/dev/markets-etl/dev-resources/test/ddl.sql ~/dev/aeon/dev-resources/test/ddl.sql
