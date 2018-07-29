@@ -16,9 +16,9 @@ with now as (
     sum((quantity * coalesce(close,cost_per_share))) market_value,
     sum(((quantity * coalesce(close,cost_per_share)) - (quantity * cost_per_share))) gain_loss
   from
-    dw.equities
-    right join dw.portfolio on equities.dataset = portfolio.dataset and equities.ticker = portfolio.ticker
-    join dw.markets on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
+    dw.equities_fact
+    right join dw.portfolio_dim on equities.dataset = portfolio.dataset and equities.ticker = portfolio.ticker
+    join dw.markets_dim on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
   where
     date in ( select today from date )
     or (case when markets.ticker in ('VGWAX') and date is null then 1 else 0 end)
@@ -33,9 +33,9 @@ with now as (
     markets.ticker,
     sum((quantity * coalesce(close,cost_per_share))) yesterday
   from
-    dw.equities
-    right join dw.portfolio on equities.dataset = portfolio.dataset and equities.ticker = portfolio.ticker
-    join dw.markets on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
+    dw.equities_fact
+    right join dw.portfolio_dim on equities.dataset = portfolio.dataset and equities.ticker = portfolio.ticker
+    join dw.markets_dim on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
   where
     date in ( select yesterday from date ) or date is null
   group by

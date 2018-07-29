@@ -6,7 +6,8 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && cd "$dir"
 source athena
 
 get_users(){
-  psql $aws_db_uri -AF',' -c 'select * from aeon.users' | ghead -n -1 >~/Downloads/file.csv
+  psql $aws_db_uri -AF',' -c 'select * from aeon.users' | \
+    ghead -n -1 >~/Downloads/file.csv
 }
 
 upload_markets_dim_to_s3(){

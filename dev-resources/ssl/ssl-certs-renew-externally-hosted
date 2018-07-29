@@ -4,7 +4,7 @@ set -eou pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 app=$(basename $(dirname $dir))
 
-cd "${dir}/.."
+cd "${dir}/../.."
 if [[ ! -d ssl-certs ]]; then mkdir ssl-certs; fi
 
 # make sure the pfsense ACME packaage has run; ie pfsense has new SSL certs

@@ -28,7 +28,7 @@
                  [org.clojure/data.json "0.2.6"]
                  [org.clojure/java.jdbc "0.7.7"]
                  [org.clojure/tools.logging "0.4.1"]
-                 [org.postgresql/postgresql "42.2.2"]
+                 [org.postgresql/postgresql "42.2.4"]
                  [org.slf4j/slf4j-log4j12 "1.7.25"
                   :exclusions [org.clojure/tools.reader
                                org.slf4j/slf4j-api]]
@@ -42,7 +42,7 @@
                   :exclusions [com.google.code.findbugs/jsr305
                                com.fasterxml.jackson.core/jackson-core]]
 
-                 [cljs-ajax "0.7.3" :exclusions [com.fasterxml.jackson.core/jackson-core
+                 [cljs-ajax "0.7.4" :exclusions [com.fasterxml.jackson.core/jackson-core
                                                  com.fasterxml.jackson.core/jackson-dataformat-cbor
                                                  cheshire]]
                  [com.andrewmcveigh/cljs-time "0.5.2"]

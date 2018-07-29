@@ -21,9 +21,15 @@
        slurp
        (jdbc/execute! *cxn*))
   (testing "jobs.api integration test"
-    (is (= (assoc {}
-                  :body
-                  (->> f/result
-                       :body
-                       (map #(update % :date coerce/to-sql-date))))
-           (api/v1.latest "currency")))))
+    (let [expected (assoc {}
+                          :body
+                          (->> f/result
+                               :body
+                               (map #(update % :date coerce/to-sql-date))))
+          actual  (assoc {}
+                         :body
+                         (->> (api/v1.latest "currency")
+                              :body
+                              (map #(dissoc % :dw_created_at))))]
+      (is (= expected
+             actual)))))
