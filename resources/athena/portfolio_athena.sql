@@ -17,7 +17,7 @@ with now_ts as (
     cast(quantity as decimal(10,4))      as quantity,
     cast(cost_per_share as decimal(6,2)) as cost_per_share
   from
-    dw.portfolio_dim
+    dw.portfolio_dim portfolio
 ), _equities as (
   select
     dataset,
@@ -35,7 +35,7 @@ with now_ts as (
     try_cast(adj_volume as decimal(20,2))  as adj_volume,
     try_cast(ex_dividend as decimal(10,2)) as ex_dividend
   from
-    dw.equities_fact
+    dw.equities_fact equities
   where
     s3uploaddate between cast((select yesterday from date) as date)
                  and     cast((select today from date) as date)
@@ -49,7 +49,7 @@ with now_ts as (
   from
     _equities equities
     right join _portfolio portfolio on equities.dataset = portfolio.dataset and equities.ticker = portfolio.ticker
-    join dw.markets_dim on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
+    join dw.markets_dim markets on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
   where
     date in ( select today from date )
     or (case when markets.ticker in ('VGWAX') and date is null then 1 else 0 end)
@@ -66,7 +66,7 @@ with now_ts as (
   from
     _equities equities
     right join _portfolio portfolio on equities.dataset = portfolio.dataset and equities.ticker = portfolio.ticker
-    join dw.markets_dim on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
+    join dw.markets_dim markets on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
   where
     date in ( select yesterday from date ) or date is null
   group by

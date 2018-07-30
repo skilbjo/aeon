@@ -5,7 +5,7 @@ with date as (
     row_number() over (partition by currency order by date desc) as rn,
     currency, date, rate
   from
-    dw.currency_fact
+    dw.currency_fact currency
   where
     currency in ('GBP', 'EUR')
     and date between ( select now - interval '30 day' from date )

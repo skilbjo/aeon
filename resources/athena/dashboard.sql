@@ -10,7 +10,7 @@ with date as (
     cast(high_est as decimal(24,14)) as high_est,
     cast(low_est as decimal(24,14))  as low_est
   from
-    dw.currency_fact
+    dw.currency_fact currency
 ), data as (
   select
     row_number() over (partition by currency order by date desc) as rn,
