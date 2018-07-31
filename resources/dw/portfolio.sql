@@ -8,6 +8,8 @@ with now as (
       when 0 then (select now from now) - 2
       else        (select now from now) - 1
     end as yesterday
+), max_known_date as (
+  select max(date) max_known_date from dw.equities_fact
 ), today as (
   select
     markets.description,
@@ -40,15 +42,42 @@ with now as (
     date in ( select yesterday from date ) or date is null
   group by
     1,2
+), backup as (
+  select
+    markets.description,
+    markets.ticker,
+    sum((quantity * cost_per_share))                 cost_basis,
+    sum((quantity * coalesce(close,cost_per_share))) market_value,
+    sum(((quantity * coalesce(close,cost_per_share)) - (quantity * cost_per_share))) gain_loss
+  from
+    dw.equities_fact equities
+    right join dw.portfolio_dim portfolio on equities.dataset = portfolio.dataset and equities.ticker = portfolio.ticker
+    join dw.markets_dim markets on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
+  where
+    date in ( select max_known_date from max_known_date )
+    or (case when markets.ticker in ('VGWAX') and date is null then 1 else 0 end)
+       = 1
+  group by
+    1,2
 ), detail as (
   select
-    today.description,
+    coalesce(today.description,yesterday.description) description,
     today.cost_basis, today.market_value, today.gain_loss,
     today.market_value - yesterday.yesterday today_gain_loss
   from
     today
     full outer join yesterday on today.ticker = yesterday.ticker
   order by today.market_value desc
+), detail_with_backup as (
+  select
+    coalesce(detail.description,  backup.description) description,
+    coalesce(detail.cost_basis,   backup.cost_basis) cost_basis,
+    coalesce(detail.market_value, backup.market_value) market_value,
+    coalesce(detail.gain_loss,    backup.gain_loss) gain_loss,
+    0 today_gain_loss
+  from
+    detail
+    left join backup on detail.description = backup.description
 ), summary as (
   select
     'Portfolio Total'::text description,
@@ -57,11 +86,11 @@ with now as (
     sum(gain_loss)          gain_loss,
     sum(today_gain_loss)    today_gain_loss
   from
-    detail
+    detail_with_backup
 ), _union as (
   select * from summary
   union all
-  select * from detail
+  select * from detail_with_backup
 ), report as (
   select
     description, cost_basis::int , market_value::int,
