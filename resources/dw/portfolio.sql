@@ -27,6 +27,8 @@ with now as (
        = 1
     or (case when markets.ticker in ('VMMXX') and date in (select yesterday from date) then 1 else 0 end)
        = 1
+    or (case when markets.ticker in ('VMMXX') and date is null then 1 else 0 end)
+       = 1
   group by
     1,2
 ), yesterday as (
