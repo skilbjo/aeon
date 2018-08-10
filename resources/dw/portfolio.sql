@@ -76,7 +76,7 @@ with now as (
     coalesce(detail.cost_basis,   backup.cost_basis) cost_basis,
     coalesce(detail.market_value, backup.market_value) market_value,
     coalesce(detail.gain_loss,    backup.gain_loss) gain_loss,
-    0 today_gain_loss
+    coalesce(detail.today_gain_loss, 0) today_gain_loss
   from
     detail
     full outer join backup on detail.description = backup.description
