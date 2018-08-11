@@ -13,14 +13,14 @@
    [:p "register"]])
 
 #_(defn register []
-    #_(let [default {:username "" :password ""}
+    #_(let [default {:user "" :password ""}
             registration (reagent/atom default)]
         (fn []
-          (let [username (get @registration :username)
-                email (get @registration :email)
+          (let [user     (get @registration :user)
+                email    (get @registration :email)
                 password (get @registration :password)
-                loading @(subscribe [:loading])
-                errors @(subscribe [:errors])]
+                loading  @(subscribe [:loading])
+                errors   @(subscribe [:errors])]
             [:div.auth-page
              [:div.container.page
               [:div.row
@@ -34,8 +34,8 @@
                  [:fieldset.form-group
                   [:input.form-control.form-control-lg {:type "text"
                                                         :placeholder "Your Name"
-                                                        :value username
-                                                        :on-change #(swap! registration assoc :username (-> % .-target .-value))
+                                                        :value user
+                                                        :on-change #(swap! registration assoc :user (-> % .-target .-value))
                                                         :disabled (when (:register-user loading))}]]
                  [:fieldset.form-group
                   [:input.form-control.form-control-lg {:type "text"

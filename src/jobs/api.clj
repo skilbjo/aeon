@@ -21,7 +21,7 @@
                          (str dir)
                          io/resource
                          slurp)
-                    (f {:user user
+                    (f {:user     user
                         :password password})
                     first)
         unauthorized (fn [user password]
@@ -48,12 +48,13 @@
 
                          {:status 401
                           :body "Wrong username, password, or both, bucko"}))]
-    (if (and (= (:username result) user)
+    (if (and (= (:user     result) user)
              (= (:password result) password))
-      {:token password} ;; TODO password is hashed, but is there a better way?
+      {:user      user      ;; TODO for token: password is
+       :token     password} ;; hashed, but is there a better way?
       (unauthorized user password))))
 
-(defn v1.portfolio []
+(defn v1.portfolio [user]
   (let [data  (fn [_]
                 (let [dir (if (env :jdbc-athena-uri)
                             "athena"
@@ -68,7 +69,7 @@
                                 ".sql")
                            io/resource
                            slurp
-                           f)
+                           (f {:user user}))
                        (map #(update % :date coerce/to-sql-date)))))
         data' (memoize data)]
     {:body (data' util/now')}))

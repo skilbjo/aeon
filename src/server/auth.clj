@@ -5,6 +5,7 @@
             [server.sql :as sql]
             [server.util :as util]))
 
+;; TODO make tokens {:skilbjo "token-here"}, not #{:"token-here"}
 (def tokens ;; TODO passwords are hashed, but is there a better way?
   (delay
    (let [query  (util/multi-line-string "select password "

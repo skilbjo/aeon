@@ -71,9 +71,11 @@
  :login-success
  set-user-interceptor
  (fn-traced [{user :db} response]
-            (let [token (-> response first :token)]
+            (let [user  (-> response first :user)
+                  token (-> response first :token)]
               {:db (assoc user
-                          :token token)
+                          :user   user
+                          :token  token)
                :dispatch-n (list [:complete-request :login]
                                  [:set-active-page {:page :portfolio}])})))
 
@@ -93,15 +95,17 @@
 (rf/reg-event-fx
  :portfolio
  (fn-traced [{:keys [db]} [_ body]]
-            {:db         (assoc-in db [:loading :portfolio] true)
-             :http-xhrio {:method          :get
-                          :uri             (endpoint "reports" "portfolio")
-                          :headers         (auth-header db)
-                          :format          (json-request-format)
-                          :response-format (json-response-format
-                                            {:keywords? true})
-                          :on-success      [:portfolio-success]
-                          :on-failure      [:api-request-error :portfolio]}}))
+            (let [user (-> db :user :user)]
+              {:db         (assoc-in db [:loading :portfolio] true)
+               :http-xhrio {:method          :get
+                            :uri             (endpoint "reports" "portfolio")
+                            :headers         (auth-header db)
+                            :params          {:user user}
+                            :format          (json-request-format)
+                            :response-format (json-response-format
+                                              {:keywords? true})
+                            :on-success      [:portfolio-success]
+                            :on-failure      [:api-request-error :portfolio]}})))
 
 (rf/reg-event-fx
  :portfolio-success
