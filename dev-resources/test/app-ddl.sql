@@ -8,11 +8,11 @@ begin;
   drop table if exists aeon.users;
   create table if not exists aeon.users (
     id          uuid primary key default uuid_generate_v4(),
-    username    text unique not null,
+    _user       text unique not null,
     password    text not null
   );
 
-  insert into aeon.users (username, password) values
+  insert into aeon.users (_user, password) values
     ('skilbjo', encode(digest('god','sha256'),'hex'))
   ;
 

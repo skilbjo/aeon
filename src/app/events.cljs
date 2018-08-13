@@ -95,12 +95,14 @@
 (rf/reg-event-fx
  :portfolio
  (fn-traced [{:keys [db]} [_ body]]
-            (let [user (-> db :user :user)]
+            (let [user     (-> db :user :user)
+                  password (-> db :user :token)]
               {:db         (assoc-in db [:loading :portfolio] true)
                :http-xhrio {:method          :get
                             :uri             (endpoint "reports" "portfolio")
                             :headers         (auth-header db)
-                            :params          {:user user}
+                            :params          {:user     user
+                                              :password password}
                             :format          (json-request-format)
                             :response-format (json-response-format
                                               {:keywords? true})

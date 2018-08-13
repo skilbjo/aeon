@@ -90,11 +90,13 @@
 
     (api/context "/reports" []
       :tags ["reports"]
-      (api/GET "/portfolio" [user]
+      (api/GET "/portfolio" [user token]
         :summary "How's the portfolio doing?"
         :header-params [authorization :- :server.spec/authorization]
         :middleware [auth/token-auth middleware/authenticated]
-        (-> (jobs.api/v1.portfolio user)
+        (-> {:user     user
+             :password token}
+            jobs.api/v1.portfolio
             response)))))
 
 (def swagger
