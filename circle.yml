@@ -17,6 +17,7 @@ jobs:
             - ~/.m2
             - ~/.lein
           key: << checksum "project.clj" >>
+      - run: git checkout https://github.com/skilbjo/markets-etl.git
       - run: lein do test, cljfmt check
       - run: bash <(curl -s https://codecov.io/bash) -f target/coverage/codecov.json
   build:

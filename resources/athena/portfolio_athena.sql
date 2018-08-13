@@ -2,6 +2,8 @@ with now_ts as (
   select current_timestamp at time zone 'America/Los_Angeles' as now_ts
 ), now as (
   select cast((select now_ts from now_ts) as date) as now
+), _user as (
+  select ':user' as _user
 ), date as (
   select
     (select now from now) today,
@@ -20,6 +22,8 @@ with now_ts as (
     cast(cost_per_share as decimal(6,2)) as cost_per_share
   from
     dw.portfolio_dim portfolio
+  where
+    _user = ( select _user from _user )
 ), _equities as (
   select
     dataset,
@@ -51,7 +55,8 @@ with now_ts as (
     sum(((quantity * coalesce(close,cost_per_share)) - (quantity * cost_per_share))) gain_loss
   from
     _equities equities
-    right join _portfolio portfolio on equities.dataset = portfolio.dataset and equities.ticker = portfolio.ticker
+    right join _portfolio portfolio on equities.dataset = portfolio.dataset
+                                    and equities.ticker = portfolio.ticker
     join dw.markets_dim markets on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
   where
     date in ( select today from date )
@@ -70,7 +75,8 @@ with now_ts as (
     sum((quantity * coalesce(close,cost_per_share))) yesterday
   from
     _equities equities
-    right join _portfolio portfolio on equities.dataset = portfolio.dataset and equities.ticker = portfolio.ticker
+    right join _portfolio portfolio on equities.dataset = portfolio.dataset
+                                    and equities.ticker = portfolio.ticker
     join dw.markets_dim markets on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
   where
     date in ( select yesterday from date ) or date is null
@@ -85,7 +91,8 @@ with now_ts as (
     sum(((quantity * coalesce(close,cost_per_share)) - (quantity * cost_per_share))) gain_loss
   from
     _equities equities
-    right join _portfolio portfolio on equities.dataset = portfolio.dataset and equities.ticker = portfolio.ticker
+    right join _portfolio portfolio on equities.dataset = portfolio.dataset
+                                    and equities.ticker = portfolio.ticker
     join dw.markets_dim markets on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
   where
     date in ( select max_known_date from max_known_date )

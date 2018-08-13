@@ -65,7 +65,7 @@
                                         :main          "app.core"
                                         :output-dir    "resources/public/js/out"
                                         :output-to     "resources/public/js/app.js"}}}}
-  :profiles {:dev {:env {:log-level 1} ;; cljs/log debug+
+  :profiles {:dev {:env {:log-level "1"} ;; cljs/log debug+
                    :dependencies [[binaryage/devtools "0.9.10"]
                                   [day8.re-frame/re-frame-10x "0.3.3"
                                    :exclusions [com.google.code.findbugs/jsr305]]
@@ -96,7 +96,7 @@
                        :cljsbuild {:builds {:app {:compiler {:closure-defines {goog.DEBUG false}
                                                              :optimizations :advanced
                                                              :pretty-print  false}}}}
-                       :env {:log-level 3}}} ;; cljs/log warn+
+                       :env {:log-level "3"}}} ;; cljs/log warn+
   :ring {:handler       server.routes/app  ; lein ring server uses this as
          :port          8080               ; the entrypoint
          :ssl-port      8443
