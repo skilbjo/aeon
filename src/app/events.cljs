@@ -1,4 +1,5 @@
 (ns app.events
+  (:require-macros [cljs-log.core :as log])
   (:require [app.db :as db]
             [app.util :as util]
             [ajax.core :refer [json-request-format json-response-format]]
@@ -16,13 +17,13 @@
 
 (defn endpoint [& params]
   (let [api-url "/api/v1"]
-    (println "endpoint is: " (string/join "/" (concat [api-url] params)))
+    (log/debug "endpoint is: " (string/join "/" (concat [api-url] params)))
     (string/join "/" (concat [api-url] params))))
 
 (defn auth-header [db]
   "Get user token and format for API authorization"
   (let [token (-> db :user :token)]
-    (println "auth-header called. token is: " token)
+    (log/debug "auth-header called. token is: " token)
     (if token
       [:Authorization (str "Token " token)]
       nil)))
@@ -71,11 +72,13 @@
  :login-success
  set-user-interceptor
  (fn-traced [{user :db} response]
-            (let [token (-> response first :token)]
+            (let [user'  (-> response first :user)
+                  token (-> response first :token)]
               {:db (assoc user
-                          :token token)
+                          :user   user'
+                          :token  token)
                :dispatch-n (list [:complete-request :login]
-                                 [:set-active-page {:page :portfolio}])})))
+                                 [:set-active-page {:page :home}])})))
 
 (rf/reg-event-fx
  :logout
@@ -93,15 +96,19 @@
 (rf/reg-event-fx
  :portfolio
  (fn-traced [{:keys [db]} [_ body]]
-            {:db         (assoc-in db [:loading :portfolio] true)
-             :http-xhrio {:method          :get
-                          :uri             (endpoint "reports" "portfolio")
-                          :headers         (auth-header db)
-                          :format          (json-request-format)
-                          :response-format (json-response-format
-                                            {:keywords? true})
-                          :on-success      [:portfolio-success]
-                          :on-failure      [:api-request-error :portfolio]}}))
+            (let [user     (-> db :user :user)
+                  password (-> db :user :token)]
+              {:db         (assoc-in db [:loading :portfolio] true)
+               :http-xhrio {:method          :get
+                            :uri             (endpoint "reports" "portfolio")
+                            :headers         (auth-header db)
+                            :params          {:user     user
+                                              :password password}
+                            :format          (json-request-format)
+                            :response-format (json-response-format
+                                              {:keywords? true})
+                            :on-success      [:portfolio-success]
+                            :on-failure      [:api-request-error :portfolio]}})))
 
 (rf/reg-event-fx
  :portfolio-success

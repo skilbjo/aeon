@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-cp ~/dev/markets-etl/dev-resources/test/ddl.sql ~/dev/aeon/dev-resources/test/ddl.sql
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+cp "${dir}/../../../markets-etl/dev-resources/test/ddl.sql" \
+  "${dir}/ddl.sql"

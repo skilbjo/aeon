@@ -26,16 +26,16 @@
              [util/error (:portfolio errors)])
            [:form.col.s12 {:on-submit #(login-user % @credentials)}
             [:div.input-field.col.s6
-             [:input#username.validate {:type        "text"
-                                        :placeholder "user"
-                                        :value       user
-                                        :disabled    (when (:login loading))
-                                        :on-change   #(swap! credentials assoc
-                                                             :user
-                                                             (-> %
-                                                                 .-target
-                                                                 .-value))}]
-             [:label {:for "username"} "username"]]
+             [:input#user.validate {:type        "text"
+                                    :placeholder "user"
+                                    :value       user
+                                    :disabled    (when (:login loading))
+                                    :on-change   #(swap! credentials assoc
+                                                         :user
+                                                         (-> %
+                                                             .-target
+                                                             .-value))}]
+             [:label {:for "user"} "user"]]
             [:div.input-field.col.s6
              [:input#password.validate {:type        "password"
                                         :placeholder "password"

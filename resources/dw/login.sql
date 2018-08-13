@@ -1,9 +1,9 @@
 select
-  username,
+  _user,
   password
 from
   aeon.users
 where
-  username = ':user' and
+  _user    = ':user' and
   password = ':password'
 limit 1

@@ -9,6 +9,7 @@ jobs:
       TEST_JDBC_DB_URI: jdbc:postgresql://localhost:5432/postgres?loginTimeout=30&socketTimeout=900&tcpKeepAlive=true&user=postgres
     steps:
       - checkout
+      - run: git clone https://github.com/skilbjo/markets-etl.git ~/markets-etl
       - restore_cache:
           key: << checksum "project.clj" >>
       - run: lein do deps, cloverage --codecov
