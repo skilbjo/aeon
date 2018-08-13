@@ -3,7 +3,12 @@ set -eou pipefail
 
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && cd "$dir"
 
-source athena
+bring_in_artifact(){
+  cp "${dir}/../../../markets-etl/dev-resources/athena/athena" \
+    "${dir}/athena"
+
+  source athena
+}
 
 get_users(){
   psql $aws_db_uri -AF',' -c 'select * from aeon.users' | \
@@ -22,9 +27,11 @@ verify_results(){
 
 delete_artifacts(){
   rm ~/Downloads/file.csv
+  rm athena
 }
 
-get_users \
+bring_in_artifacts \
+  && get_users \
   && upload_markets_dim_to_s3 \
   && verify_results \
   && delete_artifacts

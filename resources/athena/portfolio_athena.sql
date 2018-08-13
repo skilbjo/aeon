@@ -23,7 +23,7 @@ with now_ts as (
   from
     dw.portfolio_dim portfolio
   where
-    _user = ( select _user from _user )
+    user = ( select _user from _user )
 ), _equities as (
   select
     dataset,
