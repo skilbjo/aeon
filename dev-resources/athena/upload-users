@@ -3,7 +3,7 @@ set -eou pipefail
 
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && cd "$dir"
 
-bring_in_artifact(){
+bring_in_artifacts(){
   cp "${dir}/../../../markets-etl/dev-resources/athena/athena" \
     "${dir}/athena"
 
