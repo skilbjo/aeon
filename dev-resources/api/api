@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-uri="http://localhost:8081"
+uri="http://localhost:8080"
+#uri="http://localhost:8081"
+
+test_pw='god'
 
 _curl () {
   method="$1"
@@ -57,9 +60,13 @@ _portfolio () {
 
   #echo "auth_token is: $auth_token"
 
-  _curlga "reports/portfolio" "$auth_token" #| jq .
+  ## 400 bad request
+  #_curlga "reports/portfolio" "$auth_token" #| jq .
+
+  _curlga "reports/portfolio?user=skilbjo&password=$auth_token" "$auth_token" #| jq .
 }
 
 #_login
 #_login_bad
-_portfolio | jq .
+_portfolio | jq '.'
+#_portfolio | jq '.body[0]'

@@ -35,6 +35,7 @@
                       "https://fonts.googleapis.com/icon"
                       "https://fonts.gstatic.com/s/materialicons/v36/"
                       "https://fonts.gstatic.com/s/materialicons/v38/"
+                      "https://fonts.gstatic.com/s/materialicons/v40/"
                       "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/font/material-design-icons/"
                       "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/font/roboto/"
                       "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/fonts/"

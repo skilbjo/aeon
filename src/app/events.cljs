@@ -71,13 +71,13 @@
  :login-success
  set-user-interceptor
  (fn-traced [{user :db} response]
-            (let [user  (-> response first :user)
+            (let [user'  (-> response first :user)
                   token (-> response first :token)]
               {:db (assoc user
-                          :user   user
+                          :user   user'
                           :token  token)
                :dispatch-n (list [:complete-request :login]
-                                 [:set-active-page {:page :portfolio}])})))
+                                 [:set-active-page {:page :home}])})))
 
 (rf/reg-event-fx
  :logout

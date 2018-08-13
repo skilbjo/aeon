@@ -54,8 +54,7 @@
 
 (defn v1.login [{:keys [user password]}]
   (let [result (authorized? {:user     user
-                             :password password})
-        _ (println "v1.login, result is: " result)]
+                             :password password})]
     (if (and (= (:user     result) user)
              (= (:password result) password)
              (not (empty? result)))
@@ -65,7 +64,6 @@
                      :password password}))))
 
 (defn v1.portfolio [{:keys [user password]}]
-  (println "in portfolio fn")
   (let [data  (fn [_]
                 (let [dir (if (env :jdbc-athena-uri)
                             "athena"
@@ -115,7 +113,7 @@
       {:body (data' util/now')}))) ; cache the request by date
 
 (defn v1.quote [dataset ticker date]
-  (log/info "params are: " dataset ticker date)
+  (log/debug "params are: " dataset ticker date)
   (if (not (s/allowed-endpoint? s/datasets dataset))
     {:status 400
      :body (util/multi-line-string

@@ -61,7 +61,7 @@
                                    sql/escape'
                                    hash/sha256
                                    codecs/bytes->hex)]
-          (-> {:user user-trusted
+          (-> {:user     user-trusted
                :password password-trusted}
               jobs.api/v1.login
               response))))
@@ -90,14 +90,19 @@
 
     (api/context "/reports" []
       :tags ["reports"]
-      (api/GET "/portfolio" [user token]
+      (api/GET "/portfolio" []
         :summary "How's the portfolio doing?"
         :header-params [authorization :- :server.spec/authorization]
         :middleware [auth/token-auth middleware/authenticated]
-        (-> {:user     user
-             :password token}
-            jobs.api/v1.portfolio
-            response)))))
+        :query-params [user     :- :server.spec/user
+                       password :- :server.spec/password]
+        (let [user-trusted     (-> user sql/escape util/lower-trim)
+              password-trusted (-> password
+                                   sql/escape')]
+          (-> {:user     user-trusted
+               :password password-trusted}
+              jobs.api/v1.portfolio
+              response))))))
 
 (def swagger
   (-> {:swagger
