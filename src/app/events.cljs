@@ -1,4 +1,5 @@
 (ns app.events
+  (:require-macros [cljs-log.core :as log])
   (:require [app.db :as db]
             [app.util :as util]
             [ajax.core :refer [json-request-format json-response-format]]
@@ -16,13 +17,13 @@
 
 (defn endpoint [& params]
   (let [api-url "/api/v1"]
-    (println "endpoint is: " (string/join "/" (concat [api-url] params)))
+    (log/debug "endpoint is: " (string/join "/" (concat [api-url] params)))
     (string/join "/" (concat [api-url] params))))
 
 (defn auth-header [db]
   "Get user token and format for API authorization"
   (let [token (-> db :user :token)]
-    (println "auth-header called. token is: " token)
+    (log/debug "auth-header called. token is: " token)
     (if token
       [:Authorization (str "Token " token)]
       nil)))

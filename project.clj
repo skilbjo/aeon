@@ -45,6 +45,7 @@
                  [cljs-ajax "0.7.4" :exclusions [com.fasterxml.jackson.core/jackson-core
                                                  com.fasterxml.jackson.core/jackson-dataformat-cbor
                                                  cheshire]]
+                 [cljs-log "0.2.3"]
                  [com.andrewmcveigh/cljs-time "0.5.2"]
                  [day8.re-frame/http-fx "0.1.6"]
                  [day8.re-frame/tracing-stubs "0.5.1"]
@@ -64,7 +65,8 @@
                                         :main          "app.core"
                                         :output-dir    "resources/public/js/out"
                                         :output-to     "resources/public/js/app.js"}}}}
-  :profiles {:dev {:dependencies [[binaryage/devtools "0.9.10"]
+  :profiles {:dev {:env {:log-level 1} ;; cljs/log debug+
+                   :dependencies [[binaryage/devtools "0.9.10"]
                                   [day8.re-frame/re-frame-10x "0.3.3"
                                    :exclusions [com.google.code.findbugs/jsr305]]
                                   [day8.re-frame/tracing "0.5.1"]
@@ -93,7 +95,8 @@
              :uberjar {:aot :all
                        :cljsbuild {:builds {:app {:compiler {:closure-defines {goog.DEBUG false}
                                                              :optimizations :advanced
-                                                             :pretty-print  false}}}}}}
+                                                             :pretty-print  false}}}}
+                       :env {:log-level 3}}} ;; cljs/log warn+
   :ring {:handler       server.routes/app  ; lein ring server uses this as
          :port          8080               ; the entrypoint
          :ssl-port      8443
