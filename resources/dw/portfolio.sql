@@ -11,7 +11,7 @@ with now as (
       else        (select now from now) - 1
     end as yesterday
 ), max_known_date as (
-  select max(date) max_known_date from ( select date, count(*) from dw.equities_fact group by date having count(*) > 20) src
+  select max(date) max_known_date from ( select date, count(*) from dw.equities_fact group by date having count(*) > 30) src
 ), today as (
   select
     markets.description,
