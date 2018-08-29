@@ -23,6 +23,12 @@
     {::dt/column-key   [:today_gain_loss_%]
      ::dt/column-label "Today Gain/Loss %"
      ::dt/sorting      {::dt/enabled? true}}
+    {::dt/column-key   [:ytd_gain_loss]
+     ::dt/column-label "YTD Gain/Loss $"
+     ::dt/sorting      {::dt/enabled? true}}
+    {::dt/column-key   [:ytd_gain_loss_%]
+     ::dt/column-label "YTD Gain/Loss %"
+     ::dt/sorting      {::dt/enabled? true}}
     {::dt/column-key   [:total_gain_loss]
      ::dt/column-label "Total Gain/Loss $"
      ::dt/sorting      {::dt/enabled? true}}

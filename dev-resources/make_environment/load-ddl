@@ -2,4 +2,4 @@
 set -eou pipefail
 
 psql $docker_psql_uri -f ~/dev/markets-etl/dev-resources/test/ddl.sql
-psql $docker_psql_uri -f ~/dev/aeon/dev-resources/test/app-ddl.sql
+psql $docker_psql_uri -f ~/dev/aeon/dev-resources/test/aeon-ddl.sql
