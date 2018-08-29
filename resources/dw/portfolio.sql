@@ -101,11 +101,12 @@ with now as (
     coalesce(detail.cost_basis,   backup.cost_basis) cost_basis,
     coalesce(detail.market_value, backup.market_value) market_value,
     coalesce(detail.gain_loss,    backup.gain_loss) gain_loss,
-    coalesce(detail.ytd_gain_loss,   0) ytd_gain_loss,
+    coalesce(detail.ytd_gain_loss, backup.market_value - ytd.market_value, 0) ytd_gain_loss,
     coalesce(detail.today_gain_loss, 0) today_gain_loss
   from
     detail
     full outer join backup on detail.description = backup.description
+    full outer join ytd on backup.description = ytd.description
 ), summary as (
   select
     'Portfolio Total'::text description,
