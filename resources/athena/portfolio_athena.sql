@@ -14,6 +14,8 @@ with now_ts as (
     end as yesterday
 ), max_known_date as (
   select max(cast(date as date)) max_known_date from dw.equities_fact
+), beginning_of_year as (
+  select date_trunc('year', ( select now from now)) + interval '1' day beginning_of_year
 ), _portfolio as (
   select
     dataset,
@@ -82,6 +84,19 @@ with now_ts as (
     date in ( select yesterday from date ) or date is null
   group by
     1,2
+), ytd as (
+  select
+    markets.description,
+    markets.ticker,
+    sum((quantity * coalesce(close,cost_per_share))) market_value
+  from
+    _equities equities
+    right join _portfolio portfolio on equities.dataset = portfolio.dataset and equities.ticker = portfolio.ticker
+    join dw.markets_dim markets on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
+  where
+    date = ( select beginning_of_year from beginning_of_year )
+  group by
+    1,2
 ), backup as (
   select
     markets.description,
@@ -104,10 +119,12 @@ with now_ts as (
   select
     coalesce(today.description,yesterday.description) description,
     today.cost_basis, today.market_value, today.gain_loss,
+    today.market_value - ytd.market_value ytd_gain_loss,
     today.market_value - yesterday.yesterday today_gain_loss
   from
     today
     full outer join yesterday on today.ticker = yesterday.ticker
+    full outer join ytd on yesterday.ticker = ytd.ticker
   order by today.market_value desc
 ), detail_with_backup as (
   select
@@ -115,6 +132,7 @@ with now_ts as (
     coalesce(detail.cost_basis,   backup.cost_basis) cost_basis,
     coalesce(detail.market_value, backup.market_value) market_value,
     coalesce(detail.gain_loss,    backup.gain_loss) gain_loss,
+    coalesce(detail.ytd_gain_loss,  0) ytd_gain_loss,
     coalesce(detail.today_gain_loss, 0) today_gain_loss
   from
     detail
@@ -125,6 +143,7 @@ with now_ts as (
     sum(cost_basis)         cost_basis,
     sum(market_value)       market_value,
     sum(gain_loss)          gain_loss,
+    sum(ytd_gain_loss)      ytd_gain_loss,
     sum(today_gain_loss)    today_gain_loss
   from
     detail_with_backup
@@ -137,6 +156,8 @@ with now_ts as (
     description, cast(cost_basis as integer) cost_basis, cast(market_value as integer) market_value,
     cast(today_gain_loss as integer) today_gain_loss,
     cast(cast((today_gain_loss / market_value * 100) as decimal(8,2)) as varchar) || '%'  "today_gain_loss_%",
+    cast(ytd_gain_loss as integer) today_gain_loss,
+    cast(cast((ytd_gain_loss / market_value * 100) as decimal(8,2)) as varchar) || '%'  "today_gain_loss_%",
     cast(gain_loss as integer) total_gain_loss,
     cast(cast((gain_loss / cost_basis * 100) as decimal(8,2)) as varchar) || '%'  "total_gain_loss_%"
   from
