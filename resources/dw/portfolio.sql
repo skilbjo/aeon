@@ -126,7 +126,7 @@ with now as (
 ), summary as (
   select
     'Portfolio Total'::text description,
-    'Total'::text           ticker,
+    'TOTAL'::text           ticker,
     sum(cost_basis)         cost_basis,
     sum(market_value)       market_value,
     sum(gain_loss)          gain_loss,
