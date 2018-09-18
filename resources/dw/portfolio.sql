@@ -38,6 +38,7 @@ with now as (
     right join dw.portfolio_dim portfolio on equities.dataset  = portfolio.dataset
                                          and equities.ticker   = portfolio.ticker
                                          and portfolio.dataset = ( select datasource from datasource )
+                                         and _user = ( select _user from _user )
     join dw.markets_dim markets on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
   where
     date = ( select today from date )
@@ -57,6 +58,7 @@ with now as (
     right join dw.portfolio_dim portfolio on equities.dataset  = portfolio.dataset
                                          and equities.ticker   = portfolio.ticker
                                          and portfolio.dataset = ( select datasource from datasource )
+                                         and _user = ( select _user from _user )
     join dw.markets_dim markets on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
   where
     date in ( select yesterday from date )
@@ -89,6 +91,7 @@ with now as (
     right join dw.portfolio_dim portfolio on equities.dataset  = portfolio.dataset
                                          and equities.ticker   = portfolio.ticker
                                          and portfolio.dataset = ( select datasource from datasource )
+                                         and _user = ( select _user from _user )
     join dw.markets_dim markets on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
   where
     date in ( select max_known_date from max_known_date )
