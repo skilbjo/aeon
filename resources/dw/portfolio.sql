@@ -148,11 +148,11 @@ with now as (
     cost_basis::int ,
     market_value::int,
     today_gain_loss::int,
-    (today_gain_loss / market_value * 100)::decimal(8,2) || '%'  "today_gain_loss_%",
+    (today_gain_loss / market_value * 100)::decimal(8,2) "today_gain_loss_%",
     ytd_gain_loss::int,
-    (ytd_gain_loss / market_value * 100)::decimal(8,2) || '%'  "ytd_gain_loss_%",
+    (ytd_gain_loss / market_value * 100)::decimal(8,2)   "ytd_gain_loss_%",
     gain_loss::int total_gain_loss,
-    (gain_loss / cost_basis * 100)::decimal(8,2) || '%'  "total_gain_loss_%"
+    (gain_loss / cost_basis * 100)::decimal(8,2)         "total_gain_loss_%"
   from
     _union
 )
