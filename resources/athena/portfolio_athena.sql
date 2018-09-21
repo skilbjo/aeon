@@ -47,8 +47,8 @@ with now_ts as (
   from
     dw.equities_fact equities
   where
-    s3uploaddate between cast((select yesterday from date) as date)
-                 and     cast((select today from date) as date)
+    s3uploaddate    = cast((select today from date) as date)
+    or s3uploaddate = cast((select yesterday from date) as date)
     or s3uploaddate = cast((select max_known_date from max_known_date) as date)
     or s3uploaddate = cast((select beginning_of_year from beginning_of_year) as date)
 ), today as (

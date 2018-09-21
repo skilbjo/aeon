@@ -24,6 +24,7 @@ with now as (
   where
     date    = ( select today from date )
     or date = ( select yesterday from date )
+    or date = ( select max_known_date from max_known_date )
     or date = ( select beginning_of_year from beginning_of_year )
     or date is null
 ), today as (
