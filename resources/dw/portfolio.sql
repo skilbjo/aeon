@@ -18,7 +18,9 @@ with now as (
   select date_trunc('year', ( select now from now)) + interval '1 day' beginning_of_year
 ), equities as (
   select
-    *
+    ticker,
+    date,
+    close
   from
     dw.equities_fact
   where
@@ -27,85 +29,83 @@ with now as (
     or date = ( select max_known_date from max_known_date )
     or date = ( select beginning_of_year from beginning_of_year )
     or date is null
-), today as (
+  group by
+    1,2,3
+), portfolio as (
   select
     markets.description,
-    markets.ticker,
+    portfolio.ticker,
+    portfolio.quantity,
+    portfolio.cost_per_share
+  from
+    dw.portfolio_dim portfolio
+    join dw.markets_dim markets on markets.ticker = portfolio.ticker
+  where
+    portfolio.dataset = ( select datasource from datasource )
+  group by
+    1,2,3,4
+), today as (
+  select
+    portfolio.description,
+    equities.ticker,
     sum((quantity * cost_per_share))                 cost_basis,
     sum((quantity * coalesce(close,cost_per_share))) market_value,
     sum(((quantity * coalesce(close,cost_per_share)) - (quantity * cost_per_share))) gain_loss
   from
     equities
-    right join dw.portfolio_dim portfolio on equities.dataset  = portfolio.dataset
-                                         and equities.ticker   = portfolio.ticker
-                                         and portfolio.dataset = ( select datasource from datasource )
-                                         and _user = ( select _user from _user )
-    join dw.markets_dim markets on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
+    right join portfolio on portfolio.ticker = equities.ticker
   where
     date = ( select today from date )
-    or (case when markets.ticker in ('VGWAX', 'VMMXX')
-              and markets.dataset in ( select datasource from datasource )
+    or (case when equities.ticker in ('VGWAX', 'VMMXX')
               and date is null then 1 else 0 end)
-       = 1
+       = 1 -- VGWAX is too "new" of a ticker; hopefull will be added soon, VMMXX not available via TIINGO api
   group by
     1,2
 ), yesterday as (
   select
-    markets.description,
-    markets.ticker,
+    portfolio.description,
+    equities.ticker,
     sum((quantity * coalesce(close,cost_per_share))) yesterday
   from
     equities
-    right join dw.portfolio_dim portfolio on equities.dataset  = portfolio.dataset
-                                         and equities.ticker   = portfolio.ticker
-                                         and portfolio.dataset = ( select datasource from datasource )
-                                         and _user = ( select _user from _user )
-    join dw.markets_dim markets on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
+    right join portfolio on equities.ticker = portfolio.ticker
   where
     date in ( select yesterday from date )
   group by
     1,2
 ), ytd as (
   select
-    markets.description,
-    markets.ticker,
+    portfolio.description,
+    equities.ticker,
     sum((quantity * coalesce(close,cost_per_share))) market_value
   from
     equities
-    right join dw.portfolio_dim portfolio on equities.dataset  = portfolio.dataset
-                                         and equities.ticker   = portfolio.ticker
-                                         and portfolio.dataset = ( select datasource from datasource )
-    join dw.markets_dim markets on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
+    right join portfolio on equities.ticker = portfolio.ticker
   where
     date = ( select beginning_of_year from beginning_of_year )
   group by
     1,2
 ), backup as (
   select
-    markets.description,
-    markets.ticker,
+    portfolio.description,
+    equities.ticker,
     sum((quantity * cost_per_share))                 cost_basis,
     sum((quantity * coalesce(close,cost_per_share))) market_value,
     sum(((quantity * coalesce(close,cost_per_share)) - (quantity * cost_per_share))) gain_loss
   from
     equities
-    right join dw.portfolio_dim portfolio on equities.dataset  = portfolio.dataset
-                                         and equities.ticker   = portfolio.ticker
-                                         and portfolio.dataset = ( select datasource from datasource )
-                                         and _user = ( select _user from _user )
-    join dw.markets_dim markets on portfolio.dataset = markets.dataset and portfolio.ticker = markets.ticker
+    right join portfolio on equities.ticker = portfolio.ticker
   where
     date in ( select max_known_date from max_known_date )
-    or (case when markets.ticker in ('VGWAX', 'VMMXX')
-              and markets.dataset in ( select datasource from datasource )
+    or (case when equities.ticker in ('VGWAX', 'VMMXX')
               and date is null then 1 else 0 end)
-       = 1
+       = 1 -- VGWAX is too "new" of a ticker; hopefull will be added soon, VMMXX not available via TIINGO api
   group by
     1,2
 ), detail as (
   select
-    coalesce(today.description,yesterday.description) description,
-    coalesce(today.ticker,yesterday.ticker) ticker,
+    coalesce(today.description, yesterday.description) description,
+    coalesce(today.ticker,      yesterday.ticker) ticker,
     today.cost_basis, today.market_value, today.gain_loss,
     today.market_value - ytd.market_value ytd_gain_loss,
     today.market_value - yesterday.yesterday today_gain_loss
