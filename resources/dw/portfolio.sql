@@ -3,7 +3,7 @@ with now as (
 ), _user as (
   select ':user'::text as _user
 ), datasource as (
-  select 'TIINGO'::text as datasource
+  select 'ALPHA-VANTAGE'::text as datasource
 ), date as (
   select
     (select now from now) today,
@@ -13,7 +13,7 @@ with now as (
       else        (select now from now) - 1
     end as yesterday
 ), max_known_date as (
-  select max(date) max_known_date from ( select date, count(*) from dw.equities_fact group by date having count(*) > 50) src
+  select max(date) max_known_date from ( select date, count(*) from dw.equities_fact group by date having count(*) > 40) src
 ), beginning_of_year as (
   select date_trunc('year', ( select now from now)) + interval '1 day' beginning_of_year
 ), equities as (
@@ -56,9 +56,9 @@ with now as (
     right join portfolio on portfolio.ticker = equities.ticker
   where
     date = ( select today from date )
-    or (case when equities.ticker in ('VGWAX', 'VMMXX')
-              and date is null then 1 else 0 end)
-       = 1 -- VGWAX is too "new" of a ticker; hopefull will be added soon, VMMXX not available via TIINGO api
+    or (case when equities.ticker in ('VMMXX')
+              and date = (select beginning_of_year from beginning_of_year) then 1 else 0 end)
+       = 1
   group by
     1,2
 ), yesterday as (
@@ -97,9 +97,9 @@ with now as (
     right join portfolio on equities.ticker = portfolio.ticker
   where
     date in ( select max_known_date from max_known_date )
-    or (case when equities.ticker in ('VGWAX', 'VMMXX')
-              and date is null then 1 else 0 end)
-       = 1 -- VGWAX is too "new" of a ticker; hopefull will be added soon, VMMXX not available via TIINGO api
+    or (case when equities.ticker in ('VMMXX')
+              and date = (select beginning_of_year from beginning_of_year) then 1 else 0 end)
+       = 1
   group by
     1,2
 ), detail as (
@@ -116,12 +116,12 @@ with now as (
   order by today.market_value desc
 ), detail_with_backup as (
   select
-    coalesce(detail.description,  backup.description) description,
-    coalesce(detail.ticker,       backup.ticker) ticker,
-    coalesce(detail.cost_basis,   backup.cost_basis) cost_basis,
-    coalesce(detail.market_value, backup.market_value) market_value,
-    coalesce(detail.gain_loss,    backup.gain_loss) gain_loss,
-    coalesce(detail.ytd_gain_loss, backup.market_value - ytd.market_value, 0) ytd_gain_loss,
+    coalesce(detail.description,    backup.description) description,
+    coalesce(detail.ticker,         backup.ticker) ticker,
+    coalesce(detail.cost_basis,     backup.cost_basis) cost_basis,
+    coalesce(detail.market_value,   backup.market_value) market_value,
+    coalesce(detail.gain_loss,      backup.gain_loss) gain_loss,
+    coalesce(detail.ytd_gain_loss,  backup.market_value - ytd.market_value, 0) ytd_gain_loss,
     coalesce(detail.today_gain_loss, 0) today_gain_loss
   from
     detail
@@ -141,7 +141,7 @@ with now as (
 ), _union as (
   select * from summary
   union all
-  select * from detail_with_backup
+  select * from detail_with_backup where ticker <> ''
 ), report as (
   select
     ticker,
@@ -149,12 +149,12 @@ with now as (
     cost_basis::int ,
     market_value::int,
     today_gain_loss::int,
-    (today_gain_loss / market_value * 100)::decimal(8,2) "today_gain_loss_%",
+    (today_gain_loss / market_value * 100)::decimal(8,2) || '%'  "today_gain_loss_%",
     ytd_gain_loss::int,
-    (ytd_gain_loss / market_value * 100)::decimal(8,2)   "ytd_gain_loss_%",
+    (ytd_gain_loss / market_value * 100)::decimal(8,2) || '%'  "ytd_gain_loss_%",
     gain_loss::int total_gain_loss,
-    (gain_loss / cost_basis * 100)::decimal(8,2)         "total_gain_loss_%"
+    (gain_loss / cost_basis * 100)::decimal(8,2) || '%'  "total_gain_loss_%"
   from
     _union
 )
-select * from report
+select * from report order by market_value desc
