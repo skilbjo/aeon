@@ -145,6 +145,7 @@ with now as (
 ), report as (
   select
     ticker,
+    (market_value / ( select market_value from summary ) * 100)::decimal(8,2) || '%' "mix_%",
     description,
     cost_basis::int ,
     market_value::int,

@@ -146,6 +146,7 @@ with now_ts as (
 ), report as (
   select
     ticker,
+    cast(cast((market_value / ( select market_value from summary ) * 100) as decimal(8,2)) as varchar) || '%' "mix_%",
     description,
     cast(cost_basis as integer) cost_basis,
     cast(market_value as integer) market_value,
