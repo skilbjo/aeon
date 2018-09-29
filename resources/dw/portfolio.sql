@@ -13,7 +13,17 @@ with now as (
       else        (select now from now) - 1
     end as yesterday
 ), max_known_date as (
-  select max(date) max_known_date from ( select date, count(*) from dw.equities_fact group by date having count(*) > 40) src
+  select
+    max(cast(date as date)) max_known_date
+  from (
+    select date, dataset, count(*)
+    from dw.equities_fact
+    where dataset <> 'ALPHA-VANTAGE'
+      and ticker in ( select distinct ticker from dw.portfolio_dim where dataset = ( select datasource from datasource ) )
+    group by
+      1,2
+    having count(*) > 30
+   ) src
 ), beginning_of_year as (
   select date_trunc('year', ( select now from now)) + interval '1 day' beginning_of_year
 ), equities as (
