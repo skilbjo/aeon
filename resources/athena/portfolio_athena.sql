@@ -32,7 +32,7 @@ with now_ts as (
   select
     ticker,
     cast(date as date)                     as date,
-    try_cast(close as decimal(10,2))       as close
+    avg(try_cast(close as decimal(10,2)))  as close
   from
     dw.equities_fact equities
   where
@@ -41,7 +41,7 @@ with now_ts as (
     or s3uploaddate = cast((select max_known_date from max_known_date) as date)
     or s3uploaddate = cast((select beginning_of_year from beginning_of_year) as date)
   group by
-    1,2,3
+    1,2
 ), portfolio as (
   select
     markets.description,
