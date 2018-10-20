@@ -26,11 +26,13 @@ with now as (
    ) src
 ), beginning_of_year as (
   select date_trunc('year', ( select now from now)) + interval '1 day' beginning_of_year
+), fx as (
+  select 'GBP'::text as currency, 1.31 rate
 ), equities as (
   select
     ticker,
     date,
-    avg(close) as close
+    avg(case when ticker = 'LON:FCH' then close * (select rate from fx where currency = 'GBP') / 100 else close end) as close
   from
     dw.equities_fact
   where
