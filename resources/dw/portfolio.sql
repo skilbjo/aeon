@@ -54,6 +54,7 @@ with now as (
     join dw.markets_dim markets on markets.ticker = portfolio.ticker
   where
     portfolio.dataset = ( select datasource from datasource )
+    and user = ( select _user from _user )
   group by
     1,2,3,4
 ), today as (
