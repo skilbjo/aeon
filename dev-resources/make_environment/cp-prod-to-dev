@@ -4,10 +4,10 @@ set -eou pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" && cd "$dir"
 
 get_dw_equities(){
-  psql $aws_db_uri -c 'copy (select * from dw.equities_fact) to stdout with csv' | \
+  psql $db_uri -c 'copy (select * from dw.equities_fact) to stdout with csv' | \
     ghead -n -1 >~/Downloads/equities.csv
 
-  psql $aws_db_uri -c 'copy (select _user,dataset,ticker,quantity,cost_per_share from dw.portfolio_dim) to stdout with csv' | \
+  psql $db_uri -c 'copy (select _user,dataset,ticker,quantity,cost_per_share from dw.portfolio_dim) to stdout with csv' | \
     ghead -n -1 >~/Downloads/portfolio.csv
 }
 
