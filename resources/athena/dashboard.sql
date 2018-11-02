@@ -7,8 +7,8 @@ with date as (
     currency,
     cast(date as date)               as date,
     cast(rate as decimal(24,14))     as rate,
-    cast(high_est as decimal(24,14)) as high_est,
-    cast(low_est as decimal(24,14))  as low_est
+    cast(high as decimal(24,14)) as high,
+    cast(low as decimal(24,14))  as low
   from
     dw.currency_fact currency
 ), data as (
