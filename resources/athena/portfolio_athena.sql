@@ -30,12 +30,30 @@ with now_ts as (
 ), beginning_of_year as (
   select date_trunc('year', ( select now from now)) + interval '1' day beginning_of_year
 ), fx as (
-  select 'GBP' as currency, 1.31 rate
+  select
+    currency, cast(rate as decimal(24,14)) rate
+  from
+    dw.currency_fact
+  where
+    currency = 'GBP'
+    and ( s3uploaddate = cast((select today from date ) as date)
+    or    s3uploaddate = cast((select yesterday from date ) as date ))
+  order by date desc
+  limit 1
+), fx_backup as (
+  select
+    'GBP' currency, 1.30 rate
+), fx_with_backup as (
+  select
+    coalesce(fx.currency,fx_backup.currency) currency,
+    coalesce(fx.rate    ,fx_backup.rate)     rate
+  from fx
+    right join fx_backup on fx.currency = fx_backup.currency
 ), equities as (
   select
     ticker,
     cast(date as date)                     as date,
-    avg(case when ticker = 'LON:FCH' then try_cast(close as decimal(10,2)) * (select rate from fx where currency = 'GBP') / 100 else try_cast(close as decimal(10,2)) end) as close
+    avg(case when ticker = 'LON:FCH' then try_cast(close as decimal(10,2)) * (select rate from fx_with_backup where currency = 'GBP') / 100 else try_cast(close as decimal(10,2)) end) as close
   from
     dw.equities_fact equities
   where
