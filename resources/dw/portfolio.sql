@@ -20,6 +20,7 @@ with now as (
     from dw.equities_fact
     where dataset <> 'ALPHA-VANTAGE'
       and ticker in ( select distinct ticker from dw.portfolio_dim where dataset = ( select datasource from datasource ) )
+      and date <> ( select now from now )
     group by
       1,2
     having count(*) > 30
