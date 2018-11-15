@@ -18,12 +18,12 @@ with now as (
   from (
     select date, dataset, count(*)
     from dw.equities_fact
-    where dataset <> 'ALPHA-VANTAGE'
-      and ticker in ( select distinct ticker from dw.portfolio_dim where dataset = ( select datasource from datasource ) )
+    where
+      ticker in ( select distinct ticker from dw.portfolio_dim where dataset = ( select datasource from datasource ) )
       and date <> ( select now from now )
     group by
       1,2
-    having count(*) > 30
+    having count(*) > 33
    ) src
 ), beginning_of_year as (
   select date_trunc('year', ( select now from now)) + interval '1 day' beginning_of_year
