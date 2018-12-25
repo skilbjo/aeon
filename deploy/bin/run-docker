@@ -1,21 +1,19 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-app_name=$(basename $(dirname $(dirname $dir)))
-arch=""
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../" && pwd )" && cd "$dir"
+app="$(basename $(pwd))"
+arch=''
 
-cd "${dir}/../.."
-
-case $(uname -a) in
+case "$(uname -a)" in
   *amd64* | *x_86* | *x86_64* )
-    arch="x86" ;;
+    img="quay.io/skilbjo/${app}:latest" ;;
   *arm* )
-    arch="arm" ;;
+    arch='arm'
+    img="quay.io/skilbjo/${app}:${arch}" ;;
 esac
 
-img="quay.io/skilbjo/$app_name:$arch"
-job_cmd="usr/local/deploy/bin/run-job"
+job_cmd='/usr/local/deploy/bin/run-job'
 
 get_current_artifacts(){
   # any scripts need updating?
@@ -23,17 +21,17 @@ get_current_artifacts(){
 
   # remove all app containers
   set +e
-  docker ps -a | grep "$app_name" | awk '{print $1}' | uniq | xargs docker rm -f
+  docker ps -a | grep "$app" | awk '{print $1}' | uniq | xargs docker rm -f
 
   # remove all app images
-  docker images | grep "$app_name" | awk '{print $3}' | uniq | xargs docker rmi -f
+  docker images | grep "$app" | awk '{print $3}' | uniq | xargs docker rmi -f
   set -e
 }
 
 # Create it
 with_db() {
   docker run --rm \
-    --name="$app_name" \
+    --name="$app" \
     --detach \
     --tty \
     -p 8080:8080 \
@@ -53,7 +51,7 @@ with_athena(){
   # javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
   # https://curl.haxx.se/docs/sslcerts.html
   sudo docker run --rm \
-    --name="$app_name" \
+    --name="$app" \
     --detach \
     --tty \
     -p 80:8080 \
@@ -82,8 +80,8 @@ get_current_artifacts &&
   start_detached
 
 # Drop in the file. Env var won't work :/
-docker cp ~/java_key_store "${app_name}:/java_key_store"
+docker cp ~/java_key_store "${app}:/java_key_store"
 
 # Start it with the intended entrypoint
-docker exec "$app_name" \
+docker exec "$app" \
   "$job_cmd" $@
