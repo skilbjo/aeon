@@ -5,7 +5,7 @@ with now_ts as (
 ), _user as (
   select ':user' as _user
 ), datasource as (
-  select 'TIINGO' as datasource
+  select 'ALPHA-VANTAGE' as datasource
 ), date as (
   select
     (select now from now) today,
