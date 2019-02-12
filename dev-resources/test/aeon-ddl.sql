@@ -11,6 +11,8 @@ begin;
     _user       text unique not null,
     password    text not null
   );
+  create index on aeon.users (_user);
+  create index on aeon.users (_user, password);
 
   insert into aeon.users (_user, password) values
     ('skilbjo', encode(digest('god','sha256'),'hex'))
