@@ -14,6 +14,27 @@ with now_ts as (
       when 0 then (select now from now) - 2
       else        (select now from now) - 1
     end as yesterday
+), beginning_of_year as (
+  select date_trunc('year', ( select now from now)) + interval '1 day' beginning_of_year
+), portfolio as (
+  select
+    markets.asset_type,
+    markets.location,
+    markets.capitalization,
+    markets.investment_style,
+    markets.description,
+    portfolio.ticker,
+    portfolio.quantity,
+    portfolio.cost_per_share
+  from
+    dw.portfolio_dim portfolio
+    join dw.markets_dim markets on markets.ticker = portfolio.ticker
+                               and markets.dataset = portfolio.dataset
+  where
+    portfolio.dataset = 'ALPHA-VANTAGE'
+    and _user = ( select _user from _user )
+  group by
+    1,2,3,4,5,6,7,8
 ), max_known_date as (
   select
     max(cast(date as date)) max_known_date
@@ -27,8 +48,6 @@ with now_ts as (
       1,2
     having count(*) > 33
    ) src
-), beginning_of_year as (
-  select date_trunc('year', ( select now from now)) + interval '1 day' beginning_of_year
 ), fx as (
   select
     currency, rate
@@ -64,25 +83,6 @@ with now_ts as (
     or date is null
   group by
     1,2
-), portfolio as (
-  select
-    markets.asset_type,
-    markets.location,
-    markets.capitalization,
-    markets.investment_style,
-    markets.description,
-    portfolio.ticker,
-    portfolio.quantity,
-    portfolio.cost_per_share
-  from
-    dw.portfolio_dim portfolio
-    join dw.markets_dim markets on markets.ticker = portfolio.ticker
-                               and markets.dataset = portfolio.dataset
-  where
-    portfolio.dataset = 'ALPHA-VANTAGE'
-    and _user = ( select _user from _user )
-  group by
-    1,2,3,4,5,6,7,8
 ), today as (
   select
     portfolio.asset_type,
