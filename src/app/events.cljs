@@ -118,6 +118,9 @@
                               :user
                               :portfolio
                               :asset-type
+                              :capitalization
+                              :investment-style
+                              :location
                               :loading
                               :errors
                               :re-frame-datatable.core/re-frame-datatable)
