@@ -48,10 +48,18 @@
                                      profile]}]]
             (let [set-page (assoc db :active-page page)]
               (case page
-        ;; -- URL @ "/login" | "/register" ---------------------------
+        ;; -- URL @ "/" | "/login" | "/register" ---------------------
                 (:home :login :register) {:db set-page}
-        ;; -- URL @ "/" ----------------------------------------------
-                :portfolio {:dispatch [:portfolio]}))))
+        ;; -- URL @ "/portfolio" -------------------------------------
+                :portfolio {:dispatch [:portfolio]}
+        ;; -- URL @ "/asset-type" ------------------------------------
+                :asset-type {:dispatch [:asset-type]}
+        ;; -- URL @ "/investment-style" ------------------------------
+                :asset-type {:dispatch [:investment-style]}
+        ;; -- URL @ "/capitalization" ---------------------------------
+                :asset-type {:dispatch [:capitalization]}
+        ;; -- URL @ "/location" ---------------------------------------
+                :asset-type {:dispatch [:location]}))))
 
 ;; -- POST Login @ /api/login -------------------------------------------------
 (rf/reg-event-fx
@@ -87,6 +95,7 @@
             {:db      (dissoc db
                               :user
                               :portfolio
+                              :asset-type
                               :loading
                               :errors
                               :re-frame-datatable.core/re-frame-datatable)
@@ -118,6 +127,33 @@
                      (assoc :active-page :portfolio)
                      (assoc :portfolio result))
              :dispatch-n (list [:complete-request :portfolio])}))
+
+;; -- GET Asset-type @ api/v1/reports/asset-type ------------------------------
+(rf/reg-event-fx
+ :asset-type
+ (fn-traced [{:keys [db]} [_ body]]
+            (let [user     (-> db :user :user)
+                  password (-> db :user :token)]
+              {:db         (assoc-in db [:loading :asset-type] true)
+               :http-xhrio {:method          :get
+                            :uri             (endpoint "reports" "asset-type")
+                            :headers         (auth-header db)
+                            :params          {:user     user
+                                              :password password}
+                            :format          (json-request-format)
+                            :response-format (json-response-format
+                                              {:keywords? true})
+                            :on-success      [:asset-type-success]
+                            :on-failure      [:api-request-error :asset-type]}})))
+
+(rf/reg-event-fx
+ :asset-type-success
+ (fn-traced [{:keys [db]} [_ {result :body}]]
+            {:db (-> db
+                     (assoc-in [:loading :asset-type] false)
+                     (assoc :active-page :asset-type)
+                     (assoc :asset-type result))
+             :dispatch-n (list [:complete-request :asset-type])}))
 
 ;; -- Request Handlers -----------------------------------------------------------
 (rf/reg-event-db

@@ -26,3 +26,8 @@
  :portfolio
  (fn-traced [db _]
             (:portfolio db)))
+
+(rf/reg-sub
+ :asset-type
+ (fn-traced [db _]
+            (:asset-type db)))

@@ -56,6 +56,7 @@
     :login     [login/login]
     :register  [register/register]
     :portfolio [portfolio/portfolio]
+    :asset-type [asset-type/asset-type]
     [home]))
 
 (defn send-app []
