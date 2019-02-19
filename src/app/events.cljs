@@ -28,6 +28,28 @@
       [:Authorization (str "Token " token)]
       nil)))
 
+(defn dispatch-report [db body report]
+  (let [user     (-> db :user :user)
+        password (-> db :user :token)]
+    {:db         (assoc-in db [:loading report] true)
+     :http-xhrio {:method          :get
+                  :uri             (endpoint "reports" report)
+                  :headers         (auth-header db)
+                  :params          {:user     user
+                                    :password password}
+                  :format          (json-request-format)
+                  :response-format (json-response-format
+                                    {:keywords? true})
+                  :on-success      [(-> report name (str "-success") keyword)]
+                  :on-failure      [:api-request-error (keyword report)]}}))
+
+(defn report-success [db result report]
+  {:db (-> db
+           (assoc-in [:loading (keyword report)] false)
+           (assoc :active-page (keyword report))
+           (assoc (keyword report) result))
+   :dispatch-n (list [:complete-request (keyword report)])})
+
 (rf/reg-fx
  :set-hash
  (fn [{:keys [hash]}]
@@ -55,11 +77,11 @@
         ;; -- URL @ "/asset-type" ------------------------------------
                 :asset-type {:dispatch [:asset-type]}
         ;; -- URL @ "/investment-style" ------------------------------
-                :asset-type {:dispatch [:investment-style]}
+                :investment-style {:dispatch [:investment-style]}
         ;; -- URL @ "/capitalization" ---------------------------------
-                :asset-type {:dispatch [:capitalization]}
+                :capitalization {:dispatch [:capitalization]}
         ;; -- URL @ "/location" ---------------------------------------
-                :asset-type {:dispatch [:location]}))))
+                :location {:dispatch [:location]}))))
 
 ;; -- POST Login @ /api/login -------------------------------------------------
 (rf/reg-event-fx
@@ -105,55 +127,56 @@
 (rf/reg-event-fx
  :portfolio
  (fn-traced [{:keys [db]} [_ body]]
-            (let [user     (-> db :user :user)
-                  password (-> db :user :token)]
-              {:db         (assoc-in db [:loading :portfolio] true)
-               :http-xhrio {:method          :get
-                            :uri             (endpoint "reports" "portfolio")
-                            :headers         (auth-header db)
-                            :params          {:user     user
-                                              :password password}
-                            :format          (json-request-format)
-                            :response-format (json-response-format
-                                              {:keywords? true})
-                            :on-success      [:portfolio-success]
-                            :on-failure      [:api-request-error :portfolio]}})))
+            (dispatch-report db body "portfolio")))
 
 (rf/reg-event-fx
  :portfolio-success
  (fn-traced [{:keys [db]} [_ {result :body}]]
-            {:db (-> db
-                     (assoc-in [:loading :portfolio] false)
-                     (assoc :active-page :portfolio)
-                     (assoc :portfolio result))
-             :dispatch-n (list [:complete-request :portfolio])}))
+            (report-success db result "portfolio")))
 
 ;; -- GET Asset-type @ api/v1/reports/asset-type ------------------------------
 (rf/reg-event-fx
  :asset-type
  (fn-traced [{:keys [db]} [_ body]]
-            (let [user     (-> db :user :user)
-                  password (-> db :user :token)]
-              {:db         (assoc-in db [:loading :asset-type] true)
-               :http-xhrio {:method          :get
-                            :uri             (endpoint "reports" "asset-type")
-                            :headers         (auth-header db)
-                            :params          {:user     user
-                                              :password password}
-                            :format          (json-request-format)
-                            :response-format (json-response-format
-                                              {:keywords? true})
-                            :on-success      [:asset-type-success]
-                            :on-failure      [:api-request-error :asset-type]}})))
+            (dispatch-report db body "asset-type")))
 
 (rf/reg-event-fx
  :asset-type-success
  (fn-traced [{:keys [db]} [_ {result :body}]]
-            {:db (-> db
-                     (assoc-in [:loading :asset-type] false)
-                     (assoc :active-page :asset-type)
-                     (assoc :asset-type result))
-             :dispatch-n (list [:complete-request :asset-type])}))
+            (report-success db result "asset-type")))
+
+;; -- GET Asset-type @ api/v1/reports/capitalization --------------------------
+(rf/reg-event-fx
+ :capitalization
+ (fn-traced [{:keys [db]} [_ body]]
+            (dispatch-report db body "capitalization")))
+
+(rf/reg-event-fx
+ :capitalization-success
+ (fn-traced [{:keys [db]} [_ {result :body}]]
+            (report-success db result "capitalization")))
+
+;; -- GET Asset-type @ api/v1/reports/investment-style ------------------------
+(rf/reg-event-fx
+ :investment-style
+ (fn-traced [{:keys [db]} [_ body]]
+            (dispatch-report db body "capitalization")))
+
+(rf/reg-event-fx
+ :investment-style-success
+ (fn-traced [{:keys [db]} [_ {result :body}]]
+            (report-success db result "investment-style")))
+
+;; -- GET Asset-type @ api/v1/reports/location --------------------------------
+(rf/reg-event-fx
+ :location
+ (fn-traced [{:keys [db]} [_ body]]
+            (dispatch-report db body "location")))
+
+(rf/reg-event-fx
+ :location-success
+ (fn-traced [{:keys [db]} [_ {result :body}]]
+            (report-success db result "location")))
 
 ;; -- Request Handlers -----------------------------------------------------------
 (rf/reg-event-db

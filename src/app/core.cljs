@@ -19,8 +19,7 @@
     (.setEnabled true)))
 
 (defn routes []
-  (let [slug    nil
-        profile nil]
+  (let [slug    nil]
     (secretary/set-config! :prefix "#")
 
     (defroute "/" []
@@ -33,9 +32,14 @@
       (rf/dispatch [:logout]))
     (defroute "/portfolio" []
       (rf/dispatch [:set-active-page {:page :portfolio}]))
-    #_(defroute "/:profile" [profile]
-        (rf/dispatch [:set-active-page {:page    :profile
-                                        :profile (subs profile 1)}]))))
+    (defroute "/asset-type" []
+      (rf/dispatch [:set-active-page {:page :asset-type}]))
+    (defroute "/capitalization" []
+      (rf/dispatch [:set-active-page {:page :capitalization}]))
+    (defroute "/investment-style" []
+      (rf/dispatch [:set-active-page {:page :investment-style}]))
+    (defroute "/location" []
+      (rf/dispatch [:set-active-page {:page :location}]))))
 
 (defn init! []
   (rf/dispatch-sync [:initialize-db])

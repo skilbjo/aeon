@@ -19,7 +19,19 @@
           [:a {:href "#/register"} "Register"]])
        (when-not anon?
          [:li {:class (when (= active-page :portfolio) "active")}
-          [:a {:href "#/portfolio"} "Portfolio"]])
+          [:a {:href "#/portfolio"}        "Portfolio"]])
+       (when-not anon?
+         [:li {:class (when (= active-page :asset-type) "active")}
+          [:a {:href "#/asset-type"}       "Asset Type"]])
+       (when-not anon?
+         [:li {:class (when (= active-page :capitalization) "active")}
+          [:a {:href "#/capitalization"}   "Capitalization"]])
+       (when-not anon?
+         [:li {:class (when (= active-page :capitalization) "active")}
+          [:a {:href "#/investment-style"} "Investment Style"]])
+       (when-not anon?
+         [:li {:class (when (= active-page :location) "active")}
+          [:a {:href "#/location"}         "Location"]])
        (when-not anon?
          [:li {:class (when (= active-page :logout) "active")}
           [:a {:href "#/logout"} "Logout"]])]]]))
