@@ -63,7 +63,7 @@
       (unauthorized {:user     user
                      :password password}))))
 
-(defn v1.portfolio [{:keys [user password]}]
+(defn ^:private report [{:keys [user password] :as m} report]
   (let [data  (fn [_]
                 (let [dir (if (env :jdbc-athena-uri)
                             "athena"
@@ -72,7 +72,7 @@
                             sql/query-athena
                             sql/query'')]
                   (->> (-> (str dir
-                                "/portfolio"
+                                (str "/" report)
                                 (when (env :jdbc-athena-uri)
                                   "_athena")
                                 ".sql")
@@ -89,6 +89,21 @@
       {:body (data' util/now')}
       (unauthorized {:user     user
                      :password password}))))
+
+(defn v1.portfolio [m]
+  (report m "portfolio"))
+
+(defn v1.asset-type [m]
+  (report m "asset_type"))
+
+(defn v1.capitalization [m]
+  (report m "capitalization"))
+
+(defn v1.investment-style [m]
+  (report m "investment-style"))
+
+(defn v1.location [m]
+  (report m "location"))
 
 (defn v1.latest [dataset]
   (if (false? (s/allowed-endpoint? s/datasets dataset))

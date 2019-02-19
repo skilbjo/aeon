@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-uri="http://localhost:8080"
-#uri="http://localhost:8081"
+#uri="http://localhost:8080"
+uri="http://localhost:8081"
 
 test_pw='god'
 
@@ -55,10 +55,8 @@ _login_bad () {
   _curlp "POST" "login" "{\"user\": \"skilbjo\", \"password\": \"not_$test_pw\"}"
 }
 
-_portfolio () {
+_report () {
   auth_token="$(_login | jq --raw-output '.token')"
-
-  #echo "auth_token is: $auth_token"
 
   ## 400 bad request
   #_curlga "reports/portfolio" "$auth_token" #| jq .
@@ -66,7 +64,30 @@ _portfolio () {
   _curlga "reports/portfolio?user=skilbjo&password=$auth_token" "$auth_token" #| jq .
 }
 
+_portfolio(){
+  _report 'portfolio'
+}
+
+_asset_type(){
+  _report 'asset-type'
+}
+
+_capitalization(){
+  _report 'capitalization'
+}
+
+_investment_style(){
+  _report 'investment-style'
+}
+
+_location(){
+  _report 'location'
+}
+
 #_login
 #_login_bad
-_portfolio | jq '.'
+#_portfolio | jq '.'
 #_portfolio | jq '.body[0]'
+
+#_asset_type | jq '.'
+_location | jq '.'

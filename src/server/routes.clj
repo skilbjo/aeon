@@ -102,6 +102,62 @@
           (-> {:user     user-trusted
                :password password-trusted}
               jobs.api/v1.portfolio
+              response)))
+
+      (api/GET "/asset-type" []
+        :summary "How's everything performing by asset type?"
+        :header-params [authorization :- :server.spec/authorization]
+        :middleware [auth/token-auth middleware/authenticated]
+        :query-params [user     :- :server.spec/user
+                       password :- :server.spec/password]
+        (let [user-trusted     (-> user sql/escape util/lower-trim)
+              password-trusted (-> password
+                                   sql/escape')]
+          (-> {:user     user-trusted
+               :password password-trusted}
+              jobs.api/v1.asset-type
+              response)))
+
+      (api/GET "/capitalization" []
+        :summary "How's everything performing by capitalization?"
+        :header-params [authorization :- :server.spec/authorization]
+        :middleware [auth/token-auth middleware/authenticated]
+        :query-params [user     :- :server.spec/user
+                       password :- :server.spec/password]
+        (let [user-trusted     (-> user sql/escape util/lower-trim)
+              password-trusted (-> password
+                                   sql/escape')]
+          (-> {:user     user-trusted
+               :password password-trusted}
+              jobs.api/v1.capitalization
+              response)))
+
+      (api/GET "/investment-style" []
+        :summary "How's everything performing by investment style?"
+        :header-params [authorization :- :server.spec/authorization]
+        :middleware [auth/token-auth middleware/authenticated]
+        :query-params [user     :- :server.spec/user
+                       password :- :server.spec/password]
+        (let [user-trusted     (-> user sql/escape util/lower-trim)
+              password-trusted (-> password
+                                   sql/escape')]
+          (-> {:user     user-trusted
+               :password password-trusted}
+              jobs.api/v1.investment-style
+              response)))
+
+      (api/GET "/location" []
+        :summary "How's everything performing by location?"
+        :header-params [authorization :- :server.spec/authorization]
+        :middleware [auth/token-auth middleware/authenticated]
+        :query-params [user     :- :server.spec/user
+                       password :- :server.spec/password]
+        (let [user-trusted     (-> user sql/escape util/lower-trim)
+              password-trusted (-> password
+                                   sql/escape')]
+          (-> {:user     user-trusted
+               :password password-trusted}
+              jobs.api/v1.location
               response))))))
 
 (def swagger
