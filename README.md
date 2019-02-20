@@ -46,6 +46,7 @@ lein ring server
 - [X] Escape SQL injection (note: no decent sql injection escaping libaries out there); used `clojure.string/escape`
 - [X] Check if datasets conform to allowed map of datasets. Else, give a 404 instead of throwing an exception
 - [ ] Seeing this error: `java.lang.OutOfMemoryError: Java heap space`
+- [ ] Add more unit tests, test each report
 
 Note: formerly valid sql injection: `http://localhost:8080/api/equities'select%201'--/latest`
 

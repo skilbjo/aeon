@@ -3,3 +3,5 @@ set -eou pipefail
 
 psql $docker_psql_uri -f ~/dev/markets-etl/dev-resources/test/ddl.sql
 psql $docker_psql_uri -f ~/dev/aeon/dev-resources/test/aeon-ddl.sql
+
+cd ~/dev/markets-etl/dev-resources/make_environment/; ./upload-csv "markets" "dev"

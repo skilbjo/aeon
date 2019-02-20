@@ -28,6 +28,28 @@
       [:Authorization (str "Token " token)]
       nil)))
 
+(defn dispatch-report [db body report]
+  (let [user     (-> db :user :user)
+        password (-> db :user :token)]
+    {:db         (assoc-in db [:loading report] true)
+     :http-xhrio {:method          :get
+                  :uri             (endpoint "reports" report)
+                  :headers         (auth-header db)
+                  :params          {:user     user
+                                    :password password}
+                  :format          (json-request-format)
+                  :response-format (json-response-format
+                                    {:keywords? true})
+                  :on-success      [(-> report name (str "-success") keyword)]
+                  :on-failure      [:api-request-error (keyword report)]}}))
+
+(defn report-success [db result report]
+  {:db (-> db
+           (assoc-in [:loading (keyword report)] false)
+           (assoc :active-page (keyword report))
+           (assoc (keyword report) result))
+   :dispatch-n (list [:complete-request (keyword report)])})
+
 (rf/reg-fx
  :set-hash
  (fn [{:keys [hash]}]
@@ -48,10 +70,18 @@
                                      profile]}]]
             (let [set-page (assoc db :active-page page)]
               (case page
-        ;; -- URL @ "/login" | "/register" ---------------------------
+        ;; -- URL @ "/" | "/login" | "/register" ---------------------
                 (:home :login :register) {:db set-page}
-        ;; -- URL @ "/" ----------------------------------------------
-                :portfolio {:dispatch [:portfolio]}))))
+        ;; -- URL @ "/portfolio" -------------------------------------
+                :portfolio {:dispatch [:portfolio]}
+        ;; -- URL @ "/asset-type" ------------------------------------
+                :asset-type {:dispatch [:asset-type]}
+        ;; -- URL @ "/investment-style" ------------------------------
+                :investment-style {:dispatch [:investment-style]}
+        ;; -- URL @ "/capitalization" ---------------------------------
+                :capitalization {:dispatch [:capitalization]}
+        ;; -- URL @ "/location" ---------------------------------------
+                :location {:dispatch [:location]}))))
 
 ;; -- POST Login @ /api/login -------------------------------------------------
 (rf/reg-event-fx
@@ -87,6 +117,10 @@
             {:db      (dissoc db
                               :user
                               :portfolio
+                              :asset-type
+                              :capitalization
+                              :investment-style
+                              :location
                               :loading
                               :errors
                               :re-frame-datatable.core/re-frame-datatable)
@@ -96,28 +130,56 @@
 (rf/reg-event-fx
  :portfolio
  (fn-traced [{:keys [db]} [_ body]]
-            (let [user     (-> db :user :user)
-                  password (-> db :user :token)]
-              {:db         (assoc-in db [:loading :portfolio] true)
-               :http-xhrio {:method          :get
-                            :uri             (endpoint "reports" "portfolio")
-                            :headers         (auth-header db)
-                            :params          {:user     user
-                                              :password password}
-                            :format          (json-request-format)
-                            :response-format (json-response-format
-                                              {:keywords? true})
-                            :on-success      [:portfolio-success]
-                            :on-failure      [:api-request-error :portfolio]}})))
+            (dispatch-report db body "portfolio")))
 
 (rf/reg-event-fx
  :portfolio-success
  (fn-traced [{:keys [db]} [_ {result :body}]]
-            {:db (-> db
-                     (assoc-in [:loading :portfolio] false)
-                     (assoc :active-page :portfolio)
-                     (assoc :portfolio result))
-             :dispatch-n (list [:complete-request :portfolio])}))
+            (report-success db result "portfolio")))
+
+;; -- GET Asset-type @ api/v1/reports/asset-type ------------------------------
+(rf/reg-event-fx
+ :asset-type
+ (fn-traced [{:keys [db]} [_ body]]
+            (dispatch-report db body "asset-type")))
+
+(rf/reg-event-fx
+ :asset-type-success
+ (fn-traced [{:keys [db]} [_ {result :body}]]
+            (report-success db result "asset-type")))
+
+;; -- GET Asset-type @ api/v1/reports/capitalization --------------------------
+(rf/reg-event-fx
+ :capitalization
+ (fn-traced [{:keys [db]} [_ body]]
+            (dispatch-report db body "capitalization")))
+
+(rf/reg-event-fx
+ :capitalization-success
+ (fn-traced [{:keys [db]} [_ {result :body}]]
+            (report-success db result "capitalization")))
+
+;; -- GET Asset-type @ api/v1/reports/investment-style ------------------------
+(rf/reg-event-fx
+ :investment-style
+ (fn-traced [{:keys [db]} [_ body]]
+            (dispatch-report db body "investment-style")))
+
+(rf/reg-event-fx
+ :investment-style-success
+ (fn-traced [{:keys [db]} [_ {result :body}]]
+            (report-success db result "investment-style")))
+
+;; -- GET Asset-type @ api/v1/reports/location --------------------------------
+(rf/reg-event-fx
+ :location
+ (fn-traced [{:keys [db]} [_ body]]
+            (dispatch-report db body "location")))
+
+(rf/reg-event-fx
+ :location-success
+ (fn-traced [{:keys [db]} [_ {result :body}]]
+            (report-success db result "location")))
 
 ;; -- Request Handlers -----------------------------------------------------------
 (rf/reg-event-db
