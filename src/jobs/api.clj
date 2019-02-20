@@ -100,7 +100,7 @@
   (report m "capitalization"))
 
 (defn v1.investment-style [m]
-  (report m "investment-style"))
+  (report m "investment_style"))
 
 (defn v1.location [m]
   (report m "location"))

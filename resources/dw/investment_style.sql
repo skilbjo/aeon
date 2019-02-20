@@ -1,5 +1,5 @@
 with now_ts as (
-  select current_timestamp at time zone 'America/Los_Angeles' as now_ts -- for a specifc date: select cast('2018-03-13' as timestamp) as now_ts
+  select current_timestamp at time zone 'America/Los_Angeles' as now_ts
 ), now as (
   select cast((select now_ts from now_ts) as date) as now
 ), _user as (
@@ -15,7 +15,7 @@ with now_ts as (
       else        (select now from now) - 1
     end as yesterday
 ), beginning_of_year as (
-  select date_trunc('year', ( select now from now)) + interval '1 day' beginning_of_year --  select '2018-01-02' beginning_of_year
+  select date_trunc('year', ( select now from now)) + interval '1 day' beginning_of_year
 ), portfolio as (
   select
     markets.asset_type,
@@ -31,7 +31,7 @@ with now_ts as (
     join dw.markets_dim markets on markets.ticker = portfolio.ticker
                                and markets.dataset = portfolio.dataset
   where
-    portfolio.dataset = 'ALPHA-VANTAGE' --( select datasource from datasource )
+    portfolio.dataset = 'ALPHA-VANTAGE'
     and _user = ( select _user from _user )
   group by
     1,2,3,4,5,6,7,8
@@ -101,7 +101,7 @@ with now_ts as (
     date = ( select today from date )
     or (case when equities.ticker in ('VMMXX')
               and date = (select beginning_of_year from beginning_of_year) then 1 else 0 end)
-       = 1 -- VMMXX not available via TIINGO api
+       = 1
   group by
     1,2,3,4,5,6
 ), yesterday as (
@@ -154,7 +154,7 @@ with now_ts as (
     date in ( select max_known_date from max_known_date )
     or (case when equities.ticker in ('VMMXX')
               and date = (select beginning_of_year from beginning_of_year) then 1 else 0 end)
-       = 1 -- VMMXX not available via TIINGO api
+       = 1
   group by
     1,2,3,4,5,6
 ), detail as (
@@ -194,12 +194,7 @@ with now_ts as (
     full outer join ytd on backup.description = ytd.description
 ), summary as (
   select
-    -- 'TOTAL'::text           ticker,
-    -- 'Portfolio Total'::text description,
     'TOTAL'::text           asset_type,
-    -- 'TOTAL'::text        as location,
-    -- 'TOTAL'::text        capitalization,
-    -- 'TOTAL'::text        investment_style,
     sum(cost_basis)         cost_basis,
     sum(market_value)       market_value,
     sum(gain_loss)          gain_loss,
@@ -209,12 +204,7 @@ with now_ts as (
     detail_with_backup
 ), benchmark as (
   select
-    -- 'Benchmark'::text    ticker,
-    -- 'Benchmark'::text    description,
     'Benchmark'::text       asset_type,
-    -- '----'::text         as location,
-    -- '----'::text         capitalization,
-    -- '----'::text         investment_style,
     sum(cost_basis)         cost_basis,
     sum(market_value)       market_value,
     sum(gain_loss)          gain_loss,
@@ -224,14 +214,9 @@ with now_ts as (
     detail_with_backup
   where ticker = 'VTSAX'
   group by
-    1--,2
+    1
 ), results as (
   select
-    -- ticker,
-    -- description,
-    -- asset_type,
-    -- location,
-    -- capitalization,
     investment_style,
     sum(cost_basis)         cost_basis,
     sum(market_value)       market_value,
@@ -242,7 +227,7 @@ with now_ts as (
     detail_with_backup
   where ticker <> ''
   group by
-    1--,2
+    1
   order by market_value desc
 ), _union as (
   select * from benchmark
@@ -252,13 +237,8 @@ with now_ts as (
   select * from results
 ), report_pre as (
   select
-    -- ticker,
     (market_value / ( select market_value from summary ) * 100)::decimal(8,2) || '%' "mix_%",
-    -- description,
     asset_type,
-    -- location,
-    -- capitalization,
-    -- investment_style,
     cost_basis::int ,
     market_value::int,
     today_gain_loss::int,
@@ -271,13 +251,8 @@ with now_ts as (
     _union
 ), report as (
   select
-    -- ticker,
-    -- description,
     case when asset_type = 'Benchmark' then '---' else "mix_%"::text end,
     asset_type,
-    -- location,
-    -- capitalization,
-    -- investment_style,
     case when asset_type = 'Benchmark' then '---' else cost_basis::text end,
     case when asset_type = 'Benchmark' then '---' else market_value::text end,
     case when asset_type = 'Benchmark' then '---' else today_gain_loss::text end,

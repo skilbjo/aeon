@@ -50,13 +50,13 @@
   (table "asset-type" :asset_type))
 
 (defn ^:private capitalization-table []
-  (table "capitalization" :capitalization))
+  (table "capitalization" :asset_type))
 
 (defn ^:private investment-style-table []
-  (table "investment-style" :investment-style))
+  (table "investment-style" :asset_type))
 
 (defn ^:private location-table []
-  (table "location" :location))
+  (table "location" :asset_type))
 
 (defn ^:private display-report [report table-fn]
   (let [loading        @(subscribe [:loading])

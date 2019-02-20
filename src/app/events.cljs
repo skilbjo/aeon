@@ -163,7 +163,7 @@
 (rf/reg-event-fx
  :investment-style
  (fn-traced [{:keys [db]} [_ body]]
-            (dispatch-report db body "capitalization")))
+            (dispatch-report db body "investment-style")))
 
 (rf/reg-event-fx
  :investment-style-success

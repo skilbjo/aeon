@@ -90,4 +90,6 @@ _location(){
 #_portfolio | jq '.body[0]'
 
 #_asset_type | jq '.'
-_location | jq '.'
+#_capitalization | jq '.'
+_investment_style | jq '.'
+#_location | jq '.'
