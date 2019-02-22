@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-#uri="http://localhost:8080"
-uri="http://localhost:8081"
+uri="http://localhost:8080"
+#uri="http://localhost:8081"
+#uri="http://docker:8080"
 
 test_pw='god'
 
@@ -86,10 +87,10 @@ _location(){
 
 #_login
 #_login_bad
-#_portfolio | jq '.'
+_portfolio | jq '.'
 #_portfolio | jq '.body[0]'
 
 #_asset_type | jq '.'
 #_capitalization | jq '.'
-_investment_style | jq '.'
+#_investment_style | jq '.'
 #_location | jq '.'

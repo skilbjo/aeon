@@ -217,7 +217,7 @@ with now_ts as (
     1
 ), results as (
   select
-    asset_type,
+    investment_style,
     sum(cost_basis)         cost_basis,
     sum(market_value)       market_value,
     sum(gain_loss)          gain_loss,
