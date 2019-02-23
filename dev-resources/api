@@ -1,27 +1,25 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-uri="http://localhost:8080"
-#uri="http://localhost:8081"
-#uri="http://docker:8080"
+#uri="http://localhost:8080"    # lein ring server
+uri="http://localhost:8081"   # lein figwheel
+#uri="http://docker:8080"      # dev-resources/run-container
 
 test_pw='god'
 
 _curl () {
-  method="$1"
-  endpoint="$2"
-  set +u
-  payload="$3"
-  set -u
+  local method="$1"
+  local endpoint="$2"
+  set +u; payload="$3"; set -u
 
   case "$method" in
-    GET )
+    GET | get )
       curl --fail \
         -H 'Content-type: application/json' \
         -X "$method" \
         "${uri}/api/v1/${endpoint}"
       ;;
-    POST )
+    POST | post )
       curl --fail \
         -H 'Content-type: application/json' \
         -X "$method" \
@@ -32,20 +30,24 @@ _curl () {
 }
 
 _curlp () {
-  endpoint="$2"
-  payload="$3"
+  local endpoint="$2"
+  local payload="$3"
 
-  _curl "POST" "$endpoint" "$payload"
+  _curl 'POST' "$endpoint" "$payload"
 }
 
 _curlga () {
-  endpoint="$1"
-  auth_token="$2"
+  local endpoint="$1"
+  local auth_token="$2"
 
   curl --fail \
     -H 'Content-type: application/json' \
     -H "Authorization: Token $auth_token" \
     "${uri}/api/v1/${endpoint}"
+}
+
+_currency(){
+  _curl 'GET' 'prices/currency/latest'
 }
 
 _login () {
@@ -57,7 +59,7 @@ _login_bad () {
 }
 
 _report () {
-  auth_token="$(_login | jq --raw-output '.token')"
+  local auth_token="$(_login | jq --raw-output '.token')"
 
   ## 400 bad request
   #_curlga "reports/portfolio" "$auth_token" #| jq .
@@ -85,11 +87,16 @@ _location(){
   _report 'location'
 }
 
+## login ------------
 #_login
 #_login_bad
+
+## prices -----------
+#_currency
+
+## reports ----------
 _portfolio | jq '.'
 #_portfolio | jq '.body[0]'
-
 #_asset_type | jq '.'
 #_capitalization | jq '.'
 #_investment_style | jq '.'
