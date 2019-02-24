@@ -5,9 +5,11 @@
             [clojure.java.io :as io]
             [clojure.java.jdbc :as jdbc]
             [clojure.test :refer :all]
+            [clojure.tools.logging :as log]
             [fixtures.api :as f]
             [fixtures.fixtures :refer [*cxn*] :as fix]
             [jobs.api :as api]
+            [server.util :as util]
             [server.sql :as sql]))
 
 (use-fixtures :each (fix/with-database))
@@ -19,14 +21,18 @@
            (api/v1.latest "made_up_dataset")))))
 
 (deftest v1.integration-test
+  (log/warn "Remember to unset $jdbc_athena_uri,
+             or fn will route requests to athena")
+
   (->> "test/insert-source-data.sql"
        io/resource
        slurp
        (jdbc/execute! *cxn*))
+
   (testing "jobs.api.latest integration test"
     (let [expected (assoc {}
                           :body
-                          (->> f/result
+                          (->> f/currency-result
                                :body
                                (map #(update % :date coerce/to-sql-date))))
           actual  (assoc {}
@@ -40,9 +46,8 @@
   (testing "jobs.api.portfolio integration test"
     (let [expected (assoc {}
                           :body
-                          (->> f/result
-                               :body
-                               (map #(update % :date coerce/to-sql-date))))
+                          (->> f/portfolio-result
+                               :body))
           actual  (assoc {}
                          :body
                          (->> (-> {:user     "skilbjo"
@@ -51,7 +56,6 @@
                                                  hash/sha256
                                                  codecs/bytes->hex)}
                                   api/v1.portfolio)
-                              :body
-                              (map #(dissoc % :dw_created_at))))]
+                              :body))]
       (is (= expected
              actual)))))
