@@ -56,6 +56,7 @@
                                                  hash/sha256
                                                  codecs/bytes->hex)}
                                   api/v1.portfolio)
-                              :body))]
+                              :body
+                              (into [])))]
       (is (= expected
              actual)))))
