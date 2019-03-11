@@ -3,14 +3,14 @@
   :repositories {"atlassian"
                  {:url "https://maven.atlassian.com/content/repositories/atlassian-3rdparty/"}}
   :dependencies [;; clj
-                 [org.clojure/clojure "1.9.0"]
+                 [org.clojure/clojure "1.10.0"]
                  [bk/ring-gzip "0.3.0"]
                  [buddy/buddy-auth "2.1.0"]
                  [buddy/buddy-core "1.5.0"]
-                 [clj-http "3.9.0"]
-                 [clj-time "0.14.4"]
+                 [clj-http "3.9.1"]
+                 [clj-time "0.15.1"]
                  [com.amazonaws.athena.jdbc/AthenaJDBC41 "1.0.1-atlassian-hosted"]
-                 [com.draines/postal "2.0.2"]
+                 [com.draines/postal "2.0.3"]
                  [compojure "1.6.1" :exclusions [ring/ring-core]]
                  [metosin/compojure-api "2.0.0-alpha20"
                   :exclusions [cheshire
@@ -21,35 +21,35 @@
                  [environ "1.1.0"]
                  [hiccup "1.0.5"]
                  [jarohen/chime "0.2.2"]
-                 [markdown-clj "1.0.2"]
-                 [metosin/spec-tools "0.7.1"
+                 [markdown-clj "1.0.7"]
+                 [metosin/spec-tools "0.9.0"
                   :exclusions [com.fasterxml.jackson.core/jackson-core]]
                  [net.sf.uadetector/uadetector-resources "2014.10"]
                  [org.clojure/data.json "0.2.6"]
-                 [org.clojure/java.jdbc "0.7.7"]
+                 [org.clojure/java.jdbc "0.7.9"]
                  [org.clojure/tools.logging "0.4.1"]
-                 [org.postgresql/postgresql "42.2.4"]
-                 [org.slf4j/slf4j-log4j12 "1.7.25"
+                 [org.postgresql/postgresql "42.2.5"]
+                 [org.slf4j/slf4j-log4j12 "1.7.26"
                   :exclusions [org.clojure/tools.reader
                                org.slf4j/slf4j-api]]
-                 [ring "1.6.3"]
+                 [ring "1.7.1"]
                  [ring/ring-anti-forgery "1.3.0"]
                  [ring/ring-defaults "0.3.2" ]
                  [ring/ring-json "0.4.0"]
 
                  ;; cljs
-                 [org.clojure/clojurescript "1.10.339"
+                 [org.clojure/clojurescript "1.10.520"
                   :exclusions [com.google.code.findbugs/jsr305
                                com.fasterxml.jackson.core/jackson-core]]
 
-                 [cljs-ajax "0.7.4" :exclusions [com.fasterxml.jackson.core/jackson-core
+                 [cljs-ajax "0.8.0" :exclusions [com.fasterxml.jackson.core/jackson-core
                                                  com.fasterxml.jackson.core/jackson-dataformat-cbor
                                                  cheshire]]
                  [cljs-log "0.2.3"]
                  [com.andrewmcveigh/cljs-time "0.5.2"]
                  [day8.re-frame/http-fx "0.1.6"]
                  [day8.re-frame/tracing-stubs "0.5.1"]
-                 [re-frame "0.10.5"
+                 [re-frame "0.10.6"
                   :exclusions [com.google.code.findbugs/jsr305]]
                  [re-frame-datatable "0.6.0"]
                  [reagent "0.8.1"]
@@ -67,7 +67,7 @@
                                         :output-to     "resources/public/js/app.js"}}}}
   :profiles {:dev {:env {:log-level "1"} ;; cljs/log debug+
                    :dependencies [[binaryage/devtools "0.9.10"]
-                                  [day8.re-frame/re-frame-10x "0.3.3"
+                                  [day8.re-frame/re-frame-10x "0.3.7"
                                    :exclusions [com.google.code.findbugs/jsr305]]
                                   [day8.re-frame/tracing "0.5.1"]
                                   [javax.servlet/servlet-api "2.5"]
