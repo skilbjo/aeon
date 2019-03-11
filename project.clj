@@ -3,14 +3,14 @@
   :repositories {"atlassian"
                  {:url "https://maven.atlassian.com/content/repositories/atlassian-3rdparty/"}}
   :dependencies [;; clj
-                 [org.clojure/clojure "1.9.0"]
+                 [org.clojure/clojure "1.10.0"]
                  [bk/ring-gzip "0.3.0"]
                  [buddy/buddy-auth "2.1.0"]
                  [buddy/buddy-core "1.5.0"]
-                 [clj-http "3.9.0"]
-                 [clj-time "0.14.4"]
+                 [clj-http "3.9.1"]
+                 [clj-time "0.15.1"]
                  [com.amazonaws.athena.jdbc/AthenaJDBC41 "1.0.1-atlassian-hosted"]
-                 [com.draines/postal "2.0.2"]
+                 [com.draines/postal "2.0.3"]
                  [compojure "1.6.1" :exclusions [ring/ring-core]]
                  [metosin/compojure-api "2.0.0-alpha20"
                   :exclusions [cheshire
@@ -22,14 +22,14 @@
                  [hiccup "1.0.5"]
                  [jarohen/chime "0.2.2"]
                  [markdown-clj "1.0.2"]
-                 [metosin/spec-tools "0.7.1"
+                 [metosin/spec-tools "0.9.0"
                   :exclusions [com.fasterxml.jackson.core/jackson-core]]
                  [net.sf.uadetector/uadetector-resources "2014.10"]
                  [org.clojure/data.json "0.2.6"]
                  [org.clojure/java.jdbc "0.7.7"]
                  [org.clojure/tools.logging "0.4.1"]
-                 [org.postgresql/postgresql "42.2.4"]
-                 [org.slf4j/slf4j-log4j12 "1.7.25"
+                 [org.postgresql/postgresql "42.2.5"]
+                 [org.slf4j/slf4j-log4j12 "1.7.26"
                   :exclusions [org.clojure/tools.reader
                                org.slf4j/slf4j-api]]
                  [ring "1.6.3"]
