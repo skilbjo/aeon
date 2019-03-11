@@ -21,7 +21,7 @@
                  [environ "1.1.0"]
                  [hiccup "1.0.5"]
                  [jarohen/chime "0.2.2"]
-                 [markdown-clj "1.0.2"]
+                 [markdown-clj "1.0.7"]
                  [metosin/spec-tools "0.9.0"
                   :exclusions [com.fasterxml.jackson.core/jackson-core]]
                  [net.sf.uadetector/uadetector-resources "2014.10"]
