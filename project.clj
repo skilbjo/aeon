@@ -67,6 +67,7 @@
                                         :output-to     "resources/public/js/app.js"}}}}
   :profiles {:dev {:env {:log-level "1"} ;; cljs/log debug+
                    :dependencies [[binaryage/devtools "0.9.10"]
+                                  [com.bhauman/cljs-test-display "0.1.1"]
                                   [day8.re-frame/re-frame-10x "0.3.7"
                                    :exclusions [com.google.code.findbugs/jsr305]]
                                   [day8.re-frame/tracing "0.5.1"]
@@ -87,8 +88,10 @@
                                                          :pretty-print    true
                                                          :source-map      true
                                                          :source-map-timestamp true
-                                                         :closure-defines {goog.DEBUG true
-                                                                           "re_frame.trace.trace_enabled_QMARK_" true
+                                                         :closure-defines {cljs-test-display.core/root-node-id          "test-app"
+                                                                           cljs-test-display.core/printing              true
+                                                                           goog.DEBUG                                   true
+                                                                           "re_frame.trace.trace_enabled_QMARK_"        true
                                                                            "day8.re_frame.tracing.trace_enabled_QMARK_" true}
                                                          :external-config {:devtools/config
                                                                            {:features-to-install :all}}}}}}}
