@@ -1,4 +1,4 @@
-(ns cljs.core-test
+(ns app.core-test
   (:require [cljs.test :refer-macros [deftest testing is]]))
 
 ;; TODO https://github.com/bhauman/cljs-test-display

@@ -60,11 +60,23 @@
   :test-paths ["test"]
   :clean-targets ^{:protect false} ["resources/public/js"]
   :hooks [leiningen.cljsbuild]
-  :cljsbuild {:builds {:app {:source-paths ["src/app"]
-                             :compiler {:asset-path    "js/out"
-                                        :main          "app.core"
-                                        :output-dir    "resources/public/js/out"
-                                        :output-to     "resources/public/js/app.js"}}}}
+  :cljsbuild {:builds {:app
+                       {:figwheel {:open-urls ["http://localhost:8081/cljs"]}
+                        :source-paths ["src/app"]
+                        :compiler
+                        {:main        "app.core"
+                         :asset-path  "js/app"
+                         :output-dir  "resources/public/js/app"
+                         :output-to   "resources/public/js/app.js"}}
+
+                       :test
+                       {:figwheel {:open-urls ["http://localhost:8081/test.html"]}
+                        :source-paths ["test/app"]
+                        :compiler
+                        {:main        "app.dev"
+                         :asset-path  "js/test"
+                         :output-dir  "resources/public/js/test"
+                         :output-to   "resources/public/js/test.js"}}}}
   :profiles {:dev {:env {:log-level "1"} ;; cljs/log debug+
                    :dependencies [[binaryage/devtools "0.9.10"]
                                   [com.bhauman/cljs-test-display "0.1.1"]
@@ -81,22 +93,33 @@
                    :figwheel {:css-dirs ["resources/public/css"]
                               :ring-handler server.routes/app
                               :server-port 8081}
-                   :cljsbuild {:builds {:app {:figwheel true
-                                              :compiler {:optimizations   :none
-                                                         :preloads        [devtools.preload
-                                                                           day8.re-frame-10x.preload]
-                                                         :pretty-print    true
-                                                         :source-map      true
-                                                         :source-map-timestamp true
-                                                         :closure-defines {cljs-test-display.core/root-node-id          "test-app"
-                                                                           cljs-test-display.core/printing              true
-                                                                           goog.DEBUG                                   true
-                                                                           "re_frame.trace.trace_enabled_QMARK_"        true
-                                                                           "day8.re_frame.tracing.trace_enabled_QMARK_" true}
-                                                         :external-config {:devtools/config
-                                                                           {:features-to-install :all}}}}}}}
+                   :cljsbuild {:builds {:app
+                                        {:compiler
+                                         {:optimizations   :none
+                                          :preloads        [devtools.preload
+                                                            day8.re-frame-10x.preload]
+                                          :pretty-print    true
+                                          :source-map      true
+                                          :source-map-timestamp true
+                                          :closure-defines {goog.DEBUG true
+                                                            "re_frame.trace.trace_enabled_QMARK_" true
+                                                            "day8.re_frame.tracing.trace_enabled_QMARK_" true}
+                                          :external-config {:devtools/config
+                                                            {:features-to-install :all}}}}
+                                        :test
+                                        {:source-paths ["test/app"]
+                                         :compiler
+                                         {:optimizations   :none
+                                          :preloads       [devtools.preload]
+                                          :external-config {:devtools/config
+                                                            {:features-to-install :all}}
+                                          :pretty-print    true
+                                          :closure-defines
+                                          {cljs-test-display.core/root-node-id "cljs-tests"
+                                           cljs-test-display.core/printing true}}}}}}
              :uberjar {:aot :all
-                       :cljsbuild {:builds {:app {:compiler {:closure-defines {goog.DEBUG false}
+                       :cljsbuild {:builds {:app {:compiler {:closure-defines
+                                                              {goog.DEBUG false}
                                                              :optimizations :advanced
                                                              :pretty-print  false}}}}
                        :env {:log-level "3"}}} ;; cljs/log warn+

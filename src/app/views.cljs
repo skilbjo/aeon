@@ -11,7 +11,7 @@
 ;; -- Home --------------------------------------------------------------------
 (defn home []
   [:div
-   [:h4 "Aoin"]
+   [:h4 "aeon"]
    [:p "Not much here... go login!"]])
 
 (defn logout []
