@@ -129,22 +129,22 @@
          :ssl?          true}
   :target-path "target/%s"
   :main ^:skip-aot server.routes
-:jvm-opts ~(concat ["-Duser.timezone=UTC"
-                    ; Same JVM options as deploy/bin/run-job uses in production
-                    "-Xms256m"
-                    "-Xmx2g"
-                    "-XX:MaxMetaspaceSize=512m"
-                    ; https://clojure.org/reference/compilation
-                    "-Dclojure.compiler.direct-linking=true"
-                    ; https://stackoverflow.com/questions/28572783/no-log4j2-configuration-file-found-using-default-configuration-logging-only-er
-                    "-Dlog4j.configurationFile=resources/log4j.properties"
-                    ; https://stackoverflow.com/questions/4659151/recurring-exception-without-a-stack-trace-how-to-reset
-                    "-XX:-OmitStackTraceInFastThrow"
-                    ; https://stackoverflow.com/questions/42651420/how-to-find-non-heap-space-memory-leak-in-java
-                    "-XX:-HeapDumpOnOutOfMemoryError"]
-                   ; https://github.com/bhauman/lein-figwheel/issues/612
-                   (let [version (System/getProperty "java.version")
-                         [major _ _] (clojure.string/split version #"\.")]
-                     (if (>= (Integer. major) 9)
-                       ["--add-modules" "java.xml.bind"]
-                       [])))
+  :jvm-opts ~(concat ["-Duser.timezone=UTC"
+                      ; Same JVM options as deploy/bin/run-job uses in production
+                      "-Xms256m"
+                      "-Xmx2g"
+                      "-XX:MaxMetaspaceSize=512m"
+                      ; https://clojure.org/reference/compilation
+                      "-Dclojure.compiler.direct-linking=true"
+                      ; https://stackoverflow.com/questions/28572783/no-log4j2-configuration-file-found-using-default-configuration-logging-only-er
+                      "-Dlog4j.configurationFile=resources/log4j.properties"
+                      ; https://stackoverflow.com/questions/4659151/recurring-exception-without-a-stack-trace-how-to-reset
+                      "-XX:-OmitStackTraceInFastThrow"
+                      ; https://stackoverflow.com/questions/42651420/how-to-find-non-heap-space-memory-leak-in-java
+                      "-XX:-HeapDumpOnOutOfMemoryError"]
+                     ; https://github.com/bhauman/lein-figwheel/issues/612
+                     (let [version (System/getProperty "java.version")
+                           [major _ _] (clojure.string/split version #"\.")]
+                       (if (>= (Integer. major) 9)
+                         ["--add-modules" "java.xml.bind"]
+                         []))))
