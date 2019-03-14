@@ -56,17 +56,18 @@
                  [secretary "1.2.3"]]
   :plugins [[lein-cloverage "1.0.11"]
             [lein-cljsbuild "1.1.7"]]
-  :source-paths ["src"]
-  :test-paths ["test"]
   :clean-targets ^{:protect false} ["resources/public/js"]
   :hooks [leiningen.cljsbuild]
-  :cljsbuild {:builds {:app {:source-paths ["src/app"]
-                             :compiler {:asset-path    "js/out"
-                                        :main          "app.core"
-                                        :output-dir    "resources/public/js/out"
-                                        :output-to     "resources/public/js/app.js"}}}}
+  :cljsbuild {:builds {:app
+                       {:source-paths ["src/app"]
+                        :compiler
+                        {:main        "app.core"
+                         :asset-path  "js/app"
+                         :output-dir  "resources/public/js/app"
+                         :output-to   "resources/public/js/app.js"}}}}
   :profiles {:dev {:env {:log-level "1"} ;; cljs/log debug+
                    :dependencies [[binaryage/devtools "0.9.10"]
+                                  [com.bhauman/cljs-test-display "0.1.1"]
                                   [day8.re-frame/re-frame-10x "0.3.7"
                                    :exclusions [com.google.code.findbugs/jsr305]]
                                   [day8.re-frame/tracing "0.5.1"]
@@ -80,20 +81,36 @@
                    :figwheel {:css-dirs ["resources/public/css"]
                               :ring-handler server.routes/app
                               :server-port 8081}
-                   :cljsbuild {:builds {:app {:figwheel true
-                                              :compiler {:optimizations   :none
-                                                         :preloads        [devtools.preload
-                                                                           day8.re-frame-10x.preload]
-                                                         :pretty-print    true
-                                                         :source-map      true
-                                                         :source-map-timestamp true
-                                                         :closure-defines {goog.DEBUG true
-                                                                           "re_frame.trace.trace_enabled_QMARK_" true
-                                                                           "day8.re_frame.tracing.trace_enabled_QMARK_" true}
-                                                         :external-config {:devtools/config
-                                                                           {:features-to-install :all}}}}}}}
+                   :cljsbuild {:builds {:app
+                                        {:figwheel {:open-urls ["http://localhost:8081/cljs"]}
+                                         :compiler
+                                         {:optimizations   :none
+                                          :preloads        [devtools.preload
+                                                            day8.re-frame-10x.preload]
+                                          :pretty-print    true
+                                          :source-map      true
+                                          :source-map-timestamp true
+                                          :closure-defines {goog.DEBUG true
+                                                            "re_frame.trace.trace_enabled_QMARK_" true
+                                                            "day8.re_frame.tracing.trace_enabled_QMARK_" true}
+                                          :external-config {:devtools/config
+                                                            {:features-to-install :all}}}}
+                                        :test
+                                        {:figwheel {:open-urls ["http://localhost:8081/test.html"]}
+                                         :source-paths ["test/app"]
+                                         :compiler
+                                         {:optimizations   :none
+                                          :main        "app.runner"
+                                          :asset-path  "js/test"
+                                          :output-dir  "resources/public/js/test"
+                                          :output-to   "resources/public/js/test.js"
+                                          :pretty-print    true
+                                          :closure-defines
+                                          {cljs-test-display.core/root-node-id "cljs-tests"
+                                           cljs-test-display.core/printing true}}}}}}
              :uberjar {:aot :all
-                       :cljsbuild {:builds {:app {:compiler {:closure-defines {goog.DEBUG false}
+                       :cljsbuild {:builds {:app {:compiler {:closure-defines
+                                                              {goog.DEBUG false}
                                                              :optimizations :advanced
                                                              :pretty-print  false}}}}
                        :env {:log-level "3"}}} ;; cljs/log warn+
@@ -106,16 +123,22 @@
          :ssl?          true}
   :target-path "target/%s"
   :main ^:skip-aot server.routes
-  :jvm-opts ["-Duser.timezone=UTC"
-             ; Same JVM options as deploy/bin/run-job uses in production
-             "-Xms256m"
-             "-Xmx2g"
-             "-XX:MaxMetaspaceSize=512m"
-             ; https://clojure.org/reference/compilation
-             "-Dclojure.compiler.direct-linking=true"
-             ; https://stackoverflow.com/questions/28572783/no-log4j2-configuration-file-found-using-default-configuration-logging-only-er
-             "-Dlog4j.configurationFile=resources/log4j.properties"
-             ; https://stackoverflow.com/questions/4659151/recurring-exception-without-a-stack-trace-how-to-reset
-             "-XX:-OmitStackTraceInFastThrow"
-             ; https://stackoverflow.com/questions/42651420/how-to-find-non-heap-space-memory-leak-in-java
-             "-XX:-HeapDumpOnOutOfMemoryError"])
+  :jvm-opts ~(concat ["-Duser.timezone=UTC"
+                      ; Same JVM options as deploy/bin/run-job uses in production
+                      "-Xms256m"
+                      "-Xmx2g"
+                      "-XX:MaxMetaspaceSize=512m"
+                      ; https://clojure.org/reference/compilation
+                      "-Dclojure.compiler.direct-linking=true"
+                      ; https://stackoverflow.com/questions/28572783/no-log4j2-configuration-file-found-using-default-configuration-logging-only-er
+                      "-Dlog4j.configurationFile=resources/log4j.properties"
+                      ; https://stackoverflow.com/questions/4659151/recurring-exception-without-a-stack-trace-how-to-reset
+                      "-XX:-OmitStackTraceInFastThrow"
+                      ; https://stackoverflow.com/questions/42651420/how-to-find-non-heap-space-memory-leak-in-java
+                      "-XX:-HeapDumpOnOutOfMemoryError"]
+                     ; https://github.com/bhauman/lein-figwheel/issues/612
+                     (let [version (System/getProperty "java.version")
+                           [major _ _] (clojure.string/split version #"\.")]
+                       (if (>= (Integer. major) 9)
+                         ["--add-modules" "java.xml.bind"]
+                         []))))
