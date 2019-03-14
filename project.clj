@@ -56,27 +56,15 @@
                  [secretary "1.2.3"]]
   :plugins [[lein-cloverage "1.0.11"]
             [lein-cljsbuild "1.1.7"]]
-  :source-paths ["src"]
-  :test-paths ["test"]
   :clean-targets ^{:protect false} ["resources/public/js"]
   :hooks [leiningen.cljsbuild]
   :cljsbuild {:builds {:app
-                       {:figwheel {:open-urls ["http://localhost:8081/cljs"]}
-                        :source-paths ["src/app"]
+                       {:source-paths ["src/app"]
                         :compiler
                         {:main        "app.core"
                          :asset-path  "js/app"
                          :output-dir  "resources/public/js/app"
-                         :output-to   "resources/public/js/app.js"}}
-
-                       :test
-                       {:figwheel {:open-urls ["http://localhost:8081/test.html"]}
-                        :source-paths ["test/app"]
-                        :compiler
-                        {:main        "app.runner"
-                         :asset-path  "js/test"
-                         :output-dir  "resources/public/js/test"
-                         :output-to   "resources/public/js/test.js"}}}}
+                         :output-to   "resources/public/js/app.js"}}}}
   :profiles {:dev {:env {:log-level "1"} ;; cljs/log debug+
                    :dependencies [[binaryage/devtools "0.9.10"]
                                   [com.bhauman/cljs-test-display "0.1.1"]
@@ -94,7 +82,8 @@
                               :ring-handler server.routes/app
                               :server-port 8081}
                    :cljsbuild {:builds {:app
-                                        {:compiler
+                                        {:figwheel {:open-urls ["http://localhost:8081/cljs"]}
+                                         :compiler
                                          {:optimizations   :none
                                           :preloads        [devtools.preload
                                                             day8.re-frame-10x.preload]
@@ -107,9 +96,14 @@
                                           :external-config {:devtools/config
                                                             {:features-to-install :all}}}}
                                         :test
-                                        {:source-paths ["test/app"]
+                                        {:figwheel {:open-urls ["http://localhost:8081/test.html"]}
+                                         :source-paths ["test/app"]
                                          :compiler
                                          {:optimizations   :none
+                                          :main        "app.runner"
+                                          :asset-path  "js/test"
+                                          :output-dir  "resources/public/js/test"
+                                          :output-to   "resources/public/js/test.js"
                                           :pretty-print    true
                                           :closure-defines
                                           {cljs-test-display.core/root-node-id "cljs-tests"
