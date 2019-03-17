@@ -12,14 +12,14 @@ jobs:
       - run: git clone https://github.com/skilbjo/markets-etl.git ~/markets-etl
       - restore_cache:
           key: << checksum "project.clj" >>
-      - run: lein do deps, cloverage --codecov
+      - run: lein deps
       - save_cache:
           paths:
             - ~/.m2
             - ~/.lein
           key: << checksum "project.clj" >>
       - run: sudo apt install npm; sudo npm install -g lumo-cljs
-      - run: lein do test, cljfmt check, doo lumo doo-test once
+      - run: lein do test, cljfmt check, doo lumo doo-test once, cloverage --codecov
       - run: bash <(curl -s https://codecov.io/bash) -f target/coverage/codecov.json
   build:
     working_directory: ~/aeon
