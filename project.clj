@@ -110,8 +110,9 @@
                                           {cljs-test-display.core/root-node-id "cljs-tests"
                                            cljs-test-display.core/printing true}}}
                                         :doo-test
-                                        {:source-paths ["src/app" "test"]
+                                        {:source-paths ["test/app"]
                                          :compiler {:main          "app.doo-runner"
+                                                    :output-dir    "resources/public/js/doo-test"
                                                     :output-to     "resources/public/js/doo-test.js"
                                                     :optimizations :none}}}}}
              :uberjar {:aot :all
