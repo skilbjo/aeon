@@ -55,7 +55,8 @@
                  [reagent "0.8.1"]
                  [secretary "1.2.3"]]
   :plugins [[lein-cloverage "1.0.11"]
-            [lein-cljsbuild "1.1.7"]]
+            [lein-cljsbuild "1.1.7"]
+            [lein-doo "0.1.11"]]
   :clean-targets ^{:protect false} ["resources/public/js"]
   :hooks [leiningen.cljsbuild]
   :cljsbuild {:builds {:app
@@ -107,7 +108,12 @@
                                           :pretty-print    true
                                           :closure-defines
                                           {cljs-test-display.core/root-node-id "cljs-tests"
-                                           cljs-test-display.core/printing true}}}}}}
+                                           cljs-test-display.core/printing true}}}
+                                        :doo-test
+                                        {:source-paths ["src/app" "test"]
+                                         :compiler {:main          "app.doo-runner"
+                                                    :output-to     "resources/public/js/doo-test.js"
+                                                    :optimizations :none}}}}}
              :uberjar {:aot :all
                        :cljsbuild {:builds {:app {:compiler {:closure-defines
                                                               {goog.DEBUG false}
