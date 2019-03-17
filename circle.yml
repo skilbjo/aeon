@@ -1,54 +1,15 @@
 version: 2
 jobs:
-  test:
-    working_directory: ~/aeon
-    docker:
-    - image: circleci/clojure:lein-2.8.1
-    - image: circleci/postgres:9.5.12-alpine # for integration test
-    environment:
-      TEST_JDBC_DB_URI: jdbc:postgresql://localhost:5432/postgres?loginTimeout=30&socketTimeout=900&tcpKeepAlive=true&user=postgres
-    steps:
-      - checkout
-      - run: git clone https://github.com/skilbjo/markets-etl.git ~/markets-etl
-      - restore_cache:
-          key: << checksum "project.clj" >>
-      - run: lein deps
-      - save_cache:
-          paths:
-            - ~/.m2
-            - ~/.lein
-          key: << checksum "project.clj" >>
-      - run: sudo apt install npm; sudo npm install -g lumo-cljs
-      - run: lein do test, cljfmt check, doo lumo doo-test once, cloverage --codecov
-      - run: bash <(curl -s https://codecov.io/bash) -f target/coverage/codecov.json
-  build:
-    working_directory: ~/aeon
-    docker:
-    - image: circleci/clojure:lein-2.8.1
-    environment:
-      QUAY_ROBOT_USERNAME: skilbjo+robot
-    steps:
-      - checkout
-      - restore_cache:
-          key: << checksum "project.clj" >>
-      - run: lein deps
-      - save_cache:
-          paths:
-            - ~/.m2
-            - ~/.lein
-          key: << checksum "project.clj" >>
-      - setup_remote_docker
-      - run: deploy/bin/publish-image
   build_and_test:
     working_directory: ~/aeon
     docker:
     - image: circleci/clojure:lein-2.8.1
-    - image: circleci/postgres:9.5.12-alpine # for integration test
+    - image: circleci/postgres:9.6.9-alpine # for integration test
+    - image: circleci/node:current-stretch
     environment:
       TEST_JDBC_DB_URI: jdbc:postgresql://localhost:5432/postgres?loginTimeout=30&socketTimeout=900&tcpKeepAlive=true&user=postgres
     steps:
       - checkout
-      - run: sudo apt install nodejs; sudo npm install -g lumo-cljs
       - run: git clone https://github.com/skilbjo/markets-etl.git ~/markets-etl
       - restore_cache:
           key: << checksum "project.clj" >>
@@ -59,6 +20,7 @@ jobs:
             - ~/.lein
           key: << checksum "project.clj" >>
       - setup_remote_docker
+      - run: sudo npm install -g lumo-cljs
       - run: (set -e; bash <(curl -s https://codecov.io/bash) -f target/coverage/codecov.json & 2>/dev/null; lein do test, doo lumo doo-test once & 2>/dev/null; lein cljfmt check & 2>/dev/null; lein cloverage --codecov & 2>/dev/null;) && wait && deploy/bin/publish-image
 
 workflows:
@@ -66,7 +28,3 @@ workflows:
   build_and_test:
     jobs:
       - build_and_test
-      #- test
-      #- build:
-          #requires:
-            #- test
