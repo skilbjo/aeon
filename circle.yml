@@ -3,9 +3,8 @@ jobs:
   build_and_test:
     working_directory: ~/aeon
     docker:
-    - image: circleci/clojure:lein-2.8.1
+    - image: circleci/clojure:lein-2.9.1-node
     - image: circleci/postgres:9.6.9-alpine # for integration test
-    - image: circleci/node:current-stretch
     environment:
       TEST_JDBC_DB_URI: jdbc:postgresql://localhost:5432/postgres?loginTimeout=30&socketTimeout=900&tcpKeepAlive=true&user=postgres
     steps:
