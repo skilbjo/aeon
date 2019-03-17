@@ -19,7 +19,7 @@ jobs:
             - ~/.lein
           key: << checksum "project.clj" >>
       - setup_remote_docker
-      - run: sudo npm install -g lumo-cljs
+      - run: sudo npm install -g lumo-cljs --unsafe-perm
       - run: (set -e; bash <(curl -s https://codecov.io/bash) -f target/coverage/codecov.json & 2>/dev/null; lein do test, doo lumo doo-test once & 2>/dev/null; lein cljfmt check & 2>/dev/null; lein cloverage --codecov & 2>/dev/null;) && wait && deploy/bin/publish-image
 
 workflows:
