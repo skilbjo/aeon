@@ -69,8 +69,6 @@
   :profiles {:dev {:env {:log-level "1"} ;; cljs/log debug+
                    :dependencies [[binaryage/devtools "0.9.10"]
                                   [com.bhauman/cljs-test-display "0.1.1"]
-                                  [doo 0.1.6-SNAPSHOT]
-                                  [lein-doo "0.1.11"]
                                   [day8.re-frame/re-frame-10x "0.3.7"
                                    :exclusions [com.google.code.findbugs/jsr305]]
                                   [day8.re-frame/tracing "0.5.1"]
