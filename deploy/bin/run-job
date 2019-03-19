@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cmd="java $JAVA_OPTS -jar /app.jar"
 deploy_dir='/usr/local/deploy/bin'
 
@@ -8,6 +9,18 @@ deploy_dir='/usr/local/deploy/bin'
 case $(uname -a) in
   *arm* )
     set +e; eval "${deploy_dir}/apk-arm"; update-ca-certificates; apk fix || echo 'Unable to reach apk...'; set -e; ;; # set +e when apk not available
+  FreeBSD* )
+    # virtualbox is fucked in FreeBSD 11.2-RELEASE
+    # https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=228535
+    # Docker only runs natively on Linux (not BSD), so let's just run the jar
+    if [[ -f ${dir}/app.jar ]];        then rm "${dir}/app.jar"; fi
+    if [[ -f ${dir}/java_key_store ]]; then rm "${dir}/java_key_store"; fi
+
+    aws s3 cp s3://skilbjo/aeon.jar       "${dir}/app.jar"
+    aws s3 cp s3://skilbjo/java_key_store "${dir}/java_key_store"
+
+    JAVA_OPTS="-Duser.timezone=UTC -Xms256m -Xmx512m -XX:MaxMetaspaceSize=128m"
+    cmd="java $JAVA_OPTS -jar ${dir}/app.jar"
 esac
 
 exec $cmd $@
