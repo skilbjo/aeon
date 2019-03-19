@@ -6,7 +6,8 @@ jobs:
     - image: circleci/clojure:lein-2.9.1
     - image: circleci/postgres:9.6.9-alpine # for integration test
     environment:
-      TEST_JDBC_DB_URI: jdbc:postgresql://localhost:5432/postgres?loginTimeout=30&socketTimeout=900&tcpKeepAlive=true&user=postgres
+      - TEST_JDBC_DB_URI: jdbc:postgresql://localhost:5432/postgres?loginTimeout=30&socketTimeout=900&tcpKeepAlive=true&user=postgres
+      - PATH: /usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/home/circleci/.local/bin
     steps:
       - checkout
       - run: git clone https://github.com/skilbjo/markets-etl.git ~/markets-etl
