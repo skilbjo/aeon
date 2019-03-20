@@ -80,7 +80,7 @@ get_current_artifacts &&
   start_detached
 
 # Drop in the file. Env var won't work :/
-docker cp ~/java_key_store "${app}:/java_key_store"
+docker cp ~/java_key_store "${app}:/tmp/java_key_store"
 
 # Start it with the intended entrypoint
 docker exec "$app" \

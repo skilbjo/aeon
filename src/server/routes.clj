@@ -230,6 +230,6 @@
                    {:send-server-version? false
                     :port                 8080
                     :ssl-port             8443
-                    :keystore             "/java_key_store"
+                    :keystore             "/tmp/java_key_store"
                     :key-password         (env :quandl-api-key)
                     :ssl?                 true}))
