@@ -26,7 +26,7 @@ get_artifact_from_circle_ci(){
 }
 
 case "$(uname -a)" in
-  FreeBSD* )
+  FreeBSD* | Darwin* )
     # virtualbox is fucked in FreeBSD 11.2-RELEASE
     # https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=228535
     # Docker only runs natively on Linux (not BSD), so let's just run the jar
