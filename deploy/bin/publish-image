@@ -39,6 +39,6 @@ publish(){
 }
 
 setup \
-  && lein uberjar  \
+  && lein with-profile prod uberjar  \
   && publish       \
   && publish 'arm'
