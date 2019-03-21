@@ -37,6 +37,7 @@ case "$(uname -a)" in
     if [[ -f ${dir}/app.jar ]];            then rm "${dir}/app.jar"; fi
     get_artifact_from_circle_ci
 
+    set +e; pkill java -u skilbjo -nx; set -e
     JAVA_OPTS="-Duser.timezone=UTC -Xms256m -Xmx512m -XX:MaxMetaspaceSize=128m"
     cmd="java $JAVA_OPTS -jar ${dir}/app.jar"
     ;;
