@@ -11,16 +11,31 @@ case "$(uname -a)" in
     set +e; eval "${deploy_dir}/apk-arm"; update-ca-certificates; apk fix || echo 'Unable to reach apk...'; set -e; ;; # set +e when apk not available
 esac
 
+get_artifact_from_aws(){
+  aws s3 cp --profile skilbjo-robot s3://skilbjo/aeon.jar       "${dir}/app.jar"
+}
+
+get_artifact_from_circle_ci(){
+  local url='https://circleci.com/api/v1.1/project/github/skilbjo/aeon'
+  local last_build_num="$(curl "${url}?circle-token=${circleci_aeon_api_key}" | \
+    jq -r '.[0].build_num')"
+  local artifact_url="$(curl "${url}/${last_build_num}/artifacts?circle-token=${circleci_aeon_api_key}" | \
+    jq -r '.[0].url')"
+
+  curl "$artifact_url" >"${dir}/app.jar"
+}
+
 case "$(uname -a)" in
   FreeBSD* )
     # virtualbox is fucked in FreeBSD 11.2-RELEASE
     # https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=228535
     # Docker only runs natively on Linux (not BSD), so let's just run the jar
-    if [[ -f ${dir}/app.jar ]];            then rm "${dir}/app.jar"; fi
-    if [[ -f ${tmp_dir}/java_key_store ]]; then rm "${tmp_dir}/java_key_store"; fi
+    if [[ ! -f ${tmp_dir}/java_key_store ]]; then
+      aws s3 cp --profile skilbjo-robot s3://skilbjo/java_key_store "${tmp_dir}/java_key_store"
+    fi
 
-    aws s3 cp --profile skilbjo-robot s3://skilbjo/aeon.jar       "${dir}/app.jar"
-    aws s3 cp --profile skilbjo-robot s3://skilbjo/java_key_store "${tmp_dir}/java_key_store"
+    if [[ -f ${dir}/app.jar ]];            then rm "${dir}/app.jar"; fi
+    get_artifact_from_circle_ci
 
     JAVA_OPTS="-Duser.timezone=UTC -Xms256m -Xmx512m -XX:MaxMetaspaceSize=128m"
     cmd="java $JAVA_OPTS -jar ${dir}/app.jar"
