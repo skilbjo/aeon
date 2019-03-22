@@ -27,8 +27,8 @@ case "$(uname -a)" in
     mv /app.jar "${tmp_dir}/${app}.jar" ;;
 esac
 
-case "$(uname -a)" in
-  FreeBSD* | Darwin )
+case "$(uname)" in
+  FreeBSD | Darwin )
     # virtualbox is fucked in FreeBSD 11.2-RELEASE
     # https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=228535
     # Docker only runs natively on Linux (not BSD), so let's just run the jar
@@ -39,6 +39,7 @@ case "$(uname -a)" in
     if [[ -f ${tmp_dir}/${app}.jar ]]; then rm "${tmp_dir}/${app}.jar"; fi
     get_artifact_from_circle_ci
 
+    set +e; pkill java -u skilbjo -nx; set -e
     JAVA_OPTS="-Duser.timezone=UTC -Xms256m -Xmx512m -XX:MaxMetaspaceSize=128m" ;;
 esac
 
