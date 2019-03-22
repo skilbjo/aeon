@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../" && pwd )" && cd "$dir"
+app="$(basename $(pwd))"
 tmp_dir='/tmp'
 
 get_artifact_from_aws(){
-  aws s3 cp --profile skilbjo-robot s3://skilbjo/aeon.jar       "${dir}/app.jar"
+  aws s3 cp --profile skilbjo-robot "s3://skilbjo/${app}.jar" "${dir}/app.jar"
 }
 
 get_artifact_from_circle_ci(){
@@ -15,7 +16,7 @@ get_artifact_from_circle_ci(){
   local artifact_url="$(curl "${url}/${last_build_num}/artifacts?circle-token=${circleci_aeon_api_key}" | \
     jq -r '.[0].url')"
 
-  curl "$artifact_url" >"${dir}/app.jar"
+  curl "$artifact_url" >"${tmp_dir}/${app}.jar"
 }
 
 # Prereqs
@@ -23,7 +24,7 @@ case "$(uname -a)" in
   *arm* )
     deploy_dir='/usr/local/deploy/bin'
     set +e; eval "${deploy_dir}/apk-arm"; update-ca-certificates; apk fix || echo 'Unable to reach apk...'; set -e; # set +e when apk not available
-    mv /app.jar "${dir}/app.jar" ;;
+    mv /app.jar "${tmp_dir}/${app}.jar" ;;
 esac
 
 case "$(uname -a)" in
@@ -35,11 +36,11 @@ case "$(uname -a)" in
       aws s3 cp --profile skilbjo-robot s3://skilbjo/java_key_store "${tmp_dir}/java_key_store"
     fi
 
-    if [[ -f ${dir}/app.jar ]];            then rm "${dir}/app.jar"; fi
+    if [[ -f ${tmp_dir}/${app}.jar ]]; then rm "${tmp_dir}/${app}.jar"; fi
     get_artifact_from_circle_ci
 
     JAVA_OPTS="-Duser.timezone=UTC -Xms256m -Xmx512m -XX:MaxMetaspaceSize=128m" ;;
 esac
 
-cmd="java $JAVA_OPTS -jar ${dir}/app.jar"
+cmd="java $JAVA_OPTS -jar ${tmp_dir}/${app}.jar"
 exec $cmd $@
