@@ -11,7 +11,7 @@ get_artifact_from_aws(){
 
 get_artifact_from_circle_ci(){
   local url='https://circleci.com/api/v1.1/project/github/skilbjo/aeon'
-  local last_build_num="$(curl "${url}?circle-token=${circleci_aeon_api_key}" | \
+  local last_build_num="$(curl "${url}/tree/master?circle-token=${circleci_aeon_api_key}" | \
     jq -r '.[0].build_num')"
   local artifact_url="$(curl "${url}/${last_build_num}/artifacts?circle-token=${circleci_aeon_api_key}" | \
     jq -r '.[0].url')"
