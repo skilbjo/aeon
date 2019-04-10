@@ -20,8 +20,8 @@ get_artifact_from_circle_ci(){
 }
 
 # Prereqs
-case "$(uname -a)" in
-  *arm* )
+case "$(uname -m)" in
+  arm* )
     deploy_dir='/usr/local/deploy/bin'
     set +e; eval "${deploy_dir}/apk-arm"; update-ca-certificates; apk fix || echo 'Unable to reach apk...'; set -e; # set +e when apk not available
     mv /app.jar "${tmp_dir}/${app}.jar" ;;

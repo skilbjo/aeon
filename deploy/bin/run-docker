@@ -5,10 +5,10 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../" && pwd )" && cd "$dir"
 app="$(basename $(pwd))"
 arch=''
 
-case "$(uname -a)" in
-  *amd64* | *x_86* | *x86_64* )
+case "$(uname -m)" in
+  amd64* | x_86* | x86_64* )
     img="quay.io/skilbjo/${app}:latest" ;;
-  *arm* )
+  arm* )
     arch='arm'
     img="quay.io/skilbjo/${app}:${arch}" ;;
 esac
