@@ -3,11 +3,11 @@
   :repositories {"atlassian"
                  {:url "https://maven.atlassian.com/content/repositories/atlassian-3rdparty/"}}
   :dependencies [;; clj
-                 [org.clojure/clojure "1.10.0"]
+                 [org.clojure/clojure "1.10.1"]
                  [bk/ring-gzip "0.3.0"]
                  [buddy/buddy-auth "2.1.0"]
                  [buddy/buddy-core "1.5.0"]
-                 [clj-http "3.9.1"]
+                 [clj-http "3.10.0"]
                  [clj-time "0.15.1"]
                  [com.amazonaws.athena.jdbc/AthenaJDBC41 "1.0.1-atlassian-hosted"]
                  [com.draines/postal "2.0.3"]
@@ -21,14 +21,14 @@
                  [environ "1.1.0"]
                  [hiccup "1.0.5"]
                  [jarohen/chime "0.2.2"]
-                 [markdown-clj "1.0.7"]
-                 [metosin/spec-tools "0.9.0"
+                 [markdown-clj "1.10.0"]
+                 [metosin/spec-tools "0.9.3"
                   :exclusions [com.fasterxml.jackson.core/jackson-core]]
                  [net.sf.uadetector/uadetector-resources "2014.10"]
                  [org.clojure/data.json "0.2.6"]
                  [org.clojure/java.jdbc "0.7.9"]
-                 [org.clojure/tools.logging "0.4.1"]
-                 [org.postgresql/postgresql "42.2.5"]
+                 [org.clojure/tools.logging "0.5.0-alpha.1"]
+                 [org.postgresql/postgresql "42.2.6"]
                  [org.slf4j/slf4j-log4j12 "1.7.26"
                   :exclusions [org.clojure/tools.reader
                                org.slf4j/slf4j-api]]
@@ -49,7 +49,7 @@
                  [com.andrewmcveigh/cljs-time "0.5.2"]
                  [day8.re-frame/http-fx "0.1.6"]
                  [day8.re-frame/tracing-stubs "0.5.1"]
-                 [re-frame "0.10.6"
+                 [re-frame "0.10.7"
                   :exclusions [com.google.code.findbugs/jsr305]]
                  [re-frame-datatable "0.6.0"]
                  [reagent "0.8.1"]
@@ -68,15 +68,15 @@
   :profiles {:dev {:env {:log-level "1"} ;; cljs/log debug+
                    :dependencies [[binaryage/devtools "0.9.10"]
                                   [com.bhauman/cljs-test-display "0.1.1"]
-                                  [day8.re-frame/re-frame-10x "0.3.7"
+                                  [day8.re-frame/re-frame-10x "0.4.1"
                                    :exclusions [com.google.code.findbugs/jsr305]]
                                   [day8.re-frame/tracing "0.5.1"]
                                   [javax.servlet/servlet-api "2.5"]
-                                  [ring/ring-mock "0.3.2"
+                                  [ring/ring-mock "0.4.0"
                                    :exclusions [cheshire]]]
                    :plugins [[lein-cljfmt "0.5.7"]
                              [lein-environ "1.1.0"]
-                             [lein-figwheel "0.5.16"]
+                             [lein-figwheel "0.5.19"]
                              [lein-ring "0.12.0"]]
                    :figwheel {:css-dirs ["resources/public/css"]
                               :ring-handler server.routes/app
