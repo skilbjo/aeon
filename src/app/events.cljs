@@ -108,7 +108,8 @@
                           :user   user'
                           :token  token)
                :dispatch-n (list [:complete-request :login]
-                                 [:set-active-page {:page :home}])})))
+                                 [:set-active-page {:page :home}])
+             :set-hash {:hash "/"}})))
 
 (rf/reg-event-fx
  :logout
@@ -124,7 +125,8 @@
                               :loading
                               :errors
                               :re-frame-datatable.core/re-frame-datatable)
-             :dispatch [:set-active-page {:page :home}]}))
+             :dispatch [:set-active-page {:page :home}]
+             :set-hash {:hash "/"}}))
 
 ;; -- GET Portfolio @ api/v1/reports/portfolio --------------------------------
 (rf/reg-event-fx
@@ -191,7 +193,9 @@
 (rf/reg-event-fx
  :api-request-error
  (fn-traced [{:keys [db]} [_ request-type response]]
+             (println ":api-request-error...")
             {:db (-> db
                      (assoc-in [:errors request-type]
-                               (-> response :status-text)))
+                               (-> response :status-text))
+                     util/print-it)
              :dispatch [:complete-request request-type]}))
