@@ -208,7 +208,7 @@
 
   (route/not-found "<h1>Not Found</h1>"))
 
-(def app
+(def app ;; ensure: $ unset jdbc_athena_uri when dev/testing
   (-> combined-routes
       (middleware/add-content-security-policy
        :config-path
