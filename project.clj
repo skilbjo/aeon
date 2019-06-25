@@ -1,7 +1,7 @@
 (defproject aeon "0.1.0"
   :uberjar-name "app.jar"
   :repositories {"atlassian"
-                 {:url "https://maven.atlassian.com/content/repositories/atlassian-3rdparty/"}}
+                 {:url "https://maven.atlassian.com/3rdparty/"}}
   :dependencies [;; clj
                  [org.clojure/clojure "1.10.1"]
                  [bk/ring-gzip "0.3.0"]
@@ -9,7 +9,9 @@
                  [buddy/buddy-core "1.5.0"]
                  [clj-http "3.10.0"]
                  [clj-time "0.15.1"]
-                 [com.amazonaws.athena.jdbc/AthenaJDBC41 "1.0.1-atlassian-hosted"]
+                 ;[com.amazonaws.athena.jdbc/AthenaJDBC41 "1.0.1-atlassian-hosted"]
+                 ;[com.amazonaws.athena.jdbc/atl-athena-jdbc-driver "1.0.2-atlassian-1"]
+                 [com.syncron.amazonaws/simba-athena-jdbc-driver "2.0.2"]
                  [com.draines/postal "2.0.3"]
                  [compojure "1.6.1" :exclusions [ring/ring-core]]
                  [metosin/compojure-api "2.0.0-alpha20"
