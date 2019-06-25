@@ -12,8 +12,9 @@
 
 (rf/reg-sub
  :user
- (fn-traced [db _]
-            (:user db)))
+ (fn-traced [db _]                               ; when false: [:user {:token nil, :user nil}]
+            (when-let [user (-> db :user :user)] ; (:user db) is true even when failed login
+              user)))                            ; thus, (-> db :user :user)
 
 (rf/reg-sub
  :errors
