@@ -43,7 +43,7 @@
 
     ;; email on 10 unauth'd attempts & every 5 thereafter
     (when (and (->> @login-error-counter
-                    (< 10))
+                    (<= 10))
                (-> @login-error-counter
                    (mod 5)
                    (= 0)))
@@ -58,8 +58,8 @@
     (if (and (= (:user     result) user)
              (= (:password result) password)
              (not (empty? result)))
-      {:user      user      ;; TODO for token: password is
-       :token     password} ;; hashed, but is there a better way?
+      {:body {:user      user       ;; TODO for token: password is
+              :token     password}} ;; hashed, but is there a better way?
       (unauthorized {:user     user
                      :password password}))))
 

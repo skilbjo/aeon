@@ -30,18 +30,24 @@
 
 (defn dispatch-report [db body report]
   (let [user     (-> db :user :user)
-        password (-> db :user :token)]
-    {:db         (assoc-in db [:loading report] true)
-     :http-xhrio {:method          :get
-                  :uri             (endpoint "reports" report)
-                  :headers         (auth-header db)
-                  :params          {:user     user
-                                    :password password}
-                  :format          (json-request-format)
-                  :response-format (json-response-format
-                                    {:keywords? true})
-                  :on-success      [(-> report name (str "-success") keyword)]
-                  :on-failure      [:api-request-error (keyword report)]}}))
+        password (-> db :user :token)
+        report-cached? (some? (util/get-report db report))]
+    (if report-cached?
+      {:db (-> db ; this is the body of the report-success fn
+               (assoc-in [:loading (keyword report)] false)
+               (assoc :active-page (keyword report)))
+       :dispatch-n (list [:complete-request (keyword report)])}
+      {:db         (assoc-in db [:loading (-> report keyword)] true)
+       :http-xhrio {:method          :get
+                    :uri             (endpoint "reports" report)
+                    :headers         (auth-header db)
+                    :params          {:user     user
+                                      :password password}
+                    :format          (json-request-format)
+                    :response-format (json-response-format
+                                      {:keywords? true})
+                    :on-success      [(-> report name (str "-success") keyword)]
+                    :on-failure      [:api-request-error (keyword report)]}})))
 
 (defn report-success [db result report]
   {:db (-> db
@@ -108,7 +114,8 @@
                           :user   user'
                           :token  token)
                :dispatch-n (list [:complete-request :login]
-                                 [:set-active-page {:page :home}])})))
+                                 [:set-active-page {:page :home}])
+               :set-hash {:hash "/"}})))
 
 (rf/reg-event-fx
  :logout
@@ -124,7 +131,8 @@
                               :loading
                               :errors
                               :re-frame-datatable.core/re-frame-datatable)
-             :dispatch [:set-active-page {:page :home}]}))
+             :dispatch [:set-active-page {:page :home}]
+             :set-hash {:hash "/"}}))
 
 ;; -- GET Portfolio @ api/v1/reports/portfolio --------------------------------
 (rf/reg-event-fx

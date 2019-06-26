@@ -64,7 +64,7 @@
           (-> {:user     user-trusted
                :password password-trusted}
               jobs.api/v1.login
-              response))))
+              #_response)))) ; do not add reponse here; it will override 401 status (if unauthorized)
 
     (api/context "/prices/:dataset" [dataset]
       :tags ["prices"]
@@ -208,7 +208,7 @@
 
   (route/not-found "<h1>Not Found</h1>"))
 
-(def app
+(def app ;; ensure: $ unset jdbc_athena_uri when dev/testing
   (-> combined-routes
       (middleware/add-content-security-policy
        :config-path
