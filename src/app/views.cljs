@@ -2,7 +2,6 @@
   (:require [app.views.footer :as footer]
             [app.views.header :as header]
             [app.views.login :as login]
-            [app.views.portfolio :as portfolio]
             [app.views.register :as register]
             [app.views.report :as report]
             [app.views.util :as util]
