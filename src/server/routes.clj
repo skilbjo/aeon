@@ -64,7 +64,7 @@
           (-> {:user     user-trusted
                :password password-trusted}
               jobs.api/v1.login
-              response))))
+              #_response)))) ; do not add reponse here; it will override 401 status (if unauthorized)
 
     (api/context "/prices/:dataset" [dataset]
       :tags ["prices"]

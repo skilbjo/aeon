@@ -109,7 +109,7 @@
                           :token  token)
                :dispatch-n (list [:complete-request :login]
                                  [:set-active-page {:page :home}])
-             :set-hash {:hash "/"}})))
+               :set-hash {:hash "/"}})))
 
 (rf/reg-event-fx
  :logout
@@ -193,9 +193,7 @@
 (rf/reg-event-fx
  :api-request-error
  (fn-traced [{:keys [db]} [_ request-type response]]
-             (println ":api-request-error...")
             {:db (-> db
                      (assoc-in [:errors request-type]
-                               (-> response :status-text))
-                     util/print-it)
+                               (-> response :status-text)))
              :dispatch [:complete-request request-type]}))

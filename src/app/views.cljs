@@ -11,19 +11,16 @@
 
 ;; -- Home --------------------------------------------------------------------
 (defn home []
-  (let [
-        ;errors   @(subscribe [:errors])
-        ;loading  @(subscribe [:loading])
-        ;_ (println "errors are: " errors)
-        ]
+  (let [errors   @(subscribe [:errors])
+        loading  @(subscribe [:loading])]
     [:div.container
      [:div.row
-       ;(when errors
-        ;[util/error (:login errors)])
-       ;(when errors
-        ;[util/error (:portfolio errors)])
-       [:h4 "aeon"]
-       [:p "Not much here... go login!"]]]))
+      (when errors
+        [util/error (:login errors)])
+      (when errors
+        [util/error (:portfolio errors)])
+      [:h4 "aeon"]
+      [:p "Not much here... go login!"]]]))
 
 (defn logout []
   [:div

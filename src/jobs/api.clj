@@ -43,7 +43,7 @@
 
     ;; email on 10 unauth'd attempts & every 5 thereafter
     (when (and (->> @login-error-counter
-                    (< 10))
+                    (<= 10))
                (-> @login-error-counter
                    (mod 5)
                    (= 0)))
