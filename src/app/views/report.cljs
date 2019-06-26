@@ -12,35 +12,41 @@
   [dt/datatable
    (keyword report)
    [(keyword report)]
-   [{::dt/column-key   [sort-key]
-     ::dt/column-label "Description"
+   [{::dt/column-label "Ticker"
+     ::dt/column-key   [:ticker]
      ::dt/sorting      {::dt/enabled? true}}
-    {::dt/column-key   [:market_value]
-     ::dt/column-label "Market Value $"
+    {::dt/column-label "Mix %"
+     ::dt/column-key   [:mix_%]
+     ::dt/sorting      {::dt/enabled? true}}
+    {::dt/column-label "Market Value $"
+     ::dt/column-key   [:market_value]
      ::dt/render-fn    (fn [v]        ;; not sure if needed
                          (try (int v) ;; for numerical sort
                               (catch js/Object e v)))
      ::dt/sorting      {::dt/enabled? true}}
-    {::dt/column-key   [:today_gain_loss]
-     ::dt/column-label "Today Gain/Loss $"
+    {::dt/column-label "Description"
+     ::dt/column-key   [sort-key]
      ::dt/sorting      {::dt/enabled? true}}
-    {::dt/column-key   [:today_gain_loss_%]
-     ::dt/column-label "Today Gain/Loss %"
+    {::dt/column-label "Today Gain/Loss $"
+     ::dt/column-key   [:today_gain_loss]
      ::dt/sorting      {::dt/enabled? true}}
-    {::dt/column-key   [:ytd_gain_loss]
-     ::dt/column-label "YTD Gain/Loss $"
+    {::dt/column-label "Today Gain/Loss %"
+     ::dt/column-key   [:today_gain_loss_%]
+     ::dt/sorting      {::dt/enabled? true}}
+    {::dt/column-label "YTD Gain/Loss $"
+     ::dt/column-key   [:ytd_gain_loss]
      ::dt/sorting      {::dt/enabled? true}}
     {::dt/column-key   [:ytd_gain_loss_%]
      ::dt/column-label "YTD Gain/Loss %"
      ::dt/sorting      {::dt/enabled? true}}
-    {::dt/column-key   [:total_gain_loss]
-     ::dt/column-label "Total Gain/Loss $"
+    {::dt/column-label "Total Gain/Loss $"
+     ::dt/column-key   [:total_gain_loss]
      ::dt/sorting      {::dt/enabled? true}}
-    {::dt/column-key   [:total_gain_loss_%]
-     ::dt/column-label "Total Gain/Loss %"
+    {::dt/column-label "Total Gain/Loss %"
+     ::dt/column-key   [:total_gain_loss_%]
      ::dt/sorting      {::dt/enabled? true}}]
-   {::dt/pagination    {::dt/enabled? true
-                        ::dt/per-page 40}
+   {::dt/pagination    {::dt/enabled? true ; to implement, follow:
+                        ::dt/per-page 50}  ; https://github.com/kishanov/re-frame-datatable-example/blob/master/src/cljs/re_frame_datatable_example/views.cljs
     ::dt/table-classes ["ui" "celled" "stripped" "table"]}])
 
 (defn ^:private portfolio-table []
