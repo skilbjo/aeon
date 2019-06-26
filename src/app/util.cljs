@@ -17,3 +17,7 @@
 
 (def now (-> (time/today)
              joda-date->date-str))
+
+; -- db ------------------------------------------------
+(defn get-report [db report]
+  ((-> report keyword) db))

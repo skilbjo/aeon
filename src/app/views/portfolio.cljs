@@ -8,10 +8,17 @@
 
 ;; -- portfolio ---------------------------------------------------------------
 (defn portfolio-table []
+  (print "portfolio-table called")
   [dt/datatable
    :portfolio
    [:portfolio]
-   [{::dt/column-key   [:description]
+   [{::dt/column-key   [:ticker]
+     ::dt/column-label "Ticker"
+     ::dt/sorting      {::dt/enabled? true}}
+    {::dt/column-key   [:mix_%]
+     ::dt/column-label "Mix %"
+     ::dt/sorting      {::dt/enabled? true}}
+    {::dt/column-key   [:description]
      ::dt/column-label "Description"
      ::dt/sorting      {::dt/enabled? true}}
     {::dt/column-key   [:market_value]

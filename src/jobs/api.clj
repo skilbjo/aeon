@@ -58,8 +58,8 @@
     (if (and (= (:user     result) user)
              (= (:password result) password)
              (not (empty? result)))
-      {:user      user      ;; TODO for token: password is
-       :token     password} ;; hashed, but is there a better way?
+      {:body {:user      user       ;; TODO for token: password is
+              :token     password}} ;; hashed, but is there a better way?
       (unauthorized {:user     user
                      :password password}))))
 
