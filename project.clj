@@ -1,7 +1,7 @@
 (defproject aeon "0.1.0"
   :uberjar-name "app.jar"
   :dependencies [;; clj
-                 [org.clojure/clojure "1.10.1"]
+                 [org.clojure/clojure "1.9.0"]
                  [bk/ring-gzip "0.3.0"]
                  [buddy/buddy-auth "2.1.0"]
                  [buddy/buddy-core "1.5.0"]
@@ -20,7 +20,7 @@
                  [hiccup "1.0.5"]
                  [jarohen/chime "0.2.2"]
                  [markdown-clj "1.10.0"]
-                 [metosin/spec-tools "0.9.3"
+                 [metosin/spec-tools "0.10.0"
                   :exclusions [com.fasterxml.jackson.core/jackson-core]]
                  [net.sf.uadetector/uadetector-resources "2014.10"]
                  [org.clojure/data.json "0.2.6"]
