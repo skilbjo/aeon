@@ -31,7 +31,8 @@
 (defn dispatch-report [db body report]
   (let [user     (-> db :user :user)
         password (-> db :user :token)
-        report-cached? (some? (util/get-report db report))]
+        date     (-> db (keyword report) :date)
+        report-cached? (some? (-> db (keyword report) :date))]
     (if report-cached?
       {:db (-> db ; this is the body of the report-success fn
                (assoc-in [:loading (keyword report)] false)
@@ -42,7 +43,8 @@
                     :uri             (endpoint "reports" report)
                     :headers         (auth-header db)
                     :params          {:user     user
-                                      :password password}
+                                      :password password
+                                      :date     (or date util/now)}
                     :format          (json-request-format)
                     :response-format (json-response-format
                                       {:keywords? true})

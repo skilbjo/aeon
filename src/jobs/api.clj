@@ -63,7 +63,7 @@
       (unauthorized {:user     user
                      :password password}))))
 
-(defn ^:private report [{:keys [user password] :as m} report]
+(defn ^:private report [{:keys [user password date] :as m} report]
   (let [data  (fn [_]
                 (let [dir (if (env :jdbc-athena-uri)
                             "athena"
@@ -78,15 +78,17 @@
                                 ".sql")
                            io/resource
                            slurp
-                           (f {:user user}))
+                           (f {:user user
+                               :date (or date util/now)}))
                        (map #(update % :date coerce/to-sql-date)))))
         data' (memoize data)
         result (authorized? {:user     user
-                             :password password})]
+                             :password password})
+        _ (println "date is: " date)]
     (if (and (= (:user     result) user)
              (= (:password result) password)
              (not (empty? result)))
-      {:body (data' util/now')}
+      {:body [(keyword date) (data' util/now')]}
       (unauthorized {:user     user
                      :password password}))))
 

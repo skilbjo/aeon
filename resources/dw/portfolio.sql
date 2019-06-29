@@ -1,7 +1,5 @@
-with now_ts as (
-  select current_timestamp at time zone 'America/Los_Angeles' as now_ts
-), now as (
-  select cast((select now_ts from now_ts) as date) as now
+with now as (
+  select cast(':date'::text as date) as now
 ), _user as (
   select ':user'::text as _user
 ), datasource as (
