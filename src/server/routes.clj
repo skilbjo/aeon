@@ -99,7 +99,7 @@
                        date     :- :server.spec/date]
         (let [user-trusted     (-> user sql/escape util/lower-trim)
               password-trusted (-> password sql/escape')
-              date-trusted     (-> date sql/escape)]
+              date-trusted     (-> date sql/escape')]
           (-> {:user     user-trusted
                :password password-trusted
                :date     date-trusted}
