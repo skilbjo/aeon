@@ -32,7 +32,7 @@ commands:
           key: \<< checksum "project.clj" \>>
 
 jobs:
-  build-and-test:
+  test:
     executor: clojure_and_postgres
     steps:
       - checkout
