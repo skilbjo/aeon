@@ -40,7 +40,8 @@ case "$(uname)" in
     get_artifact_from_circle_ci
 
     set +e; pkill java -u skilbjo -nx; set -e
-    JAVA_OPTS="-Duser.timezone=UTC -Xms256m -Xmx512m -XX:MaxMetaspaceSize=128m" ;;
+    JAVA_OPTS="-Duser.timezone=UTC -Xms256m -Xmx1g -XX:MaxMetaspaceSize=128m" # The flags below are to try to resolve "java.lang.OutOfMemoryError: GC overhead limit exceeded" errors
+    JAVA_OPTS="${JAVA_OPTS} -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:+CMSIncrementalPacing -XX:+UseCompressedOops -XX:+DoEscapeAnalysis -Xincgc" ;; # Note: -XX:+UseCompressedOops for 64bit only
 esac
 
 cmd="java $JAVA_OPTS -jar ${tmp_dir}/${app}.jar"
