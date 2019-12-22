@@ -1,7 +1,7 @@
 select
   *
 from
-  dw.:table
+  datalake.:table
 where
   ticker   = ':ticker'
   and date = ':date'

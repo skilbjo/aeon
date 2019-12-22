@@ -5,16 +5,18 @@ with date as (
     dataset,
     ticker,
     currency,
-    cast(date as date)               as date,
-    cast(rate as decimal(24,14))     as rate,
-    cast(high as decimal(24,14)) as high,
-    cast(low as decimal(24,14))  as low
+    date,
+    rate,
+    high,
+    low
   from
-    dw.currency_fact currency
+    datalake.currency
 ), data as (
   select
     row_number() over (partition by currency order by date desc) as rn,
-    currency, date, rate
+    currency,
+    date,
+    rate
   from
     _currency
   where

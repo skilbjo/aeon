@@ -1,5 +1,5 @@
 select *
-from dw.:table
+from datalake.:table
 order by date desc
 limit 10
 ;
