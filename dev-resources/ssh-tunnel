@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -eou pipefail
+
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+set +u; db="$1"; set -u
+
+ssh_cmd(){
+  local local_port="$1"
+  local db_host="$2"
+
+  ssh -L "${local_port}:${db_host}:5432" \
+    jumphost-base.prod.circleci.com -N
+}
+
+udoo(){
+  echo "connect to local port: 9010 and 9011 (jmx)"
+
+  ssh udoo -L 9010:localhost:9010 -L 9011:localhost:9011 -N
+}
+
+case "$db" in
+  udoo)           udoo ;;
+  * ) echo 'Usage: ./ssh-tunnel [udoo|pi|..]'
+      echo 'Got no args, so running ./ssh-tunnel udoo' && udoo ;;
+esac

@@ -4,9 +4,9 @@ set -eou pipefail
 # https://stackoverflow.com/questions/11952274/how-can-i-create-keystore-from-an-existing-certificate-abc-crt-and-abc-key-fil
 
 # these are file paths
-keyfile=$1
-certfile=$2
-password=${quandl_api_key}    # something random
+keyfile="$1"
+certfile="$2"
+password="$quandl_api_key"    # something random
 
 # first we need to merge the keys into a pkcs12 keystore
 openssl pkcs12 -export \
