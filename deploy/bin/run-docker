@@ -4,6 +4,7 @@ set -eou pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../" && pwd )" && cd "$dir"
 app="$(basename $(pwd))"
 arch=''
+job_cmd='/usr/local/deploy/bin/run-job'
 
 case "$(uname -m)" in
   amd64* | x_86* | x86_64* )
@@ -12,8 +13,6 @@ case "$(uname -m)" in
     arch='arm'
     img="quay.io/skilbjo/${app}:${arch}" ;;
 esac
-
-job_cmd='/usr/local/deploy/bin/run-job'
 
 get_current_artifacts(){
   # any scripts need updating?
