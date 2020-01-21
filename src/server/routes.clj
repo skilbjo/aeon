@@ -95,13 +95,16 @@
         :header-params [authorization :- :server.spec/authorization]
         :middleware [auth/token-auth middleware/authenticated]
         :query-params [user     :- :server.spec/user
-                       password :- :server.spec/password]
+                       password :- :server.spec/password
+                       date     :- :server.spec/date]
         (let [user-trusted     (-> user sql/escape util/lower-trim)
-              password-trusted (-> password
-                                   sql/escape')]
+              password-trusted (-> password sql/escape')
+              date-trusted     (-> date sql/escape')]
           (-> {:user     user-trusted
-               :password password-trusted}
+               :password password-trusted
+               :date     date-trusted}
               jobs.api/v1.portfolio
+              util/print-it
               response)))
 
       (api/GET "/asset-type" []

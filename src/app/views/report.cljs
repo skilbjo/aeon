@@ -8,7 +8,7 @@
             [re-frame.core :refer [subscribe dispatch]]))
 
 ;; -- table -------------------------------------------------------------------
-(defn ^:private table [report sort-key]
+(defn ^:private table [report date sort-key]
   [dt/datatable
    (keyword report)
    [(keyword report)]
@@ -50,19 +50,24 @@
     ::dt/table-classes ["ui" "celled" "stripped" "table"]}])
 
 (defn ^:private portfolio-table []
-  (table "portfolio" :description))
+  (let [date util/now]
+    (table "portfolio" date :description)))
 
 (defn ^:private asset-type-table []
-  (table "asset-type" :asset_type))
+  (let [date util/now]
+    (table "asset-type" date :asset_type)))
 
 (defn ^:private capitalization-table []
-  (table "capitalization" :asset_type))
+  (let [date util/now]
+    (table "capitalization" date :asset_type)))
 
 (defn ^:private investment-style-table []
-  (table "investment-style" :asset_type))
+  (let [date util/now]
+    (table "investment-style" date :asset_type)))
 
 (defn ^:private location-table []
-  (table "location" :asset_type))
+  (let [date util/now]
+    (table "location" date :asset_type)))
 
 (defn ^:private display-report [report table-fn]
   (let [loading        @(subscribe [:loading])
