@@ -25,7 +25,7 @@ get_artifact_from_circle_ci(){
   local artifact_url="$(curl "${url}/${last_build_num}/artifacts?circle-token=${circleci_aeon_api_key}" | \
     jq -r '.[0].url')"
 
-  curl "$artifact_url" >"${tmp_dir}/${app}.jar"
+  curl -L "$artifact_url" >"${tmp_dir}/${app}.jar" # -L to follow redirects
 }
 
 # Prereqs
