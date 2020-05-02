@@ -29,6 +29,5 @@
 (def backend
   (backends/token {:authfn authfn}))
 
-(defn token-auth
-  [handler]
+(defn token-auth [handler]
   (wrap-authentication handler backend))
