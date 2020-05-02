@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 set -eou pipefail
 
-#uri="http://localhost:8080"    # lein ring server
-uri="http://localhost:8081"   # lein figwheel
+uri="http://localhost:8080"    # lein ring server
+#uri="http://localhost:8081"   # lein figwheel
 #uri="http://docker:8080"      # dev-resources/run-container
 
 test_pw='god'
 
-_curl () {
+_curl(){
   local method="$1"
   local endpoint="$2"
   set +u; payload="$3"; set -u
@@ -29,14 +29,14 @@ _curl () {
     esac
 }
 
-_curlp () {
+_curlp(){
   local endpoint="$2"
   local payload="$3"
 
   _curl 'POST' "$endpoint" "$payload"
 }
 
-_curlga () {
+_curlga(){
   local endpoint="$1"
   local auth_token="$2"
 
@@ -46,19 +46,35 @@ _curlga () {
     "${uri}/api/v1/${endpoint}"
 }
 
-_currency(){
-  _curl 'GET' 'prices/currency/latest'
-}
-
-_login () {
+_login(){
   _curlp "POST" "login" "{\"user\": \"skilbjo\", \"password\": \"$test_pw\"}"
 }
 
-_login_bad () {
+_login_bad(){
   _curlp "POST" "login" "{\"user\": \"skilbjo\", \"password\": \"not_$test_pw\"}"
 }
 
-_report () {
+_equities(){
+  local auth_token="$(_login | jq --raw-output '.token')"
+
+  _curlga 'prices/equities?ticker=FB&date=2017-09-05' "$auth_token"
+}
+
+_currency(){
+  local auth_token="$(_login | jq --raw-output '.token')"
+
+  #_curl 'GET' 'prices/currency/latest'
+  _curlga 'prices/currency?ticker=EUR&date=2017-12-14' "$auth_token"
+}
+
+_latest(){
+  local auth_token="$(_login | jq --raw-output '.token')"
+
+  #_curl 'GET' 'prices/currency/latest'
+  _curlga 'prices/currency/latest' "$auth_token"
+}
+
+_report(){
   local auth_token="$(_login | jq --raw-output '.token')"
 
   ## 400 bad request
@@ -92,10 +108,12 @@ _location(){
 #_login_bad
 
 ## prices -----------
-#_currency
+#_equities
+_currency
+#_latest
 
 ## reports ----------
-_portfolio | jq '.'
+#_portfolio | jq '.'
 #_portfolio | jq '.body[0]'
 #_asset_type | jq '.'
 #_capitalization | jq '.'

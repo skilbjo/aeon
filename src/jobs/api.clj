@@ -72,7 +72,7 @@
                             sql/query-athena
                             sql/query'')]
                   (->> (-> (str dir
-                                (str "/" report)
+                                (str "/reports/" report)
                                 (when (env :jdbc-athena-uri)
                                   "_athena")
                                 ".sql")
@@ -133,15 +133,20 @@
     {:status 400
      :body (util/multi-line-string
             "Error: problem with dataset, ticker, or date."
-            "Try '/api/equities/FB/2018-04-01'.")}
+            "Try '/api/v1/prices/equities?ticker=FB&date=2017-09-05'"
+            "Remember 'Authorization: Token [token]' header"
+            "For authorization parameter, make sure to include 'Token ' literal")}
     (let [data  (fn [_]
-                  (let [dir (if (env :jdbc-athena-uri)
-                              "athena"
-                              "dw")
-                        f   (if (env :jdbc-athena-uri)
-                              sql/query-athena
-                              sql/query')]
-                    (->> (-> (str dir "/quote.sql")
+                  (let [dir      (if (env :jdbc-athena-uri)
+                                   "athena"
+                                   "dw")
+                        f        (if (env :jdbc-athena-uri)
+                                   sql/query-athena
+                                   sql/query')
+                        sql-file (if (some (partial = dataset) ["equities" "currency"])
+                                   dataset
+                                   "quote")]
+                    (->> (-> (str dir "/prices/" sql-file ".sql")
                              io/resource
                              slurp
                              (f {:table  (str dataset "_fact")

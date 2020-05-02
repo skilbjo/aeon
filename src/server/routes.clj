@@ -68,6 +68,8 @@
 
     (api/context "/prices/:dataset" [dataset]
       :tags ["prices"]
+      :header-params [authorization :- :server.spec/authorization]
+      :middleware    [auth/token-auth middleware/authenticated]
       (api/GET "/latest" []
         :summary "Latest prices"
         (let [dataset-trusted (-> dataset sql/escape util/lower-trim)
@@ -90,12 +92,12 @@
 
     (api/context "/reports" []
       :tags ["reports"]
+      :header-params [authorization :- :server.spec/authorization]
+      :middleware    [auth/token-auth middleware/authenticated]
       (api/GET "/portfolio" []
-        :summary "How's the portfolio doing?"
-        :header-params [authorization :- :server.spec/authorization]
-        :middleware [auth/token-auth middleware/authenticated]
-        :query-params [user     :- :server.spec/user
-                       password :- :server.spec/password]
+        :summary "How's the portfolio doing? (Remember to add 'Token ' + token to the authorization header)"
+        :query-params  [user     :- :server.spec/user
+                        password :- :server.spec/password]
         (let [user-trusted     (-> user sql/escape util/lower-trim)
               password-trusted (-> password
                                    sql/escape')]
@@ -106,10 +108,8 @@
 
       (api/GET "/asset-type" []
         :summary "How's everything performing by asset type?"
-        :header-params [authorization :- :server.spec/authorization]
-        :middleware [auth/token-auth middleware/authenticated]
-        :query-params [user     :- :server.spec/user
-                       password :- :server.spec/password]
+        :query-params  [user     :- :server.spec/user
+                        password :- :server.spec/password]
         (let [user-trusted     (-> user sql/escape util/lower-trim)
               password-trusted (-> password
                                    sql/escape')]
@@ -120,10 +120,8 @@
 
       (api/GET "/capitalization" []
         :summary "How's everything performing by capitalization?"
-        :header-params [authorization :- :server.spec/authorization]
-        :middleware [auth/token-auth middleware/authenticated]
-        :query-params [user     :- :server.spec/user
-                       password :- :server.spec/password]
+        :query-params  [user     :- :server.spec/user
+                        password :- :server.spec/password]
         (let [user-trusted     (-> user sql/escape util/lower-trim)
               password-trusted (-> password
                                    sql/escape')]
@@ -134,10 +132,8 @@
 
       (api/GET "/investment-style" []
         :summary "How's everything performing by investment style?"
-        :header-params [authorization :- :server.spec/authorization]
-        :middleware [auth/token-auth middleware/authenticated]
-        :query-params [user     :- :server.spec/user
-                       password :- :server.spec/password]
+        :query-params  [user     :- :server.spec/user
+                        password :- :server.spec/password]
         (let [user-trusted     (-> user sql/escape util/lower-trim)
               password-trusted (-> password
                                    sql/escape')]
@@ -148,10 +144,8 @@
 
       (api/GET "/location" []
         :summary "How's everything performing by location?"
-        :header-params [authorization :- :server.spec/authorization]
-        :middleware [auth/token-auth middleware/authenticated]
-        :query-params [user     :- :server.spec/user
-                       password :- :server.spec/password]
+        :query-params  [user     :- :server.spec/user
+                        password :- :server.spec/password]
         (let [user-trusted     (-> user sql/escape util/lower-trim)
               password-trusted (-> password
                                    sql/escape')]
