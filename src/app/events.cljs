@@ -16,9 +16,12 @@
 (def remove-user-interceptor [(rf/after db/remove-user-ls)])
 
 (defn endpoint [& params]
-  (let [api-url "/api/v1"]
-    (log/debug "endpoint is: " (string/join "/" (concat [api-url] params)))
-    (string/join "/" (concat [api-url] params))))
+  (let [backend-uri      "https://skilbjo.duckdns.org"
+        api-prefix       "api/v1"
+        prefix           (str backend-uri "/" api-prefix)   ;; comment out #_backend-uri if want to test locally
+        joined-endpoint  (string/join "/" (concat [prefix] params))]
+    (log/debug "endpoint is: " joined-endpoint)
+    joined-endpoint))
 
 (defn auth-header [db]
   "Get user token and format for API authorization"

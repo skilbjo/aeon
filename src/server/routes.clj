@@ -16,6 +16,7 @@
             [ring.middleware.gzip :as gzip]
             [ring.middleware.json :as ring-json]
             [ring.middleware.session :as session]
+            [ring.middleware.cors :as ring-cors]
             [ring.util.response :refer [response]]
             [server.auth :as auth]
             [server.error :as error]
@@ -166,6 +167,11 @@
 
 (defroutes combined-routes
   (-> swagger
+      (ring-cors/wrap-cors :access-control-allow-origin [#"skilbjo.duckdns.org"
+                                                         #"https://thirsty-northcutt-878096.netlify.app/"  ;; how to get this to be any of the netlify previews?
+                                                         #_#"http://localhost"        ;; look into how to do this... dev build tests on local backend or prod backend?
+                                                         #_#"http://localhost:8081"]  ;; how to tie this up to src/app/events.cljs:19 , where you set backend as skilbjo.duckdns.org ..?
+                           :access-control-allow-methods [:get :post])
       (ring-defaults/wrap-defaults (assoc
                                     ring-defaults/api-defaults
                                     :security
