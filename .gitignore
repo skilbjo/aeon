@@ -1,1 +1,4 @@
 ssl-certs/
+
+# Local Netlify folder
+.netlify
