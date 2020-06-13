@@ -34,6 +34,7 @@
                  [ring/ring-anti-forgery "1.3.0"]
                  [ring/ring-defaults "0.3.2" ]
                  [ring/ring-json "0.5.0"]
+                 [ring-cors "0.1.13"]
 
                  ;; cljs
                  [org.clojure/clojurescript "1.10.520"
