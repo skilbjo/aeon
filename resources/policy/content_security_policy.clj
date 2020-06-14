@@ -34,7 +34,6 @@
                       "http://localhost:8081"
                       "http://localhost:3449"
                       "http://docker:8080"
-                      "https://demo.productionready.io"
                       :unsafe-inline]
            :img      ["http://www.w3.org"
                       "data:"
