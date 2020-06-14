@@ -46,7 +46,7 @@ with now_ts as (
       datalake.equities
     where
       date >= (select beginning_of_year from beginning_of_year )
-      and date <> (select now from now)
+      and date <> (select today from date )
       and ticker in ( select distinct ticker from portfolio )
     group by
       1,2
@@ -60,8 +60,8 @@ with now_ts as (
     datalake.currency
   where
     currency = 'GBP'
-    and ( date = (select today from date )
-    or    date = (select yesterday from date ) )
+    and ( date = ( select today from date )
+    or    date = ( select yesterday from date ) )
   order by
     date desc
   limit 1
@@ -83,10 +83,10 @@ with now_ts as (
   from
     datalake.equities equities
   where
-    date    = (select today from date)
-    or date = (select yesterday from date)
-    or date = (select max_known_date from max_known_date)
-    or date = (select beginning_of_year from beginning_of_year)
+    date    = ( select today from date )
+    or date = ( select yesterday from date )
+    or date = ( select max_known_date from max_known_date )
+    or date = ( select beginning_of_year from beginning_of_year )
   group by
     1,2
 ), today as (
@@ -121,9 +121,9 @@ with now_ts as (
     sum((quantity * coalesce(close,cost_per_share))) yesterday
   from
     equities
-    right join portfolio on portfolio.ticker = equities.ticker
+    right join portfolio on equities.ticker = portfolio.ticker
   where
-    date in ( select yesterday from date ) or date is null
+    date in ( select yesterday from date )
   group by
     1,2,3,4,5,6
 ), ytd as (
@@ -137,7 +137,7 @@ with now_ts as (
     sum((quantity * coalesce(close,cost_per_share))) market_value
   from
     equities
-    right join portfolio on portfolio.ticker = equities.ticker
+    right join portfolio on equities.ticker = portfolio.ticker
   where
     date = ( select beginning_of_year from beginning_of_year )
   group by
@@ -155,7 +155,7 @@ with now_ts as (
     sum(((quantity * coalesce(close,cost_per_share)) - (quantity * cost_per_share))) gain_loss
   from
     equities
-    right join portfolio on portfolio.ticker = equities.ticker
+    right join portfolio on equities.ticker = portfolio.ticker
   where
     date in ( select max_known_date from max_known_date )
     or (case when equities.ticker in ('VMMXX')
