@@ -4,6 +4,7 @@ set -eou pipefail
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../" && pwd )" && cd "$dir"
 app="$(basename $(pwd))"
 tmp_dir='/tmp'
+jmx=''
 
 usage(){ echo "Usage: ${0} [-jmx <direct-etl|testing|...>]" 1>&2;
   echo " <jmx: optional.. start a jmx listener to monitor w/ VisualVM'>" 1>&2; exit 1; }
