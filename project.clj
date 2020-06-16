@@ -122,6 +122,7 @@
          :ssl?          true}
   :target-path "target/%s"
   :main ^:skip-aot server.routes
+  :repl-options {:timeout 300000} ; repl timeout in udoo, increase to 5 min
   :jvm-opts ~(concat ["-Duser.timezone=UTC"
                       ; Same JVM options as deploy/bin/run-job uses in production
                       "-Xms256m"
