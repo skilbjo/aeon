@@ -62,7 +62,10 @@ case "$(uname)" in
       fi
 
       #jmx_opts="-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.ssl=true -Djava.rmi.server.hostname=${ip} -Dcom.sun.management.jmxremote.authenticate=true -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.rmi.port=9011 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.ssl.need.client.auth=true -Djavax.net.ssl.keyStore=/tmp/java_key_store -Djavax.net.ssl.keyStorePassword="$(echo "$quandl_api_key")" -Dcom.sun.management.jmxremote.password.file=/tmp/jmx.password -Dcom.sun.management.jmxremote.access.file=/tmp/jmxremote.access" # don't quote /tmp/jmx.password  ## This doesn't work
-      jmx_opts='-Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.rmi.port=9011 -Djava.rmi.server.hostname=localhost -Dcom.sun.management.jmxremote.local.only=false'
+      # formally -Djava.rmi.server.hostname=pfsense2. was set as localhost
+      #   it worked as localhost as of 12/31/2019, but as of 6/15/2020 it was not working
+      #   changed to pfsense2. and 192.168.3.49 and each worked, but localhost did not
+      jmx_opts='-Djava.rmi.server.hostname=pfsense2. -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.port=9010 -Dcom.sun.management.jmxremote.rmi.port=9011 -Dcom.sun.management.jmxremote.local.only=false'
     fi
 
     JAVA_OPTS="$JAVA_OPTS $java_garbage_collector_opts $jmx_opts"
