@@ -15,10 +15,9 @@
 
 (def remove-user-interceptor [(rf/after db/remove-user-ls)])
 
-(def backend-uri "https://skilbjo.duckdns.org")
-
 (defn endpoint [& params]
-  (let [api-prefix       "api/v1"
+  (let [backend-uri      "https://skilbjo.duckdns.org"
+        api-prefix       "api/v1"
         prefix           (str backend-uri "/" api-prefix)   ;; comment out #_backend-uri if want to test locally
         joined-endpoint  (string/join "/" (concat [prefix] params))]
     (log/debug "endpoint is: " joined-endpoint)
@@ -31,9 +30,6 @@
     (if token
       [:Authorization (str "Token " token)]
       nil)))
-
-(defn cors-header []
-  [:Access-Control-Allow-Origin backend-uri])
 
 (defn dispatch-report [db body report]
   (let [user     (-> db :user :user)
@@ -103,9 +99,7 @@
             {:db         (assoc-in db [:loading :login] true)
              :http-xhrio {:method          :post
                           :uri             (endpoint "login")
-                          :headers         #_(auth-header db)
-                                           {:Authorization (str "Token " token)
-                                            :Access-Control-Allow-Origin "https://thirsty-northcutt-878096.netlify.app"}
+                          :headers         (auth-header db)
                           :params          body
                           :format          (json-request-format)
                           :response-format (json-response-format
