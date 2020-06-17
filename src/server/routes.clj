@@ -210,6 +210,7 @@
        "policy/content_security_policy.clj")
       (middleware/wrap-referrer-policy "strict-origin")
       (ring-cors/wrap-cors :access-control-allow-origin [#"skilbjo.duckdns.org"
+                                                         #"https://skilbjo.duckdns.org"
                                                          #"https://thirsty-northcutt-878096.netlify.app/"  ;; how to get this to be any of the netlify previews?
                                                          #"thirsty-northcutt-878096.netlify.app/"          ;; ...
                                                          #_#"http://localhost"        ;; look into how to do this... dev build tests on local backend or prod backend?
