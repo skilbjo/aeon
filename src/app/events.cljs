@@ -15,9 +15,10 @@
 
 (def remove-user-interceptor [(rf/after db/remove-user-ls)])
 
+(def backend-uri "https://skilbjo.duckdns.org")
+
 (defn endpoint [& params]
-  (let [backend-uri      "https://skilbjo.duckdns.org"
-        api-prefix       "api/v1"
+  (let [api-prefix       "api/v1"
         prefix           (str backend-uri "/" api-prefix)   ;; comment out #_backend-uri if want to test locally
         joined-endpoint  (string/join "/" (concat [prefix] params))]
     (log/debug "endpoint is: " joined-endpoint)
@@ -30,6 +31,9 @@
     (if token
       [:Authorization (str "Token " token)]
       nil)))
+
+(defn cors-header []
+  [:Access-Control-Allow-Origin backend-uri])
 
 (defn dispatch-report [db body report]
   (let [user     (-> db :user :user)
@@ -99,7 +103,9 @@
             {:db         (assoc-in db [:loading :login] true)
              :http-xhrio {:method          :post
                           :uri             (endpoint "login")
-                          :headers         (auth-header db)
+                          :headers         (vector
+                                             (auth-header db)
+                                             (cors-header))
                           :params          body
                           :format          (json-request-format)
                           :response-format (json-response-format
