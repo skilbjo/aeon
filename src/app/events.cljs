@@ -105,7 +105,7 @@
                           :uri             (endpoint "login")
                           :headers         #_(auth-header db)
                                            {:Authorization (str "Token " token)
-                                            :Access-Control-Allow-Origin "https://thirsty-northcutt-878096.netlify.app/#/login"}
+                                            :Access-Control-Allow-Origin "https://thirsty-northcutt-878096.netlify.app"}
                           :params          body
                           :format          (json-request-format)
                           :response-format (json-response-format
