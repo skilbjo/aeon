@@ -56,18 +56,18 @@
         #_:middleware    #_[anti-forgery/wrap-anti-forgery]
         #_:header-params #_[{x-csrf-token :- :server.spec/authorization nil}]
         (api/POST "/login" []
-                  :summary "Login, for an authentication token"
-                  :body-params [user     :- :server.spec/user
-                                password :- :server.spec/password]
-                  (let [user-trusted     (-> user sql/escape util/lower-trim)
-                        password-trusted (-> password
-                                             sql/escape'
-                                             hash/sha256
-                                             codecs/bytes->hex)]
-                    (-> {:user     user-trusted
-                         :password password-trusted}
-                        jobs.api/v1.login
-                        #_response))))) ; do not add reponse here; it will override 401 status (if unauthorized)
+          :summary "Login, for an authentication token"
+          :body-params [user     :- :server.spec/user
+                        password :- :server.spec/password]
+          (let [user-trusted     (-> user sql/escape util/lower-trim)
+                password-trusted (-> password
+                                     sql/escape'
+                                     hash/sha256
+                                     codecs/bytes->hex)]
+            (-> {:user     user-trusted
+                 :password password-trusted}
+                jobs.api/v1.login
+                #_response))))) ; do not add reponse here; it will override 401 status (if unauthorized)
 
     (api/context "/prices/:dataset" [dataset]
       :tags ["prices"]
