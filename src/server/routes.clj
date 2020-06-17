@@ -48,24 +48,26 @@
 
     (api/context "" []
       :tags ["login"]
+      (api/OPTIONS "/login" [] {:status 200}) ;; for netlify CORS
       ;; TODO does CSRF on /login make sense? How to make it work with swagger?
       ;; per https://github.com/edbond/CSRF - CSRF + ring + POST does not work
       ;; with compojure 1.2.0+ (we are on 1.6.1)
-      #_:middleware    #_[anti-forgery/wrap-anti-forgery]
-      #_:header-params #_[{x-csrf-token :- :server.spec/authorization nil}]
-      (api/POST "/login" []
-        :summary "Login, for an authentication token"
-        :body-params [user     :- :server.spec/user
-                      password :- :server.spec/password]
-        (let [user-trusted     (-> user sql/escape util/lower-trim)
-              password-trusted (-> password
-                                   sql/escape'
-                                   hash/sha256
-                                   codecs/bytes->hex)]
-          (-> {:user     user-trusted
-               :password password-trusted}
-              jobs.api/v1.login
-              #_response)))) ; do not add reponse here; it will override 401 status (if unauthorized)
+      (api/context "" []
+        #_:middleware    #_[anti-forgery/wrap-anti-forgery]
+        #_:header-params #_[{x-csrf-token :- :server.spec/authorization nil}]
+        (api/POST "/login" []
+                  :summary "Login, for an authentication token"
+                  :body-params [user     :- :server.spec/user
+                                password :- :server.spec/password]
+                  (let [user-trusted     (-> user sql/escape util/lower-trim)
+                        password-trusted (-> password
+                                             sql/escape'
+                                             hash/sha256
+                                             codecs/bytes->hex)]
+                    (-> {:user     user-trusted
+                         :password password-trusted}
+                        jobs.api/v1.login
+                        #_response))))) ; do not add reponse here; it will override 401 status (if unauthorized)
 
     (api/context "/prices/:dataset" [dataset]
       :tags ["prices"]
@@ -93,67 +95,73 @@
 
     (api/context "/reports" []
       :tags ["reports"]
-      :header-params [authorization :- :server.spec/authorization]
-      :middleware    [auth/token-auth middleware/authenticated]
-      (api/GET "/portfolio" []
-        :summary "How's the portfolio doing? (Remember to add 'Token ' + token to the authorization header)"
-        :query-params  [user     :- :server.spec/user
-                        password :- :server.spec/password]
-        (let [user-trusted     (-> user sql/escape util/lower-trim)
-              password-trusted (-> password
-                                   sql/escape')]
-          (-> {:user     user-trusted
-               :password password-trusted}
-              jobs.api/v1.portfolio
-              response)))
+      (api/OPTIONS "/portfolio" [] {:status 200})        ;; for netlify CORS
+      (api/OPTIONS "/asset-type" [] {:status 200})       ;; for netlify CORS
+      (api/OPTIONS "/capitalization" [] {:status 200})   ;; for netlify CORS
+      (api/OPTIONS "/investment-style" [] {:status 200}) ;; for netlify CORS
+      (api/OPTIONS "/location" [] {:status 200})         ;; for netlify CORS
+      (api/context "" []
+        :header-params [authorization :- :server.spec/authorization]
+        :middleware    [auth/token-auth middleware/authenticated]
+        (api/GET "/portfolio" []
+          :summary "How's the portfolio doing? (Remember to add 'Token ' + token to the authorization header)"
+          :query-params  [user     :- :server.spec/user
+                          password :- :server.spec/password]
+          (let [user-trusted     (-> user sql/escape util/lower-trim)
+                password-trusted (-> password
+                                     sql/escape')]
+            (-> {:user     user-trusted
+                 :password password-trusted}
+                jobs.api/v1.portfolio
+                response)))
 
-      (api/GET "/asset-type" []
-        :summary "How's everything performing by asset type?"
-        :query-params  [user     :- :server.spec/user
-                        password :- :server.spec/password]
-        (let [user-trusted     (-> user sql/escape util/lower-trim)
-              password-trusted (-> password
-                                   sql/escape')]
-          (-> {:user     user-trusted
-               :password password-trusted}
-              jobs.api/v1.asset-type
-              response)))
+        (api/GET "/asset-type" []
+          :summary "How's everything performing by asset type?"
+          :query-params  [user     :- :server.spec/user
+                          password :- :server.spec/password]
+          (let [user-trusted     (-> user sql/escape util/lower-trim)
+                password-trusted (-> password
+                                     sql/escape')]
+            (-> {:user     user-trusted
+                 :password password-trusted}
+                jobs.api/v1.asset-type
+                response)))
 
-      (api/GET "/capitalization" []
-        :summary "How's everything performing by capitalization?"
-        :query-params  [user     :- :server.spec/user
-                        password :- :server.spec/password]
-        (let [user-trusted     (-> user sql/escape util/lower-trim)
-              password-trusted (-> password
-                                   sql/escape')]
-          (-> {:user     user-trusted
-               :password password-trusted}
-              jobs.api/v1.capitalization
-              response)))
+        (api/GET "/capitalization" []
+          :summary "How's everything performing by capitalization?"
+          :query-params  [user     :- :server.spec/user
+                          password :- :server.spec/password]
+          (let [user-trusted     (-> user sql/escape util/lower-trim)
+                password-trusted (-> password
+                                     sql/escape')]
+            (-> {:user     user-trusted
+                 :password password-trusted}
+                jobs.api/v1.capitalization
+                response)))
 
-      (api/GET "/investment-style" []
-        :summary "How's everything performing by investment style?"
-        :query-params  [user     :- :server.spec/user
-                        password :- :server.spec/password]
-        (let [user-trusted     (-> user sql/escape util/lower-trim)
-              password-trusted (-> password
-                                   sql/escape')]
-          (-> {:user     user-trusted
-               :password password-trusted}
-              jobs.api/v1.investment-style
-              response)))
+        (api/GET "/investment-style" []
+          :summary "How's everything performing by investment style?"
+          :query-params  [user     :- :server.spec/user
+                          password :- :server.spec/password]
+          (let [user-trusted     (-> user sql/escape util/lower-trim)
+                password-trusted (-> password
+                                     sql/escape')]
+            (-> {:user     user-trusted
+                 :password password-trusted}
+                jobs.api/v1.investment-style
+                response)))
 
-      (api/GET "/location" []
-        :summary "How's everything performing by location?"
-        :query-params  [user     :- :server.spec/user
-                        password :- :server.spec/password]
-        (let [user-trusted     (-> user sql/escape util/lower-trim)
-              password-trusted (-> password
-                                   sql/escape')]
-          (-> {:user     user-trusted
-               :password password-trusted}
-              jobs.api/v1.location
-              response))))))
+        (api/GET "/location" []
+          :summary "How's everything performing by location?"
+          :query-params  [user     :- :server.spec/user
+                          password :- :server.spec/password]
+          (let [user-trusted     (-> user sql/escape util/lower-trim)
+                password-trusted (-> password
+                                     sql/escape')]
+            (-> {:user     user-trusted
+                 :password password-trusted}
+                jobs.api/v1.location
+                response)))))))
 
 (def swagger
   (-> {:swagger
