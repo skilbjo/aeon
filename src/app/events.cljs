@@ -103,9 +103,9 @@
             {:db         (assoc-in db [:loading :login] true)
              :http-xhrio {:method          :post
                           :uri             (endpoint "login")
-                          :headers         ((comp vec flatten vector)
-                                            (auth-header db)
-                                            (cors-header))
+                          :headers         #_(auth-header db)
+                                           {:Authorization (str "Token " token)
+                                            :Access-Control-Allow-Origin backend-uri}
                           :params          body
                           :format          (json-request-format)
                           :response-format (json-response-format
