@@ -8,6 +8,8 @@
             [day8.re-frame.tracing :refer-macros [fn-traced]]
             [re-frame.core :as rf]))
 
+(goog-define backend-uri "localhost:8080")
+
 ;; -- utils -------------------------------------------------------------------
 (def set-user-interceptor [(rf/path :user)
                            (rf/after db/set-user-ls)
@@ -16,9 +18,8 @@
 (def remove-user-interceptor [(rf/after db/remove-user-ls)])
 
 (defn endpoint [& params]
-  (let [backend-uri      "https://skilbjo.duckdns.org"
-        api-prefix       "api/v1"
-        prefix           (str backend-uri "/" api-prefix)   ;; comment out #_backend-uri if want to test locally
+  (let [api-prefix       "api/v1"
+        prefix           (str backend-uri "/" api-prefix)
         joined-endpoint  (string/join "/" (concat [prefix] params))]
     (log/debug "endpoint is: " joined-endpoint)
     joined-endpoint))
