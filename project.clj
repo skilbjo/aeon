@@ -109,7 +109,7 @@
                                           {cljs-test-display.core/root-node-id "cljs-tests"
                                            cljs-test-display.core/printing true}}}}}}
              :uberjar {:aot :all
-                       :cljsbuild {:builds {:app {:compiler {:closure-defines {"app.events/backend_uri" "https://skilbjo-api.duckdns.org"
+                       :cljsbuild {:builds {:app {:compiler {:closure-defines {"app.events.backend_uri" "https://skilbjo-api.duckdns.org"
                                                                                goog.DEBUG false}
                                                              :optimizations :advanced
                                                              :pretty-print  false}}}}

@@ -49,7 +49,7 @@ case "$(uname)" in
     if [[ -f ${tmp_dir}/${app}.jar ]]; then rm "${tmp_dir}/${app}.jar"; fi
     get_artifact_from_circle_ci
 
-    set +e; pkill java -u skilbjo -nx; set -e
+    set +e; pkill java -Duser.timezone=UTC -u skilbjo -nx; set -e
     JAVA_OPTS="-Duser.timezone=UTC -Xms256m -Xmx1g -XX:MaxMetaspaceSize=128m" # The flags below are to try to resolve "java.lang.OutOfMemoryError: GC overhead limit exceeded" errors
     java_garbage_collector_opts='-XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:+CMSIncrementalPacing -XX:+UseCompressedOops -XX:+DoEscapeAnalysis -Xincgc' # Note: -XX:+UseCompressedOops for 64bit only
     jmx_opts=''
