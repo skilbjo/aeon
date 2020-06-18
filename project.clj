@@ -89,7 +89,8 @@
                                           :pretty-print    true
                                           :source-map      true
                                           :source-map-timestamp true
-                                          :closure-defines {goog.DEBUG true
+                                          :closure-defines  {"app.events.backend_uri" "http://localhost:8081"
+                                                             goog.DEBUG true
                                                             "re_frame.trace.trace_enabled_QMARK_" true
                                                             "day8.re_frame.tracing.trace_enabled_QMARK_" true}
                                           :external-config {:devtools/config
@@ -108,8 +109,8 @@
                                           {cljs-test-display.core/root-node-id "cljs-tests"
                                            cljs-test-display.core/printing true}}}}}}
              :uberjar {:aot :all
-                       :cljsbuild {:builds {:app {:compiler {:closure-defines
-                                                              {goog.DEBUG false}
+                       :cljsbuild {:builds {:app {:compiler {:closure-defines {"app.events/backend_uri" "https://skilbjo-api.duckdns.org"
+                                                                               goog.DEBUG false}
                                                              :optimizations :advanced
                                                              :pretty-print  false}}}}
                        :env {:log-level "3"}}} ;; cljs/log warn+

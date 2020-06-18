@@ -65,6 +65,24 @@ $ curl [host].duckdns.org/api/equities/latest
   "adj_high":149.39,"split_ratio":1.00,"low":147.96,"adj_open":148.45,"dataset":"WIKI"}]}
 ```
 
+### CORS
+
+CORS (cross origin resource sharing) is way that allows resources from one
+domain to be requested from another domain. Browers however tended to restrict
+CORS on api calls, unless:
+
+- the API passes a pre-flight check, made by an HTTP OPTIONS method call (were
+  it the same origin, only an HTTP GET would be called), and only after OPTIONS
+  is successful (with the server including the `Access-Control-Allow-Origin`
+  response header including the requester's origin), will the broswer make an
+  HTTP GET; and
+- some headers in the response are sent by the API, specifically
+  - `Access-Control-Allow-Headers`
+
+Because Aeon deploys the static assets on a CDN (netlify), and the server lives
+on a separate domain, CORS needs to be enabled for the single-page-application
+on the CDN to work correctly.
+
 ## Deploy
 
 Make sure the jks is in the prod servers:

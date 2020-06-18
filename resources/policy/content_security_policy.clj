@@ -50,6 +50,7 @@
                       "https://fonts.gstatic.com/s/materialicons/v36/"
                       "https://fonts.gstatic.com/s/materialicons/v38/"
                       "https://fonts.gstatic.com/s/materialicons/v40/"
+                      "https://fonts.gstatic.com/s/materialicons/"
                       "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/font/material-design-icons/"
                       "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/font/roboto/"
                       "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/fonts/"
@@ -63,7 +64,7 @@
                       "http://localhost:8081"
                       "http://localhost:3449"
                       "http://docker:8080"
-                      "data:"]
+                      #_"data:"]
            :connect  ["http://skilbjo.duckdns.org"
                       "http://skilbjo-sfo.duckdns.org"
                       "http://skilbjo-aws.duckdns.org"
@@ -78,8 +79,9 @@
                       "http://pfsense2:8049"
                       "http://localhost:8080"
                       "http://localhost:8081"
-                      "http://localhost:3449"
+                      "http://localhost"
                       "http://docker:8080"
-                      "ws://localhost:3449"
-                      "ws:"]
+                      "ws://localhost:8080"
+                      "ws://localhost:8081"
+                      ]
            :child    :self}}

@@ -48,11 +48,13 @@
 
     (api/context "" []
       :tags ["login"]
-      (api/OPTIONS "/login" [] {:status 200}) ;; for netlify CORS
-      ;; TODO does CSRF on /login make sense? How to make it work with swagger?
-      ;; per https://github.com/edbond/CSRF - CSRF + ring + POST does not work
-      ;; with compojure 1.2.0+ (we are on 1.6.1)
+      (api/OPTIONS "/login" []
+        :summary "For CORS to work, need to respond 200 OK and send CORS headers"
+        {:status 200})
       (api/context "" []
+        ;; TODO does CSRF on /login make sense? How to make it work with swagger?
+        ;; per https://github.com/edbond/CSRF - CSRF + ring + POST does not work
+        ;; with compojure 1.2.0+ (we are on 1.6.1)
         #_:middleware    #_[anti-forgery/wrap-anti-forgery]
         #_:header-params #_[{x-csrf-token :- :server.spec/authorization nil}]
         (api/POST "/login" []
@@ -95,11 +97,21 @@
 
     (api/context "/reports" []
       :tags ["reports"]
-      (api/OPTIONS "/portfolio" [] {:status 200})        ;; for netlify CORS
-      (api/OPTIONS "/asset-type" [] {:status 200})       ;; for netlify CORS
-      (api/OPTIONS "/capitalization" [] {:status 200})   ;; for netlify CORS
-      (api/OPTIONS "/investment-style" [] {:status 200}) ;; for netlify CORS
-      (api/OPTIONS "/location" [] {:status 200})         ;; for netlify CORS
+      (api/OPTIONS "/portfolio" []
+        :summary "For CORS to work, need to respond 200 OK and send CORS headers"
+        {:status 200})
+      (api/OPTIONS "/asset-type" []
+        :summary "For CORS to work, need to respond 200 OK and send CORS headers"
+        {:status 200})
+      (api/OPTIONS "/capitalization" []
+        :summary "For CORS to work, need to respond 200 OK and send CORS headers"
+        {:status 200})
+      (api/OPTIONS "/investment-style" []
+        :summary "For CORS to work, need to respond 200 OK and send CORS headers"
+        {:status 200})
+      (api/OPTIONS "/location" []
+        :summary "For CORS to work, need to respond 200 OK and send CORS headers"
+        {:status 200})
       (api/context "" []
         :header-params [authorization :- :server.spec/authorization]
         :middleware    [auth/token-auth middleware/authenticated]
@@ -217,7 +229,7 @@
        :config-path
        "policy/content_security_policy.clj")
       (middleware/wrap-referrer-policy "strict-origin")
-      (ring-cors/wrap-cors :access-control-allow-origin [#"https://skilbjo.duckdns.org"                    ;; how to get this to be any of the netlify previews?
+      (ring-cors/wrap-cors :access-control-allow-origin [#"https://skilbjo-api.duckdns.org"                ;; how to get this to be any of the netlify previews?
                                                          #"https://thirsty-northcutt-878096.netlify.app/"] ;; look into how to do this... dev build tests on local backend or prod backend? ;; how to tie this up to src/app/events.cljs:19 , where you set backend as skilbjo.duckdns.org ..?
                            :access-control-allow-headers #{"accept"
                                                            "authorization"
