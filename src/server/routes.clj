@@ -48,7 +48,7 @@
 
     (api/context "" []
       :tags ["login"]
-      (api/OPTIONS "/login" []
+      #_(api/OPTIONS "/login" []
         :summary "For CORS to work, need to respond 200 OK and send CORS headers"
         {:status 200})
       (api/context "" []
@@ -97,19 +97,19 @@
 
     (api/context "/reports" []
       :tags ["reports"]
-      (api/OPTIONS "/portfolio" []
+      #_(api/OPTIONS "/portfolio" []
         :summary "For CORS to work, need to respond 200 OK and send CORS headers"
         {:status 200})
-      (api/OPTIONS "/asset-type" []
+      #_(api/OPTIONS "/asset-type" []
         :summary "For CORS to work, need to respond 200 OK and send CORS headers"
         {:status 200})
-      (api/OPTIONS "/capitalization" []
+      #_(api/OPTIONS "/capitalization" []
         :summary "For CORS to work, need to respond 200 OK and send CORS headers"
         {:status 200})
-      (api/OPTIONS "/investment-style" []
+      #_(api/OPTIONS "/investment-style" []
         :summary "For CORS to work, need to respond 200 OK and send CORS headers"
         {:status 200})
-      (api/OPTIONS "/location" []
+      #_(api/OPTIONS "/location" []
         :summary "For CORS to work, need to respond 200 OK and send CORS headers"
         {:status 200})
       (api/context "" []

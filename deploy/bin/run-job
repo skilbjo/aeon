@@ -5,12 +5,15 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../../" && pwd )" && cd "$dir"
 app="$(basename $(pwd))"
 tmp_dir='/tmp'
 jmx=''
+pull_new_image=''
 
-usage(){ echo "Usage: ${0} [-jmx <direct-etl|testing|...>]" 1>&2;
-  echo " <jmx: optional.. start a jmx listener to monitor w/ VisualVM'>" 1>&2; exit 1; }
+usage(){ echo "Usage: ${0} [<-jmx>] [<--pull-new-image>]"                1>&2;
+  echo " <jmx: optional.. start a jmx listener to monitor w/ VisualVM'>" 1>&2;
+  echo " <pull-new-image: force-pull a new image from circleci>>"        1>&2; exit 1; }
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    -jmx|--jmx)  jmx='y' ;;
+    -jmx|--jmx)        jmx='y' ;;
+    --pull-new-image)  pull_new_image='y' ;;
   esac
   shift
 done
@@ -46,8 +49,12 @@ case "$(uname)" in
       aws s3 cp --profile skilbjo-robot s3://skilbjo/java_key_store "${tmp_dir}/java_key_store"
     fi
 
-    if [[ -f ${tmp_dir}/${app}.jar ]]; then rm "${tmp_dir}/${app}.jar"; fi
-    get_artifact_from_circle_ci
+    git pull -f # any scripts need updating?
+
+    if [[ -n $pull_new_image ]]; then
+      if [[ -f ${tmp_dir}/${app}.jar ]]; then rm "${tmp_dir}/${app}.jar"; fi
+      get_artifact_from_circle_ci
+    fi
 
     set +e; pkill java -Duser.timezone=UTC -u skilbjo -nx; set -e
     JAVA_OPTS="-Duser.timezone=UTC -Xms256m -Xmx1g -XX:MaxMetaspaceSize=128m" # The flags below are to try to resolve "java.lang.OutOfMemoryError: GC overhead limit exceeded" errors
