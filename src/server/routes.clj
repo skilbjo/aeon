@@ -49,8 +49,8 @@
     (api/context "" []
       :tags ["login"]
       (api/OPTIONS "/login" []
-          :summary "For CORS to work, need to respond 200 OK and send CORS headers"
-          {:status 200})
+        :summary "For CORS to work, need to respond 200 OK and send CORS headers"
+        {:status 200})
       (api/context "" []
         ;; TODO does CSRF on /login make sense? How to make it work with swagger?
         ;; per https://github.com/edbond/CSRF - CSRF + ring + POST does not work
@@ -110,8 +110,8 @@
         :summary "For CORS to work, need to respond 200 OK and send CORS headers"
         {:status 200})
       (api/OPTIONS "/location" []
-          :summary "For CORS to work, need to respond 200 OK and send CORS headers"
-          {:status 200})
+        :summary "For CORS to work, need to respond 200 OK and send CORS headers"
+        {:status 200})
       (api/context "" []
         :header-params [authorization :- :server.spec/authorization]
         :middleware    [auth/token-auth middleware/authenticated]
