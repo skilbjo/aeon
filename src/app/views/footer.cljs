@@ -1,9 +1,8 @@
 (ns app.views.footer
-  (:require [app.events :as events :refer [backend-uri]]
-            [re-frame.core :refer [subscribe dispatch]]))
+  (:require [re-frame.core :refer [subscribe dispatch]]))
 
 (def swagger-uri
-  (str events/backend-uri "/swagger"))
+  (str "https://skilbjo.duckdns.org" "/swagger"))
 
 (defn footer []
   [:footer.page-footer
