@@ -2,7 +2,6 @@
            :script   ["https://skilbjo.duckdns.org"
                       "https://skilbjo-sfo.duckdns.org"
                       "https://skilbjo-aws.duckdns.org"
-                      "https://skilbjo-robot.duckdns.org"
                       "https://thirsty-northcutt-878096.netlify.app"
                       "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/"
                       "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/"
@@ -22,7 +21,6 @@
            :style    ["https://skilbjo.duckdns.org"
                       "https://skilbjo-sfo.duckdns.org"
                       "https://skilbjo-aws.duckdns.org"
-                      "https://skilbjo-robot.duckdns.org"
                       "https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/"
                       "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/"
                       "https://fonts.googleapis.com/icon"
@@ -45,7 +43,6 @@
            :font     ["http://skilbjo.duckdns.org"
                       "http://skilbjo-sfo.duckdns.org"
                       "http://skilbjo-aws.duckdns.org"
-                      "http://skilbjo-robot.duckdns.org"
                       "https://fonts.googleapis.com/icon"
                       "https://fonts.gstatic.com/s/materialicons/v36/"
                       "https://fonts.gstatic.com/s/materialicons/v38/"
@@ -66,10 +63,7 @@
                       "http://docker:8080"
                       #_"data:"]
            :connect  ["http://skilbjo.duckdns.org"
-                      "http://skilbjo-sfo.duckdns.org"
-                      "http://skilbjo-aws.duckdns.org"
-                      "http://skilbjo-robot.duckdns.org"
-                      "https://thirsty-northcutt-878096.netlify.app"
+                      "http://skilbjo-api.duckdns.org"
                       "http://192.168.2.2:8043"
                       "http://192.168.2.2:8048"
                       "http://192.168.2.2:8049"
@@ -82,6 +76,5 @@
                       "http://localhost"
                       "http://docker:8080"
                       "ws://localhost:8080"
-                      "ws://localhost:8081"
-                      ]
+                      "ws://localhost:8081"]
            :child    :self}}
