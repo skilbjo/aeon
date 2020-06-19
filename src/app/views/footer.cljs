@@ -1,5 +1,9 @@
 (ns app.views.footer
-  (:require [re-frame.core :refer [subscribe dispatch]]))
+  (:require [app.events :as events :refer [backend-uri]]
+            [re-frame.core :refer [subscribe dispatch]]))
+
+(def swagger-uri
+  (str events/backend-uri "/swagger"))
 
 (defn footer []
   [:footer.page-footer
@@ -11,4 +15,4 @@
       {:href "https://github.com/skilbjo/aeon"}
       "source code"]]
     [:div.container
-     [:a.grey-text.text-lighten-4.right {:href "/swagger"} "swagger api"]]]])
+     [:a.grey-text.text-lighten-4.right {:href swagger-uri} "swagger api"]]]])
