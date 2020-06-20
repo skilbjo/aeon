@@ -113,13 +113,14 @@
                                     dataset)
                                    "Try /api/equities or /api/currency.")}
     (let [data  (fn [_]
-                  (let [dir (if (env :jdbc-athena-uri)
-                              "athena"
-                              "dw")
-                        f   (if (env :jdbc-athena-uri)
-                              sql/query-athena
-                              sql/query')]
-                    (->> (-> (str dir "/latest.sql")
+                  (let [dir      (if (env :jdbc-athena-uri)
+                                   "athena"
+                                   "dw")
+                        f        (if (env :jdbc-athena-uri)
+                                   sql/query-athena
+                                   sql/query')
+                        sql-file "latest"]
+                    (->> (-> (str dir "/prices/" sql-file ".sql")
                              io/resource
                              slurp
                              (f {:table (str dataset "_fact")}))

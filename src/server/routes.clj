@@ -93,6 +93,18 @@
                                                  ticker-trusted
                                                  date-trusted)]
           (-> response'
+              response)))
+
+      (api/GET "/today" []
+        :summary "Price for today"
+        :query-params [ticker :- :server.spec/ticker]
+        (let [dataset-trusted (-> dataset sql/escape util/lower-trim)
+              ticker-trusted  (-> ticker sql/escape util/lower-trim)
+              date-trusted    (-> (util/get-todays-date) util/print-it sql/escape' util/lower-trim)
+              response'       (jobs.api/v1.quote dataset-trusted
+                                                 ticker-trusted
+                                                 date-trusted)]
+          (-> response'
               response))))
 
     (api/context "/reports" []
