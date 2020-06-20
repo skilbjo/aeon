@@ -58,6 +58,9 @@
 (def now' (formatter/unparse (formatter/formatters :date)
                              (time/now)))
 
+(defn get-todays-date [] (formatter/unparse (formatter/formatters :date)
+                                            (time/now)))
+
 (def every-half-hour (-> 30 time/minutes))
 
 (def once-an-hour (-> 1 time/hours))
