@@ -56,7 +56,7 @@ case "$(uname)" in
       get_artifact_from_circle_ci
     fi
 
-    set +e; pkill java -Duser.timezone=UTC -u skilbjo -nx; set -e
+    set +e; pkill -f 'aeon.jar' -nx; set -e
     JAVA_OPTS="-Duser.timezone=UTC -Xms256m -Xmx1g -XX:MaxMetaspaceSize=128m" # The flags below are to try to resolve "java.lang.OutOfMemoryError: GC overhead limit exceeded" errors
     java_garbage_collector_opts='-XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:+CMSIncrementalPacing -XX:+UseCompressedOops -XX:+DoEscapeAnalysis -Xincgc' # Note: -XX:+UseCompressedOops for 64bit only
     jmx_opts=''
