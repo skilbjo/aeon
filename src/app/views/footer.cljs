@@ -15,14 +15,14 @@
    [:div.container
     [:div.row]]
    [:div.footer-copyright
+    [:div.container
+     [:a.grey-text.text-lighten-4.left
+      {:href source-code} "source code"]
      [:div.container
-      [:a.grey-text.text-lighten-4.left
-       {:href source-code} "source code"]
+      [:div.container
+       [:a.grey-text.text-lighten-4.left
+        {:href statuspage} "status"]]
       [:div.container
        [:div.container
         [:a.grey-text.text-lighten-4.left
-         {:href statuspage} "status"]]
-       [:div.container
-        [:div.container
-         [:a.grey-text.text-lighten-4.left
-          {:href swagger-uri} "swagger api"]]]]]]])
+         {:href swagger-uri} "swagger api"]]]]]]])
