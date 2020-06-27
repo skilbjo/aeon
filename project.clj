@@ -79,7 +79,8 @@
                              [lein-ring "0.12.0"]]
                    :figwheel {:css-dirs ["resources/public/css"]
                               :ring-handler server.routes/app
-                              :server-port 8081}
+                              :server-port 8081
+                              :server-logfile false}
                    :cljsbuild {:builds {:app
                                         {:figwheel {:open-urls ["http://localhost:8081/cljs"]}
                                          :compiler
