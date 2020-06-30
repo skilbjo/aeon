@@ -58,7 +58,11 @@
 (def now' (formatter/unparse (formatter/formatters :date)
                              (time/now)))
 
-(defn get-todays-date [] (formatter/unparse (formatter/formatters :date)
+(def pst-formatter (formatter/with-zone
+                     (formatter/formatters :date)
+                     (time/time-zone-for-id "America/Los_Angeles")))
+
+(defn get-todays-date [] (formatter/unparse pst-formatter
                                             (time/now)))
 
 (def every-half-hour (-> 30 time/minutes))
