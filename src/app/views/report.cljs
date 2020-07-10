@@ -7,6 +7,8 @@
             [app.util :as util]
             [re-frame.core :refer [subscribe dispatch]]))
 
+(def pagination 60)
+
 ;; -- table -------------------------------------------------------------------
 (defn ^:private table [report sort-key]
   [dt/datatable
@@ -45,8 +47,8 @@
     {::dt/column-label "Total Gain/Loss %"
      ::dt/column-key   [:total_gain_loss_%]
      ::dt/sorting      {::dt/enabled? true}}]
-   {::dt/pagination    {::dt/enabled? true ; to implement, follow:
-                        ::dt/per-page 50}  ; https://github.com/kishanov/re-frame-datatable-example/blob/master/src/cljs/re_frame_datatable_example/views.cljs
+   {::dt/pagination    {::dt/enabled? true        ; to implement, follow:
+                        ::dt/per-page pagination} ; https://github.com/kishanov/re-frame-datatable-example/blob/master/src/cljs/re_frame_datatable_example/views.cljs
     ::dt/table-classes ["ui" "celled" "stripped" "table"]}])
 
 (defn ^:private portfolio-table []
