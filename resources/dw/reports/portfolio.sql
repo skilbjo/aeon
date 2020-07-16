@@ -50,7 +50,7 @@ with now_ts as (
       and date <> ( select now from now )
     group by
       1,2
-    having count(*) > 33
+    having count(*) > 40
    ) src
 ), fx as (
   select

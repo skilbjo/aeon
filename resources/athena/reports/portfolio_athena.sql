@@ -50,7 +50,7 @@ with now_ts as (
       and ticker in ( select distinct ticker from portfolio )
     group by
       1,2
-    having count(*) > 30
+    having count(*) > 40
    ) src
 ), fx as (
   select
