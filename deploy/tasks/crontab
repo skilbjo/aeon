@@ -1,7 +1,7 @@
 ## -- variables -----------------------------------
   SHELL=/bin/bash
   PATH=:/bin:/usr/bin:/usr/local/bin:/usr/sbin:/usr/local/sbin
-  MAILTO=john.skilbeck@gmail.com
+  MAILTO=skilbjo@gmail.com
   cmd="deploy/bin/marathon"
   app_dir="/home/skilbjo/deploy/app/compojure"
 
